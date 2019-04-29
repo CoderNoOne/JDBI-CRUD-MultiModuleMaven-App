@@ -1,0 +1,5 @@
+title=shazam!
+genre=fantasy
+price=30
+duration=2
+release_date=2019-06-7
