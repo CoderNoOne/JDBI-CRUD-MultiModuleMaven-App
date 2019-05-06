@@ -29,8 +29,6 @@ b
 2src/main/java/validators/LoyaltyCardValidator.java,f\6\f68f560042de7f12c377baa8ef80c3a98cc6a60c
 Z
 *src/main/java/connection/DbConnection.java,1\a\1a38d6fdfcfe42ba272eee829ee231ce15d3b00a
-e
-5src/main/java/connection/InsertIntoCustomerTable.java,8\9\891b038fda1de807a8cc858d006bc551d2f0d39a
 9
 	movie.txt,8\9\8999ac8f6bfebde3f35fe453e46cc84e74e87cb5
 b
@@ -41,11 +39,21 @@ W
 'src/main/java/service/EmailService.java,b\8\b83d164c7f660dacfe0dda0ea97c1a3e953fee64
 c
 3src/main/java/repository/LoyaltyCardRepository.java,b\5\b5da70db27e95712de45bb15d21ecf15e9c5b7eb
-Z
-*src/main/java/connection/TableManager.java,7\e\7ea5c0f706b0512da78e361affffa235dd310924
 L
 src/main/java/main/Test.java,3\e\3ebdfcd051ae19d2ea08ce0c8c3908a8616e32ba
-b
-2src/main/java/connection/InsertIntoMovieTable.java,1\b\1b569b34cc9a6052fd3624a91ab92689a5f92cd3
 `
 0src/main/java/service/DataInitializeService.java,4\c\4cc2f0ce7af7bffbda8a0e01e3016d5fdbb167b4
+c
+3src/main/java/connection/SqlCreateTableCommand.java,f\2\f227a8a7dc02cd8bdf711a7932613cdee9c99f54
+[
++src/main/java/converters/JsonConverter.java,c\4\c4bd7eada5fccccdf56852a863c77ed8b78da173
+`
+0src/main/java/converters/MovieJsonConverter.java,6\4\645535538dbc84e10c48213c34aa56780efd80cd
+H
+src/main/java/movie.json,6\3\638178219b317b35c7c31fffbf2069391f985c29
+Z
+*src/main/java/service/UserDataService.java,2\7\2721907c0f7debbd1ef7810b71e87dab97d27dcc
+L
+src/main/java/main/Menu.java,3\8\38874e97868eab190dfeb4b67c6c143182a14784
+X
+(src/main/java/service/EntityService.java,d\f\df3d7121d8d39ceb932166e5eaab711a4b9b0b98

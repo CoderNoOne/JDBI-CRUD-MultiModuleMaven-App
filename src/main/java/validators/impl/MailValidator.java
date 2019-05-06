@@ -1,4 +1,4 @@
-package validators;
+package validators.impl;
 
 import org.apache.commons.validator.routines.EmailValidator;
 

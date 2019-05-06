@@ -13,10 +13,10 @@ public class DbConnection {
   private final String DATABASE_URL = "jdbc:mysql://localhost:3306/jdbi_db2?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
   private final String USERNAME = "root";
   private final String PASSWORD = "admin";
-  private Jdbi jdbi;
+  private final Jdbi jdbi;
 
   private DbConnection() {
-    connect();
+    jdbi = Jdbi.create(DATABASE_URL, USERNAME, PASSWORD);
     createTables();
   }
 
@@ -24,9 +24,6 @@ public class DbConnection {
     return jdbi;
   }
 
-  private void connect() {
-    jdbi = Jdbi.create(DATABASE_URL, USERNAME, PASSWORD);
-  }
 
   private void createTables() {
     createMovieTable();

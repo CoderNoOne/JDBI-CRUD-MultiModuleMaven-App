@@ -16,6 +16,6 @@ public class SalesStand {
   private Integer id;
   private Integer customerId;
   private Integer movieId;
-  private LocalDate startDateTime;
+  private LocalDate startDateTime; // LocalDateTime
 
 }

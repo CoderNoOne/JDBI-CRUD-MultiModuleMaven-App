@@ -1,9 +1,9 @@
 
-ysquid:S2068"V'Password' detected in this expression, review this potentially hard-coded credential.(ˆêÿ¤ıÿÿÿÿ8ıƒ§³¢-
-[
-squid:S106"9Replace this use of System.out or System.err by a logger.(äò”úÿÿÿÿ8ıƒ§³¢-
-[
-squid:S106"9Replace this use of System.out or System.err by a logger.(Ÿò«Ïıÿÿÿÿ8ıƒ§³¢-
-~squid:S00115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(‚¾Ò•ùÿÿÿÿ8ıƒ§³¢-
-~squid:S00115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ˆêÿ¤ıÿÿÿÿ8ıƒ§³¢-
-Fsquid:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ıƒ§³¢-
+|squid:S00115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ˆêÿ¤ıÿÿÿÿ8ıƒ§³¢-
+Y
+squid:S106"9Replace this use of System.out or System.err by a logger.(Ÿò«Ïıÿÿÿÿ8ıƒ§³¢-
+Dsquid:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ıƒ§³¢-
+Y
+squid:S106"9Replace this use of System.out or System.err by a logger.(äò”úÿÿÿÿ8ıƒ§³¢-
+wsquid:S2068"V'Password' detected in this expression, review this potentially hard-coded credential.(ˆêÿ¤ıÿÿÿÿ8ıƒ§³¢-
+|squid:S00115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(‚¾Ò•ùÿÿÿÿ8ıƒ§³¢-

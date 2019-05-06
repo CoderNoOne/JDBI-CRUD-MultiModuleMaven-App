@@ -1,5 +1,2 @@
 
-Ÿsquid:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(œ®Ò8Ë«ª²¢-
-Isquid:S1168""+Return an empty collection instead of null.(¥¹ï8Ë«ª²¢-
-¤squid:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Ç¢Èøÿÿÿÿ8Ë«ª²¢-
-¤squid:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(½ÒìÊşÿÿÿÿ8Ë«ª²¢-
+Ysquid:UselessImportCheck".Remove this unused import 'model.LoyaltyCard'.(Æ÷ÈÍ8Ü˜ Æ¦-

@@ -1,6 +1,7 @@
-package validators;
+package validators.impl;
 
 import model.LoyaltyCard;
+import validators.Validator;
 
 import java.util.HashMap;
 import java.util.Map;

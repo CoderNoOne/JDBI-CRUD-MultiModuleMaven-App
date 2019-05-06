@@ -1,6 +1,7 @@
-package validators;
+package validators.impl;
 
 import model.Movie;
+import validators.Validator;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

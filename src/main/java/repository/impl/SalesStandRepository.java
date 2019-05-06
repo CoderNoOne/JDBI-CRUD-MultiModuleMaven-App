@@ -1,10 +1,11 @@
-package repository;
+package repository.impl;
 
 import connection.DbConnection;
 import exceptions.AppException;
 import model.LoyaltyCard;
 import model.SalesStand;
 import org.jdbi.v3.core.Jdbi;
+import repository.CrudRepository;
 
 import java.util.List;
 import java.util.Optional;

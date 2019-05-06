@@ -1,9 +1,10 @@
-package repository;
+package repository.impl;
 
 import connection.DbConnection;
 import exceptions.AppException;
 import model.Customer;
 import org.jdbi.v3.core.Jdbi;
+import repository.CrudRepository;
 
 
 import java.util.List;
@@ -77,7 +78,7 @@ public class CustomerRepository implements CrudRepository<Customer> {
     }
 
     return jdbi.withHandle(handle -> handle
-            .createQuery("select * from teams where id = :id")
+            .createQuery("select * from customers where id = :id")
             .bind("id", id)
             .mapToBean(Customer.class)
             .findFirst());
@@ -86,7 +87,7 @@ public class CustomerRepository implements CrudRepository<Customer> {
   @Override
   public List<Customer> findAll() {
     return jdbi.withHandle(handle -> handle
-            .createQuery("select * from teams")
+            .createQuery("select * from customers")
             .mapToBean(Customer.class)
             .list());
   }

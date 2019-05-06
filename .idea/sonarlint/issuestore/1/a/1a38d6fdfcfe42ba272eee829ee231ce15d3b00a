@@ -1,3 +1,9 @@
 
-ysquid:S00115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(“üÖÚ8İÒ¢¯¢-
-…squid:S1192 "gDefine a constant instead of duplicating this literal "id int(11) primary key auto_increment," 4 times.(Üí…ù8Ø·°¢-
+rsquid:S00116"SRename this field "USERNAME" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Õï®ñ8ºÌÃ¦-
+?squid:S1170"!Make this final field static too.(Õï®ñ8ºÌÃ¦-
+?squid:S1170"!Make this final field static too.(ÅÜ§ô8ºÌÃ¦-
+ysquid:S2068"V'PASSWORD' detected in this expression, review this potentially hard-coded credential.(ÿ†·Çùÿÿÿÿ8ºÌÃ¦-
+Dsquid:S1170"!Make this final field static too.(ÿ†·Çùÿÿÿÿ8ºÌÃ¦-
+hsquid:S1192,"JDefine a constant instead of duplicating this literal "not null" 15 times.(ó¸ú8¯á•Ç¦-
+wsquid:S00116"SRename this field "PASSWORD" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÿ†·Çùÿÿÿÿ8ºÌÃ¦-
+vsquid:S00116"WRename this field "DATABASE_URL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÅÜ§ô8ºÌÃ¦-
