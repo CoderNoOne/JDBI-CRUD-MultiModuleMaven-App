@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MovieValidator implements Validator<Movie> {
 
@@ -29,9 +30,9 @@ public class MovieValidator implements Validator<Movie> {
       errors.put("Movie Price", "Movie Price should be greater than 0");
     }
 
-//    if (!isReleaseDateValid(movie)) {
-//      errors.put("Movie Release Date", "Movie release date takes place in the future");
-//    }
+    if (!isReleaseDateValid(movie)) {
+      errors.put("Movie Release Date", "Movie release date takes place in the future");
+    }
 
     return errors;
   }
@@ -39,6 +40,20 @@ public class MovieValidator implements Validator<Movie> {
   @Override
   public boolean hasErrors() {
     return !errors.isEmpty();
+  }
+
+  @Override
+  public boolean validateEntity(Movie movie) {
+    Map<String, String> errors = validate(movie);
+
+    if (hasErrors()) {
+      System.out.println(errors
+              .entrySet()
+              .stream()
+              .map(e -> e.getKey() + " : " + e.getValue())
+              .collect(Collectors.joining("\n")));
+    }
+    return !hasErrors();
   }
 
   public boolean isDurationValid(Movie movie) {
@@ -49,9 +64,9 @@ public class MovieValidator implements Validator<Movie> {
     return movie.getPrice().compareTo(BigDecimal.ZERO) > 0;
   }
 
-//  public boolean isReleaseDateValid(Movie movie) {
-//    return movie.getReleaseDate().compareTo(LocalDate.now()) > 0;
-//  }
+  public boolean isReleaseDateValid(Movie movie) {
+    return movie.getReleaseDate().compareTo(LocalDate.now()) > 0;
+  }
 
 }
 

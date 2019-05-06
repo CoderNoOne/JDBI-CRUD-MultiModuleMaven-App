@@ -1,5 +1,6 @@
 package validators.impl;
 
+import model.Customer;
 import model.LoyaltyCard;
 import validators.Validator;
 
@@ -7,6 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class LoyaltyCardValidator implements Validator<LoyaltyCard> {
 
@@ -39,6 +41,21 @@ public class LoyaltyCardValidator implements Validator<LoyaltyCard> {
   public boolean hasErrors() {
     return !errors.isEmpty();
   }
+
+  @Override
+  public boolean validateEntity(LoyaltyCard loyaltyCard) {
+    Map<String, String> errors = validate(loyaltyCard);
+
+    if (hasErrors()) {
+      System.out.println(errors
+              .entrySet()
+              .stream()
+              .map(e -> e.getKey() + " : " + e.getValue())
+              .collect(Collectors.joining("\n")));
+    }
+    return !hasErrors();
+  }
+
 
   private boolean isMovieNumberValid(LoyaltyCard loyaltyCard) {
     return loyaltyCard.getMoviesNumber() > 0;

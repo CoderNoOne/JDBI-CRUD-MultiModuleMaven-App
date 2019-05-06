@@ -1,0 +1,62 @@
+[
+    {
+        "name": "JAMIE",
+        "surname": "DRINKWATER",
+        "age": 30,
+        "email": "jamie@gmail.com"
+    },
+    {
+        "name": "ALAN",
+        "surname": "SMITH",
+        "age": 23,
+        "email": "a_smith@gmail.com"
+    },
+    {
+        "name": "MELANIE",
+        "surname": "NOVAK",
+        "age": 18,
+        "email": "melanie_novak@gmail.com"
+    },
+    {
+        "name": "ADAM",
+        "surname": "GOLDFINGER",
+        "age": 52,
+        "email": "goldAdamFinger@gmail.com"
+    },
+    {
+        "name": "KATE",
+        "surname": "MORRISON",
+        "age": 42,
+        "email": "kate.morrison@gmail.com"
+    },
+    {
+        "name": "ELISABETH",
+        "surname": "GREEN",
+        "age":37 ,
+        "email": "e.green@gmail.com"
+    },
+    {
+        "name": "MARTIN",
+        "surname": "GREY",
+        "age":21 ,
+        "email": "m.grey@gmail.com"
+    },
+    {
+        "name": "DAVID",
+        "surname": "FRIDAY",
+        "age":38 ,
+        "email": "d.friday@gmail.com"
+    },
+    {
+        "name": "ALICE",
+        "surname": "FLOYD",
+        "age": 27,
+        "email": "a.floyd@gmail.com"
+    },
+    {
+        "name": "ALAN",
+        "surname": "MARTINS",
+        "age": 60,
+        "email": "alan.martins@gmail.com"
+    }
+]

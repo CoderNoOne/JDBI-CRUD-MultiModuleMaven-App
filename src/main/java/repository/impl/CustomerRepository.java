@@ -8,6 +8,7 @@ import repository.CrudRepository;
 
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class CustomerRepository implements CrudRepository<Customer> {
@@ -64,7 +65,7 @@ public class CustomerRepository implements CrudRepository<Customer> {
       throw new AppException("id is null");
     }
 
-    jdbi.withHandle(handle ->  handle
+    jdbi.withHandle(handle -> handle
             .createUpdate("delete from customers where id = :id")
             .bind("id", id)
             .execute());
@@ -90,5 +91,34 @@ public class CustomerRepository implements CrudRepository<Customer> {
             .createQuery("select * from customers")
             .mapToBean(Customer.class)
             .list());
+  }
+
+  @Override
+  public void deleteAll() {
+    jdbi.withHandle(handle -> handle
+            .createUpdate("delete from customers")
+            .execute());
+  }
+
+  public Customer findByNameSurnameAndEmail(String name, String surname, String email) {
+
+    if (Objects.isNull(name)) {
+      throw new AppException("customer name is null");
+    }
+
+    if (Objects.isNull(surname)) {
+      throw new AppException("customer surname is null");
+    }
+
+    if (Objects.isNull(email)) {
+      throw new AppException("customer email is null");
+    }
+    return jdbi.withHandle(handle -> handle
+            .createQuery("select * from customers where name = :name and surname = :surname and email = :email")
+            .bind("name", name)
+            .bind("surname", surname)
+            .bind("email", email)
+            .mapToBean(Customer.class)
+            .findFirst()).orElseThrow(() -> new AppException("Such customer isn't registered in our db"));
   }
 }

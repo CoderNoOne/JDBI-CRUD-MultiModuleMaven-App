@@ -2,7 +2,6 @@ package repository.impl;
 
 import connection.DbConnection;
 import exceptions.AppException;
-import model.LoyaltyCard;
 import model.SalesStand;
 import org.jdbi.v3.core.Jdbi;
 import repository.CrudRepository;
@@ -87,5 +86,20 @@ public class SalesStandRepository implements CrudRepository<SalesStand> {
             .createQuery("select * from sales_stand")
             .mapToBean(SalesStand.class)
             .list());
+  }
+
+  @Override
+  public void deleteAll() {
+    jdbi.withHandle(handle -> handle
+            .createUpdate("delete from sales_stands")
+            .execute());
+  }
+
+  public Integer ticketsNumberBoughtByCustomerId(Integer id) {
+
+    return jdbi.withHandle(handle -> handle
+            .createUpdate("select count(*) from sales_stand where movie_id =: id")
+            .bind("id", id)
+            .execute());
   }
 }

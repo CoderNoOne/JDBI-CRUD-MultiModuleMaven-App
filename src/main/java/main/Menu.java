@@ -2,23 +2,29 @@ package main;
 
 import exceptions.AppException;
 import lombok.extern.slf4j.Slf4j;
+import repository.impl.CustomerRepository;
+import repository.impl.LoyaltyCardRepository;
+import repository.impl.MovieRepository;
+import repository.impl.SalesStandRepository;
+import service.DataInitializeService;
 import service.EntityService;
 import service.UserDataUtils;
 
 import java.text.MessageFormat;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @Slf4j
 public class Menu {
 
-  private final UserDataUtils userDataUtils = new UserDataUtils();
-  private final EntityService entityService = new EntityService();
+  private final EntityService entityService =
+          new EntityService(new CustomerRepository(), new MovieRepository(), new LoyaltyCardRepository(), new SalesStandRepository());
 
   public void mainMenu() {
     menuOptions();
     while (true) {
       try {
-        int option = userDataUtils.getInt("INPUT YOUR OPTION: ");
+        int option = UserDataUtils.getInt("INPUT YOUR OPTION: ");
         switch (option) {
           case 1 -> option1();
           case 2 -> option2();
@@ -28,10 +34,10 @@ public class Menu {
           case 6 -> option6();
           case 7 -> option7();
           case 8 -> option8();
-//          case 9 -> option9();
-//          case 10 -> option10();
+          case 9 -> option9();
+          case 10 -> option10();
           case 11 -> {
-            userDataUtils.close();
+            UserDataUtils.close();
             return;
           }
           case 12 -> menuOptions();
@@ -46,7 +52,11 @@ public class Menu {
 
 
   private void option1() {
-    boolean isAdded = entityService.addCustomer();
+    String name = UserDataUtils.getString("Input customer name");
+    String surname = UserDataUtils.getString("Input customer surname");
+    Integer age = UserDataUtils.getInt("Input customer age");
+    String email = UserDataUtils.getString("Input customer email");
+    boolean isAdded = entityService.addCustomer(name, surname, age, email);
     if (!isAdded) {
       throw new AppException("Specified customer object couldn't have been added to db");
     }
@@ -54,7 +64,7 @@ public class Menu {
 
   private void option2() {
 
-    String jsonFilename = userDataUtils.getString("Input json filename");
+    String jsonFilename = UserDataUtils.getString("Input json filename");
     if (jsonFilename == null || !jsonFilename.matches(".+\\.json$")) {
       throw new AppException("Wrong json file format");
     }
@@ -68,12 +78,12 @@ public class Menu {
 
   private void option3() {
 
-    final Integer integer = userDataUtils.getInt("Input customer id you want to delete from database");
+    final Integer integer = UserDataUtils.getInt("Input customer id you want to delete from database");
     entityService.deleteCustomer(integer);
   }
 
   private void option4() {
-    final Integer integer = userDataUtils.getInt("Input movie id you want to delete from database");
+    final Integer integer = UserDataUtils.getInt("Input movie id you want to delete from database");
     entityService.deleteMovie(integer);
   }
 
@@ -86,15 +96,29 @@ public class Menu {
   }
 
   private void option7() {
-    final int movieId = userDataUtils.getInt("Input movie id");
+    final int movieId = UserDataUtils.getInt("Input movie id");
     entityService.findMovieById(movieId).ifPresent(System.out::println);
   }
 
   private void option8() {
-    final int customerId = userDataUtils.getInt("Input customer id");
+    final int customerId = UserDataUtils.getInt("Input customer id");
     entityService.findMovieById(customerId).ifPresent(System.out::println);
   }
 
+  private void option9() {
+    DataInitializeService.init();
+  }
+
+  private void option10() {
+    entityService.showAllCustomers();
+
+    String name = UserDataUtils.getString("Input your name");
+    String surname = UserDataUtils.getString("Inpput your surname");
+    String email = UserDataUtils.getString("Input your email");
+
+    entityService.buyTicket(name, surname, email);
+
+  }
 
   private void menuOptions() {
 
@@ -119,12 +143,13 @@ public class Menu {
             "Show all customers",
             "Shows all movies",
             "Show one row from movies",
-            "Show one row from customers"
+            "Show one row from customers",
+            "Generate example data for table movies and customers",
+            "Buy a ticket"
 
     );
     System.out.println(menu);
   }
-
 }
 
 

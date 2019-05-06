@@ -86,4 +86,12 @@ public class LoyaltyCardRepository implements CrudRepository<LoyaltyCard> {
             .mapToBean(LoyaltyCard.class)
             .list());
   }
+
+  @Override
+  public void deleteAll() {
+    jdbi.withHandle(handle -> handle
+            .createUpdate("delete from loyalty_cards")
+            .execute());
+  }
+
 }

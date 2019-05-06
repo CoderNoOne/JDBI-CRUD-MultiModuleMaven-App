@@ -5,24 +5,23 @@ import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
 import model.Customer;
 import model.Movie;
+import model.SalesStand;
 import repository.impl.CustomerRepository;
 import repository.impl.LoyaltyCardRepository;
 import repository.impl.MovieRepository;
 import repository.impl.SalesStandRepository;
-import validators.*;
 import validators.impl.CustomerValidator;
-import validators.impl.LoyaltyCardValidator;
 import validators.impl.MovieValidator;
 import validators.impl.SalesStandValidator;
 
+
 import java.math.BigDecimal;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class EntityService {
-
 
   private final int LOYALTY_CARD_MIN_MOVIE_NUMBER = 5; // X
 
@@ -31,41 +30,13 @@ public class EntityService {
   private final LoyaltyCardRepository loyaltyCardRepository;
   private final SalesStandRepository salesStandRepository;
 
-  // referencje lokalne
-  /*private final CustomerValidator customerValidator;
-  private final MovieValidator movieValidator;
-  private final LoyaltyCardValidator loyaltyCardValidator;
-  private final SalesStandValidator salesStandValidator;*/
-
-
-  // przeniesc do interfejsu Validator
-  private <T> boolean validateEntity(Validator<T> validator, T entity) {
-
-    Map<String, String> entityErrors = validator.validate(entity);
-
-    if (validator.hasErrors()) {
-      System.out.println(entityErrors
-              .entrySet()
-              .stream()
-              .map(e -> e.getKey() + " : " + e.getValue())
-              .collect(Collectors.joining("\n")));
-    }
-    return !validator.hasErrors();
-  }
-
   private Customer createCustomer(String name, String surname, int age, String email) {
-
-    // String customerName = UserDataUtils.getString("Input customer name");
-    // String customerSurname = UserDataUtils.getString("Input customer surname");
-    // Integer customerAge = UserDataUtils.getInt("Input customer age");
-    // String customerEmail = UserDataUtils.getString("Input customer Email");
-
     return Customer.builder().name(name).surname(surname).age(age).email(email).build();
   }
 
   public boolean addCustomer(String name, String surname, int age, String email) {
     Customer customer = createCustomer(name, surname, age, email);
-    boolean isValid = validateEntity(new CustomerValidator(), customer);
+    boolean isValid = new CustomerValidator().validateEntity(customer);
 
     if (isValid) {
       customerRepository.add(customer);
@@ -82,7 +53,7 @@ public class EntityService {
 
   public boolean addMovie(final String jsonfileName) {
     Movie movie = createMovie(jsonfileName);
-    boolean isValid = validateEntity(movieValidator, movie);
+    boolean isValid = new MovieValidator().validateEntity(movie);
     if (isValid) {
       movieRepository.add(movie);
     }
@@ -117,29 +88,15 @@ public class EntityService {
 
   //modyfikowanie
 
-  public void updateMovie(Movie movie) {
+  private void updateMovie(Movie movie) {
     movieRepository.update(movie);
   }
 
-  public boolean updateMovieDetail() {
+  public boolean updateMovieDetail(Integer id, String title, String genre, LocalDate releaseDate, Integer duration, BigDecimal price) {
 
-    Integer movieId = userDataUtils.getInt("Input movie id");
-    String movieTitle = userDataUtils.getString("Input movie title");
-    String movieGenre = userDataUtils.getString("Input movie genre");
-    String movieReleaseDate = userDataUtils.getDate("Input movie release date");
-    Integer movieDuration = userDataUtils.getInt("Input movie duration");
-    BigDecimal moviePrice = userDataUtils.getBigDecimal("Input movie price");
+    Movie movie = Movie.builder().id(id).title(title).genre(genre).price(price).duration(duration).releaseDate(releaseDate).build();
 
-    Movie movie = Movie.builder()
-            .id(movieId)
-            .title(movieTitle)
-            .genre(movieGenre)
-            .price(moviePrice)
-            .duration(movieDuration)
-            .releaseDate(movieReleaseDate)
-            .build();
-
-    boolean isValid = validateEntity(movieValidator, movie);
+    boolean isValid = new MovieValidator().validateEntity(movie);
 
     if (isValid) {
       updateMovie(movie);
@@ -147,32 +104,48 @@ public class EntityService {
     return isValid;
   }
 
-  public void updateCustomer(Customer customer) {
+  private void updateCustomer(Customer customer) {
     customerRepository.update(customer);
   }
 
-  public boolean updateCustomerDetail() {
+  public boolean updateCustomerDetail(Integer id, String name, String surname, Integer age, String email) {
 
-    Integer customerId = userDataUtils.getInt("Input customer id");
-    String customerName = userDataUtils.getString("Input customer name");
-    String customerSurname = userDataUtils.getString("Input customer surname");
-    Integer customerAge = userDataUtils.getInt("Input customer age");
-    String customerEmail = userDataUtils.getString("Input customer email");
+    Customer customer = Customer.builder().id(id).name(name).surname(surname).age(age).email(email).build();
 
-    final Customer customer = Customer.builder()
-            .id(customerId)
-            .name(customerName)
-            .surname(customerSurname)
-            .age(customerAge)
-            .email(customerEmail)
-            .build();
-
-    boolean isValid = validateEntity(customerValidator, customer);
+    boolean isValid = new CustomerValidator().validateEntity(customer);
 
     if (isValid) {
       updateCustomer(customer);
     }
     return isValid;
+  }
+
+  public void buyTicket(String name, String surname, String email) {
+    Customer customer = customerRepository.findByNameSurnameAndEmail(name, surname, email);
+
+    System.out.println("AVAILABLE MOVIES");
+    showAllMovies();
+
+    Integer movieId = UserDataUtils.getInt("Input movie id");
+    LocalDateTime localDateTime = UserDataUtils.getLocalDateTime("Input movie start time in format 'year-month-day HH:mm'");
+
+    SalesStand salesStand = SalesStand.builder()
+            .movieId(movieId)
+            .customerId(customer.getId())
+            .startDateTime(localDateTime)
+            .build();
+
+    var isValid = new SalesStandValidator().validateEntity(salesStand);
+    if (!isValid) {
+      salesStandRepository.add(salesStand);
+    }
+
+    if (salesStandRepository.ticketsNumberBoughtByCustomerId(customer.getId()) >= LOYALTY_CARD_MIN_MOVIE_NUMBER){
+      System.out.println("Do you want to add loyalty card? (y/n)");
+    }
+
+
 
   }
+
 }

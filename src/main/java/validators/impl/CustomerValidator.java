@@ -5,6 +5,7 @@ import validators.Validator;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CustomerValidator implements Validator<Customer> {
 
@@ -40,6 +41,21 @@ public class CustomerValidator implements Validator<Customer> {
 
   public boolean hasErrors() {
     return !errors.isEmpty();
+  }
+
+  @Override
+  public boolean validateEntity(Customer customer) {
+
+    Map<String, String> errors = validate(customer);
+
+    if (hasErrors()) {
+      System.out.println(errors
+              .entrySet()
+              .stream()
+              .map(e -> e.getKey() + " : " + e.getValue())
+              .collect(Collectors.joining("\n")));
+    }
+    return !hasErrors();
   }
 
   private boolean isAgeValid(Customer customer) {

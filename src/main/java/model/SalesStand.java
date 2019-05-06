@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -16,6 +16,6 @@ public class SalesStand {
   private Integer id;
   private Integer customerId;
   private Integer movieId;
-  private LocalDate startDateTime; // LocalDateTime
+  private LocalDateTime startDateTime; // LocalDateTime
 
 }

@@ -2,7 +2,6 @@ package repository.impl;
 
 import connection.DbConnection;
 import exceptions.AppException;
-import model.LoyaltyCard;
 import model.Movie;
 import org.jdbi.v3.core.Jdbi;
 import repository.CrudRepository;
@@ -91,5 +90,12 @@ public class MovieRepository implements CrudRepository<Movie> {
             .createQuery("select * from movies")
             .mapToBean(Movie.class)
             .list());
+  }
+
+  @Override
+  public void deleteAll() {
+    jdbi.withHandle(handle -> handle
+            .createUpdate("delete from movies")
+            .execute());
   }
 }
