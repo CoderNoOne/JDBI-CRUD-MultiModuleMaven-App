@@ -2,7 +2,7 @@ package repository.impl;
 
 import connection.DbConnection;
 import exceptions.AppException;
-import model.Customer;
+import model.entity.Customer;
 import org.jdbi.v3.core.Jdbi;
 import repository.CrudRepository;
 

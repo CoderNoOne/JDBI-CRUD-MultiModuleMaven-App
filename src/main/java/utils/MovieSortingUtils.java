@@ -1,15 +1,14 @@
 package utils;
 
 import exceptions.AppException;
-import model.sorting.MovieSort;
-import model.sorting.MovieSortingCriterion;
+import model.sorting.sorting_comparator.MovieSort;
+import model.sorting.sortingCriterion.MovieSortingCriterion;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static model.sorting.CustomerSortingCriterion.*;
-import static model.sorting.CustomerSortingCriterion.NAME;
-import static model.sorting.MovieSortingCriterion.TITLE;
+import static model.sorting.sortingCriterion.MovieSortingCriterion.*;
 import static utils.UserDataUtils.getString;
 
 public class MovieSortingUtils {
@@ -22,7 +21,7 @@ public class MovieSortingUtils {
 
   public static MovieSort getMovieSortingAlgorithm(String message) {
 
-    sortingAlgorithms = Arrays.asList(MovieSortingCriterion.values());
+    sortingAlgorithms = new ArrayList<>(Arrays.asList(MovieSortingCriterion.values()));
     builder = new MovieSort.MovieSortBuilder();
     System.out.println(message);
 
@@ -30,7 +29,8 @@ public class MovieSortingUtils {
 
       MovieSortingCriterion sortingCriterion = MovieSortingCriterion.valueOf(getString("CHOOSE FROM ABOVE: " + sortingAlgorithms).toUpperCase());
 
-      if (!sortingAlgorithms.contains(sortingCriterion)) throw new AppException("UNDEFINED SORTING CRITERION OR ALREADY SORTED BY THIS ONE");
+      if (!sortingAlgorithms.contains(sortingCriterion))
+        throw new AppException("UNDEFINED SORTING CRITERION OR ALREADY SORTED BY THIS ONE");
 
       switch (sortingCriterion) {
         case TITLE -> sortByTitle();
@@ -38,7 +38,7 @@ public class MovieSortingUtils {
         case DURATION -> sortByDuration();
         case RELEASE_DATE -> sortByReleaseDate();
       }
-      if (!getString("DO YOU WANT TO ADD NEW SORTING CRITERION? Y/N").equalsIgnoreCase("Y")) break;
+      if (sortingAlgorithms.isEmpty() || !getString("DO YOU WANT TO ADD NEW SORTING CRITERION? Y/N").equalsIgnoreCase("Y")) break;
     }
     return builder.build();
   }
@@ -50,17 +50,17 @@ public class MovieSortingUtils {
 
   private static void sortByGenre() {
     builder = chooseOrdering().equals("ASC") ? builder.genre(true) : builder.genre(false);
-    sortingAlgorithms.remove(AGE);
+    sortingAlgorithms.remove(GENRE);
   }
 
   private static void sortByDuration() {
     builder = chooseOrdering().equals("ASC") ? builder.duration(true) : builder.duration(false);
-    sortingAlgorithms.remove(SURNAME);
+    sortingAlgorithms.remove(DURATION);
   }
 
   private static void sortByReleaseDate() {
     builder = chooseOrdering().equals("ASC") ? builder.releaseDate(true) : builder.releaseDate(false);
-    sortingAlgorithms.remove(NAME);
+    sortingAlgorithms.remove(RELEASE_DATE);
   }
 
   private static String chooseOrdering() {
@@ -68,4 +68,4 @@ public class MovieSortingUtils {
   }
 }
 
-}
+

@@ -1,12 +1,12 @@
 package service;
 
-import converters.MovieJsonConverter;
+import converters.impl.MovieJsonConverter;
 import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
-import model.Customer;
-import model.LoyaltyCard;
-import model.Movie;
-import model.SalesStand;
+import model.entity.Customer;
+import model.entity.LoyaltyCard;
+import model.entity.Movie;
+import model.entity.SalesStand;
 import repository.impl.CustomerRepository;
 import repository.impl.LoyaltyCardRepository;
 import repository.impl.MovieRepository;

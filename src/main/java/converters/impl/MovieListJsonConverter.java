@@ -1,6 +1,7 @@
-package converters;
+package converters.impl;
 
-import model.Movie;
+import converters.JsonConverter;
+import model.entity.Movie;
 
 import java.util.List;
 

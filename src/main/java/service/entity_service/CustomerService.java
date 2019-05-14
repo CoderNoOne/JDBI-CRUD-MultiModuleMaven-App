@@ -1,7 +1,7 @@
-package service.entityService;
+package service.entity_service;
 
 import lombok.RequiredArgsConstructor;
-import model.Customer;
+import model.entity.Customer;
 import repository.impl.CustomerRepository;
 import validators.impl.CustomerValidator;
 

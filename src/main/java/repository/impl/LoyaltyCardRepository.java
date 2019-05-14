@@ -2,7 +2,7 @@ package repository.impl;
 
 import connection.DbConnection;
 import exceptions.AppException;
-import model.LoyaltyCard;
+import model.entity.LoyaltyCard;
 import org.jdbi.v3.core.Jdbi;
 import repository.CrudRepository;
 

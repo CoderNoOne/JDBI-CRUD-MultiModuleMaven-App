@@ -1,6 +1,6 @@
 package validators.impl;
 
-import model.Customer;
+import model.entity.Customer;
 import validators.Validator;
 
 import java.util.HashMap;

@@ -1,21 +1,20 @@
-package model;
+package model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SalesStand {
+public class Customer {
 
   private Integer id;
-  private Integer customerId;
-  private Integer movieId;
-  private LocalDateTime startDateTime; // LocalDateTime
-
+  private String name;
+  private String surname;
+  private Integer age;
+  private String email;
+  private Integer loyaltyCardId;
 }

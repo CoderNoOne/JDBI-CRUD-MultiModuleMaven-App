@@ -1,4 +1,4 @@
-package service.entityService;
+package service.entity_service;
 
 public class LoyaltyCardService {
 }

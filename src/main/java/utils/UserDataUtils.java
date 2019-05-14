@@ -1,7 +1,6 @@
 package utils;
 
 import exceptions.AppException;
-import model.sorting.MovieSort;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -9,7 +8,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 public class UserDataUtils {
@@ -76,10 +74,6 @@ public class UserDataUtils {
 
     String date = sc.nextLine();
 
-//    if(!message.matches("[]]")){
-//      throw new AppException("");
-//    }
-
     LocalDateTime localDateTime;
     try {
       localDateTime = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
@@ -90,7 +84,19 @@ public class UserDataUtils {
     return localDateTime;
   }
 
+  public static LocalDate getLocalDate(String message) {
+    System.out.println(message);
 
+    String date = sc.nextLine();
+
+    LocalDate localDate;
+    try {
+      localDate = LocalDate.parse(date);
+    } catch (DateTimeParseException e) {
+      throw new AppException("DATE FORMAT NOT SUPPORTED");
+    }
+    return localDate;
+  }
 
 
 }

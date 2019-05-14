@@ -1,9 +1,9 @@
-package service.entityService;
+package service.entity_service;
 
-import converters.MovieJsonConverter;
+import converters.impl.MovieJsonConverter;
 import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
-import model.Movie;
+import model.entity.Movie;
 import repository.impl.MovieRepository;
 import validators.impl.MovieValidator;
 

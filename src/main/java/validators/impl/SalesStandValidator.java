@@ -1,7 +1,6 @@
 package validators.impl;
 
-import model.LoyaltyCard;
-import model.SalesStand;
+import model.entity.SalesStand;
 import validators.Validator;
 
 import java.time.LocalDateTime;

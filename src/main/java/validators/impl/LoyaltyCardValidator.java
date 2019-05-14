@@ -1,7 +1,6 @@
 package validators.impl;
 
-import model.Customer;
-import model.LoyaltyCard;
+import model.entity.LoyaltyCard;
 import validators.Validator;
 
 import java.math.BigDecimal;

@@ -1,13 +1,13 @@
 package utils;
 
 import exceptions.AppException;
-import model.sorting.CustomerSort;
-import model.sorting.CustomerSortingCriterion;
+import model.sorting.sorting_comparator.CustomerSort;
+import model.sorting.sortingCriterion.CustomerSortingCriterion;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static model.sorting.CustomerSortingCriterion.*;
+import static model.sorting.sortingCriterion.CustomerSortingCriterion.*;
 import static utils.UserDataUtils.getString;
 
 public class CustomerSortingUtils {
@@ -28,7 +28,7 @@ public class CustomerSortingUtils {
 
       CustomerSortingCriterion sortingCriterion = CustomerSortingCriterion.valueOf(getString("CHOOSE FROM ABOVE: " + sortingAlgorithms).toUpperCase());
 
-      if (!sortingAlgorithms.contains(sortingCriterion)) throw new AppException("UNDEFINED SORTING CRITERION OR ALREADY SORTED BY THIS ONE");
+      if (sortingAlgorithms.isEmpty() || !sortingAlgorithms.contains(sortingCriterion)) throw new AppException("UNDEFINED SORTING CRITERION OR ALREADY SORTED BY THIS ONE");
 
       switch (sortingCriterion) {
         case NAME -> sortByName();

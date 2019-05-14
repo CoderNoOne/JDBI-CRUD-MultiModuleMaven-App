@@ -1,8 +1,7 @@
-package model.sorting;
+package model.sorting.sorting_comparator;
 
 import exceptions.AppException;
-import model.Customer;
-import model.Movie;
+import model.entity.Customer;
 
 import java.util.ArrayList;
 import java.util.Comparator;

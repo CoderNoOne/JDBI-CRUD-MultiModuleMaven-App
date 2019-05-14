@@ -1,4 +1,4 @@
-package model.sorting;
+package model.sorting.sortingCriterion;
 
 public enum MovieSortingCriterion {
   TITLE,

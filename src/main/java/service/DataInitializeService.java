@@ -1,7 +1,7 @@
 package service;
 
-import converters.CustomerListJsonConverter;
-import converters.MovieListJsonConverter;
+import converters.impl.CustomerListJsonConverter;
+import converters.impl.MovieListJsonConverter;
 import exceptions.AppException;
 import repository.impl.CustomerRepository;
 import repository.impl.LoyaltyCardRepository;
@@ -11,9 +11,7 @@ import validators.impl.CustomerValidator;
 import validators.impl.MovieValidator;
 
 
-
 import java.util.concurrent.atomic.AtomicInteger;
-
 
 public class DataInitializeService {
 
