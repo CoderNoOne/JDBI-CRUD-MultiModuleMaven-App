@@ -8,7 +8,6 @@ import exceptions.AppException;
 import java.io.FileReader;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -17,7 +16,7 @@ public abstract class JsonConverter<T> {
 
   private final String jsonFilename;
 
-  private final Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
+  private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
   private final Type type = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 
   public JsonConverter(String jsonFilename) {

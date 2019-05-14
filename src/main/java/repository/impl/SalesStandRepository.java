@@ -21,7 +21,7 @@ public class SalesStandRepository implements CrudRepository<SalesStand> {
     }
 
     jdbi.withHandle(handle -> handle
-            .createUpdate("insert into loyaltyCards (customer_id, movie_id, start_date_time) values (?, ?, ?)")
+            .createUpdate("insert into sales_stands (customer_id, movie_id, start_date_time) values (?, ?, ?)")
             .bind(0, salesStand.getCustomerId())
             .bind(1, salesStand.getMovieId())
             .bind(2, salesStand.getStartDateTime())
@@ -95,11 +95,12 @@ public class SalesStandRepository implements CrudRepository<SalesStand> {
             .execute());
   }
 
-  public Integer ticketsNumberBoughtByCustomerId(Integer id) {
+  public Integer ticketsNumberBoughtByCustomerId(Integer customerId) {
 
     return jdbi.withHandle(handle -> handle
-            .createUpdate("select count(*) from sales_stand where movie_id =: id")
-            .bind("id", id)
-            .execute());
+            .select("select count(*) from sales_stands where customer_id = ?", customerId)
+            .mapTo(Integer.class)
+            .findOnly());
+
   }
 }

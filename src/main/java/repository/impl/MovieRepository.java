@@ -98,4 +98,5 @@ public class MovieRepository implements CrudRepository<Movie> {
             .createUpdate("delete from movies")
             .execute());
   }
+
 }

@@ -20,7 +20,7 @@ public class LoyaltyCardRepository implements CrudRepository<LoyaltyCard> {
     }
 
     jdbi.withHandle(handle -> handle
-            .createUpdate("insert into loyaltyCards (expiration_date, discount, movies_number) values (?, ?, ?)")
+            .createUpdate("insert into loyalty_cards (expiration_date, discount, movies_number) values (?, ?, ?)")
             .bind(0, loyaltyCard.getExpirationDate())
             .bind(1, loyaltyCard.getDiscount())
             .bind(2, loyaltyCard.getMoviesNumber())

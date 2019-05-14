@@ -11,7 +11,6 @@ import service.EntityService;
 import service.UserDataUtils;
 
 import java.text.MessageFormat;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @Slf4j
@@ -36,11 +35,13 @@ public class Menu {
           case 8 -> option8();
           case 9 -> option9();
           case 10 -> option10();
-          case 11 -> {
+          case 11 -> option11();
+          case 12 -> option12();
+          case 13 -> {
             UserDataUtils.close();
             return;
           }
-          case 12 -> menuOptions();
+          case 14 -> menuOptions();
           default -> throw new AppException("INPUT OPTION IS NOT DEFINED");
         }
       } catch (AppException e) {
@@ -49,7 +50,6 @@ public class Menu {
       }
     }
   }
-
 
   private void option1() {
     String name = UserDataUtils.getString("Input customer name");
@@ -113,16 +113,39 @@ public class Menu {
     entityService.showAllCustomers();
 
     String name = UserDataUtils.getString("Input your name");
-    String surname = UserDataUtils.getString("Inpput your surname");
+    String surname = UserDataUtils.getString("Input your surname");
     String email = UserDataUtils.getString("Input your email");
 
     entityService.buyTicket(name, surname, email);
 
   }
 
+
+  private void option11() {
+    System.out.println(MessageFormat.format(
+            "\nOption no. 1 - {0}\n" +
+                    "Option no. 2 - {1}\n" +
+                    "Option no. 3 - {2}\n" +
+                    "Option no. 4 - {3}\n" +
+                    "Option no. 5 - {4}",
+
+            "All movie ticket bought",
+            "ticket bought in the time within",
+            "movies that lasts x hours",
+            "",
+            ""
+    ));
+
+  }
+
+  private void option12() {
+
+  }
+
+
   private void menuOptions() {
 
-    String menu = MessageFormat.format(
+    System.out.println(MessageFormat.format(
             "\nOption no. 1 - {0}\n" +
                     "Option no. 2 - {1}\n" +
                     "Option no. 3 - {2}\n" +
@@ -134,7 +157,9 @@ public class Menu {
                     "Option no. 9 - {8}\n" +
                     "Option no. 10 - {9}\n" +
                     "Option no. 11 - {10}\n" +
-                    "Option no. 12  -{11}",
+                    "Option no. 12  -{11}\n" +
+                    "Option no. 13 - {12}\n" +
+                    "Option no. 14 - {13}",
 
             "Add new Customer",
             "Add new movie",
@@ -145,10 +170,12 @@ public class Menu {
             "Show one row from movies",
             "Show one row from customers",
             "Generate example data for table movies and customers",
-            "Buy a ticket"
+            "Buy a ticket",
+            "History - summary",
+            "Some statistics",
+            "Show menu options"
 
-    );
-    System.out.println(menu);
+    ));
   }
 }
 

@@ -10,7 +10,7 @@ public class DbConnection {
     return ourInstance;
   }
 
-  private final String DATABASE_URL = "jdbc:mysql://localhost:3306/jdbi_db2?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+  private final String DATABASE_URL = "jdbc:mysql://localhost:3306/jdbi_db3?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
   private final String USERNAME = "root";
   private final String PASSWORD = "admin";
   private final Jdbi jdbi;
@@ -40,7 +40,7 @@ public class DbConnection {
             .primaryKey("id")
             .stringColumn("title", 50, "not null")
             .decimalColumn("price", 4, 2, "not null")
-            .stringColumn("genre",50, "not null")
+            .stringColumn("genre", 50, "not null")
             .intColumn("duration", "not null")
             .column("release_date", "date", "not null")
             .build().toSql();
@@ -53,10 +53,12 @@ public class DbConnection {
             .builder()
             .table("customers")
             .primaryKey("id")
-            .stringColumn("name", 50, "not null")
-            .stringColumn("surname", 50, "not null")
-            .intColumn("age", "not null")
+            .intColumn("loyalty_card_id")
             .stringColumn("email", 50, "not null")
+            .intColumn("age", "not null")
+            .stringColumn("surname", 50, "not null")
+            .stringColumn("name", 50, "not null")
+            .foreignKey("loyalty_card_id", "loyalty_cards", "id")
             .build().toSql();
 
     jdbi.useHandle(handle -> handle.execute(sqlCustomerTable));
@@ -67,8 +69,8 @@ public class DbConnection {
             .builder()
             .table("sales_stands")
             .primaryKey("id")
-            .intColumn("customer_id","not null")
-            .intColumn("movie_id","not null")
+            .intColumn("customer_id", "not null")
+            .intColumn("movie_id", "not null")
             .column("start_date_time", "timestamp", "not null")
             .foreignKey("customer_id", "customers", "id")
             .foreignKey("movie_id", "movies", "id")

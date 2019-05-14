@@ -43,7 +43,7 @@ public class SalesStandValidator implements Validator<SalesStand> {
 
   @Override
   public boolean validateEntity(SalesStand salesStand) {
-    Map<String, String> errors = validate(salesStand);
+    validate(salesStand);
 
     if (hasErrors()) {
       System.out.println(errors
