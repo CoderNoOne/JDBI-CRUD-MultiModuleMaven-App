@@ -56,8 +56,8 @@ public class MovieSort {
       return this;
     }
 
-    public CustomerSort build() {
-      return new CustomerSort(this);
+    public MovieSort build() {
+      return new MovieSort(this);
     }
   }
 }

@@ -1,6 +1,6 @@
 
-squid:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¯ÛÁ8”ãÂ¦-
-squid:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(–Ë–¶8öˆŠÂ¦-
-¢squid:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ÛØğüÿÿÿÿ8”ãÂ¦-
-Usquid:S1172"9Remove this unused method parameter "moviesJsonFilename".(ğ–Ëá8öˆŠÂ¦-
-Wsquid:S1172";Remove this unused method parameter "customersJsonFilenam".(–Ë–¶8öˆŠÂ¦-
+V
+squid:S106/"9Replace this use of System.out or System.err by a logger.(ƒŸâİ8ãáÅå¨-
+[
+squid:S106C"9Replace this use of System.out or System.err by a logger.(Ö°¼êüÿÿÿÿ8³œõå¨-
+Zsquid:UselessImportCheck"*Remove this unused import 'java.util.Map'.(¼è½Òşÿÿÿÿ8êÅúç¨-

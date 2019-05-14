@@ -11,6 +11,7 @@ import repository.impl.CustomerRepository;
 import repository.impl.LoyaltyCardRepository;
 import repository.impl.MovieRepository;
 import repository.impl.SalesStandRepository;
+import utils.UserDataUtils;
 import validators.impl.CustomerValidator;
 import validators.impl.MovieValidator;
 import validators.impl.SalesStandValidator;

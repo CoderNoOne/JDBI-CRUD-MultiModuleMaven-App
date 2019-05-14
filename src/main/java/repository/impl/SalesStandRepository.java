@@ -2,12 +2,14 @@ package repository.impl;
 
 import connection.DbConnection;
 import exceptions.AppException;
+import model.CustomerWithMoviesAndSalesStand;
 import model.SalesStand;
 import org.jdbi.v3.core.Jdbi;
 import repository.CrudRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class SalesStandRepository implements CrudRepository<SalesStand> {
 
@@ -101,6 +103,25 @@ public class SalesStandRepository implements CrudRepository<SalesStand> {
             .select("select count(*) from sales_stands where customer_id = ?", customerId)
             .mapTo(Integer.class)
             .findOnly());
+  }
 
+  public List<CustomerWithMoviesAndSalesStand> getAllTicketsByCustomerId(Integer id) {
+
+    final String sql = "select movies.title m_title, movies.genre m_genre, movies.price m_price, movies.duration m_duration, movies.release_date m_releaseDate," +
+            " sales_stands.start_date_time as s_startTime from sales_stands join customers on sales_stands.customer_id = customers.id join movies on movies.id = sales_stands.movie_id where sales_stands.customer_id = :customerId";
+    return jdbi.withHandle(handle ->
+            handle
+                    .createQuery(sql)
+                    .bind("customerId", id)
+                    .map((rs, ctx) -> CustomerWithMoviesAndSalesStand.builder()
+                            .id(id)
+                            .movieTitle(rs.getString("m_title"))
+                            .movieDuration(rs.getInt("m_duration"))
+                            .movieGenre(rs.getString("m_genre"))
+                            .movieReleaseDate(rs.getDate("m_releaseDate").toLocalDate())
+                            .ticketPrice(rs.getBigDecimal("m_price"))
+                            .startDateTime(rs.getTimestamp("s_startTime").toLocalDateTime())
+                            .build()).list());
   }
 }
+

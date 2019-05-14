@@ -8,7 +8,7 @@ import repository.impl.MovieRepository;
 import repository.impl.SalesStandRepository;
 import service.DataInitializeService;
 import service.EntityService;
-import service.UserDataUtils;
+import utils.UserDataUtils;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
