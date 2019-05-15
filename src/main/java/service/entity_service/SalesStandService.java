@@ -2,13 +2,16 @@ package service.entity_service;
 
 import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
+import model.entity.SalesStand;
 import model.others.CustomerWithMoviesAndSalesStand;
 import model.tickets_data_filtering.MovieFilteringCriterion;
 import repository.impl.SalesStandRepository;
 import utils.EmailUtils;
 import utils.TicketsFilteringUtils;
+import validators.impl.SalesStandValidator;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -81,5 +84,31 @@ public class SalesStandService {
                     && customerWithMoviesAndSalesStand.getMovieDuration() <= Integer.parseInt(String.valueOf(cus.getValue().get(1)));
   }
 
+
+  private static SalesStand createSalesStand(Integer movieId, Integer customerId, LocalDateTime startDateTime) {
+    return SalesStand.builder()
+            .customerId(customerId)
+            .movieId(movieId)
+            .startDateTime(startDateTime)
+            .build();
+  }
+
+  public boolean addSalesStand(Integer movieId, Integer customerId, LocalDateTime startDateTime) {
+    var salesStand = createSalesStand(movieId, customerId, startDateTime);
+    boolean isValid = new SalesStandValidator().validateEntity(salesStand);
+
+    if (isValid) {
+      salesStandRepository.add(salesStand);
+    }
+    return isValid;
+  }
+
+  public List<CustomerWithMoviesAndSalesStand> getMoviesDetailsByCustomerId(Integer id) {
+    return salesStandRepository.getAllTicketsByCustomerId(id);
+  }
+
+  public Integer ticketsNumberBoughtByCustomerId(Integer customerId) {
+    return salesStandRepository.getAllTicketsByCustomerId(customerId).size();
+  }
 }
 

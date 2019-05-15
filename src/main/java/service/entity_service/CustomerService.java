@@ -1,8 +1,10 @@
 package service.entity_service;
 
+import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
 import model.entity.Customer;
 import repository.impl.CustomerRepository;
+import utils.UserDataUtils;
 import validators.impl.CustomerValidator;
 
 import java.util.Optional;
@@ -39,6 +41,10 @@ public class CustomerService {
   }
 
   private void updateCustomer(Customer customer) {
+
+    //walidacja ale w tym przypadku pola moga byc nullem
+
+
     customerRepository.update(customer);
   }
 
@@ -53,5 +59,16 @@ public class CustomerService {
     }
     return isValid;
   }
+
+  public Customer getCustomerByFromUser() {
+    showAllCustomers();
+
+    var name = UserDataUtils.getString("Input your name");
+    var surname = UserDataUtils.getString("Input your surname");
+    var email = UserDataUtils.getString("Input your email");
+
+    return customerRepository.findByNameSurnameAndEmail(name, surname, email).orElseThrow(() -> new AppException(""));
+  }
+
 
 }

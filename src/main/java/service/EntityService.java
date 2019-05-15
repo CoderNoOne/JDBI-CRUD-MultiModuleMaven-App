@@ -4,23 +4,18 @@ import converters.impl.MovieJsonConverter;
 import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
 import model.entity.Customer;
-import model.entity.LoyaltyCard;
 import model.entity.Movie;
-import model.entity.SalesStand;
 import repository.impl.CustomerRepository;
 import repository.impl.LoyaltyCardRepository;
 import repository.impl.MovieRepository;
 import repository.impl.SalesStandRepository;
-import utils.UserDataUtils;
+import service.entity_service.CustomerService;
 import validators.impl.CustomerValidator;
 import validators.impl.MovieValidator;
-import validators.impl.SalesStandValidator;
 
 
 import java.math.BigDecimal;
-import java.text.MessageFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -125,34 +120,35 @@ public class EntityService {
   }
 
   public void buyTicket(String name, String surname, String email) {
-    Customer customer = customerRepository.findByNameSurnameAndEmail(name, surname, email);
+    CustomerService customerService = new CustomerService(new CustomerRepository());
+    Customer customer = customerService.getCustomerByFromUser(name, surname, email);
 
-    System.out.println("AVAILABLE MOVIES");
-    showAllMovies();
+//    System.out.println("AVAILABLE MOVIES");
+//    showAllMovies();
+//
+//    Integer movieId = UserDataUtils.getInt("Input movie id");
+//
+//    Movie movieById = movieRepository.findById(movieId).orElseThrow(() -> new AppException(""));
 
-    Integer movieId = UserDataUtils.getInt("Input movie id");
+//    LocalDateTime localDateTime = UserDataUtils.getLocalDateTime("Input movie start time in format 'year-month-day HH:mm'");
+//
+//    SalesStand salesStand = SalesStand.builder().movieId(movieById.getId()).customerId(customer.getId()).startDateTime(localDateTime).build();
 
-    Movie movieById = movieRepository.findById(movieId).orElseThrow(() -> new AppException(""));
-
-    LocalDateTime localDateTime = UserDataUtils.getLocalDateTime("Input movie start time in format 'year-month-day HH:mm'");
-
-    SalesStand salesStand = SalesStand.builder().movieId(movieById.getId()).customerId(customer.getId()).startDateTime(localDateTime).build();
-
-    var isValid = new SalesStandValidator().validateEntity(salesStand);
+//    var isValid = new SalesStandValidator().validateEntity(salesStand);
 //    if (!isValid) {
-    salesStandRepository.add(salesStand);
+//    salesStandRepository.add(salesStand);
 //    }
-
-    if (salesStandRepository.ticketsNumberBoughtByCustomerId(customer.getId()) >= LOYALTY_CARD_MIN_MOVIE_NUMBER) {
-      switch (UserDataUtils.getString("Do you want to add a loyalty card? (y/n)").toLowerCase()) {
-        case "y" -> loyaltyCardRepository.add(LoyaltyCard.builder()
-                .discount(new BigDecimal("5")).expirationDate(LocalDate.now().plusMonths(3)).moviesNumber(2).build());
-        case "n" -> System.out.println("TOO BAD. MAYBE NEXT TIME!");
-        default -> throw new AppException("ACTION NOT DEFINED");
-      }
-
-      customer.setLoyaltyCardId(loyaltyCardRepository.findAll().get(loyaltyCardRepository.findAll().size() - 1).getId());
-      customerRepository.update(customer);
+//
+//    if (salesStandRepository.ticketsNumberBoughtByCustomerId(customer.getId()) >= LOYALTY_CARD_MIN_MOVIE_NUMBER) {
+//      switch (UserDataUtils.getString("Do you want to add a loyalty card? (y/n)").toLowerCase()) {
+//        case "y" -> loyaltyCardRepository.add(LoyaltyCard.builder()
+//                .discount(new BigDecimal("5")).expirationDate(LocalDate.now().plusMonths(3)).moviesNumber(2).build());
+//        case "n" -> System.out.println("TOO BAD. MAYBE NEXT TIME!");
+//        default -> throw new AppException("ACTION NOT DEFINED");
+//      }
+//
+//      customer.setLoyaltyCardId(loyaltyCardRepository.findAll().get(loyaltyCardRepository.findAll().size() - 1).getId());
+//      customerRepository.update(customer);
     }
 
 

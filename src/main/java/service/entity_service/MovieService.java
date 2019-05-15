@@ -5,6 +5,7 @@ import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
 import model.entity.Movie;
 import repository.impl.MovieRepository;
+import utils.UserDataUtils;
 import validators.impl.MovieValidator;
 
 import java.math.BigDecimal;
@@ -59,4 +60,15 @@ public class MovieService {
     }
     return isValid;
   }
+
+  public Movie getMovieById() {
+
+    System.out.println("AVAILABLE MOVIES");
+    showAllMovies();
+
+    Integer movieId = UserDataUtils.getInt("Input movie id");
+
+    return movieRepository.findById(movieId).orElseThrow(() -> new AppException(""));
+  }
+
 }

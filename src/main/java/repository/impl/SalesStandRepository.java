@@ -2,11 +2,9 @@ package repository.impl;
 
 import connection.DbConnection;
 import exceptions.AppException;
-import model.entity.Customer;
 import model.others.CustomerWithMoviesAndSalesStand;
 import model.entity.SalesStand;
 import org.jdbi.v3.core.Jdbi;
-import org.jdbi.v3.core.mapper.reflect.BeanMapper;
 import repository.CrudRepository;
 
 import java.util.List;
@@ -98,13 +96,13 @@ public class SalesStandRepository implements CrudRepository<SalesStand> {
             .execute());
   }
 
-  public Integer ticketsNumberBoughtByCustomerId(Integer customerId) {
-
-    return jdbi.withHandle(handle -> handle
-            .select("select count(*) from sales_stands where customer_id = ?", customerId)
-            .mapTo(Integer.class)
-            .findOnly());
-  }
+//  public Integer ticketsNumberBoughtByCustomerId(Integer customerId) {
+//
+//    return jdbi.withHandle(handle -> handle
+//            .select("select count(*) from sales_stands where customer_id = ?", customerId)
+//            .mapTo(Integer.class)
+//            .findOnly());
+//  }
 
   public List<CustomerWithMoviesAndSalesStand> getAllTicketsByCustomerId(Integer id) {
 

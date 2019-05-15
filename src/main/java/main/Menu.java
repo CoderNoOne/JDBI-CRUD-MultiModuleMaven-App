@@ -139,22 +139,28 @@ public class Menu {
   }
 
   private void option5() {
+    var customer = customerService.getCustomerByFromUser();
+    var movie = movieService.getMovieById();
+    var localDateTime = UserDataUtils.getLocalDateTime("Input movie start time in format 'year-month-day HH:mm'");
+
+    salesStandService.addSalesStand(movie.getId(), customer.getId(), localDateTime);
+    var ticketsNumber = salesStandService.ticketsNumberBoughtByCustomerId(customer.getId());
+
+    loyaltyCardService.verifyLoyaltyCard(ticketsNumber);
+    customer.setLoyaltyCardId(loyaltyCardService.getNewlyCreatedLoyaltyCardId());
+    customerService.update(customer);
+  }
+
+
+  /*private Customer option5getCustomer() {
     customerService.showAllCustomers();
 
-    String name = UserDataUtils.getString("Input your name");
-    String surname = UserDataUtils.getString("Input your surname");
-    String email = UserDataUtils.getString("Input your email");
+    var name = UserDataUtils.getString("Input your name");
+    var surname = UserDataUtils.getString("Input your surname");
+    var email = UserDataUtils.getString("Input your email");
 
-    entityService.buyTicket(name, surname, email);
-
-  }
-
-
-
-
-  private void option6() {
-
-  }
+    return customerService.getCustomerByFromUser(name, surname, email);
+  }*/
 }
 
 

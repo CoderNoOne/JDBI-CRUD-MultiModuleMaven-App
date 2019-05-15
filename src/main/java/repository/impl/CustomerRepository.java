@@ -54,7 +54,7 @@ public class CustomerRepository implements CrudRepository<Customer> {
                     .bind(2, customer.getAge() == null ? customerFromDb.getAge() : customer.getAge())
                     .bind(3, customer.getEmail() == null ? customerFromDb.getEmail() : customer.getEmail())
                     .bind(4, customer.getId())
-                    .bind(5,customer.getLoyaltyCardId())
+                    .bind(5, customer.getLoyaltyCardId())
                     .execute()));
 
   }
@@ -101,7 +101,7 @@ public class CustomerRepository implements CrudRepository<Customer> {
             .execute());
   }
 
-  public Customer findByNameSurnameAndEmail(String name, String surname, String email) {
+  public Optional<Customer> findByNameSurnameAndEmail(String name, String surname, String email) {
 
     if (Objects.isNull(name)) {
       throw new AppException("customer name is null");
@@ -120,6 +120,6 @@ public class CustomerRepository implements CrudRepository<Customer> {
             .bind("surname", surname)
             .bind("email", email)
             .mapToBean(Customer.class)
-            .findFirst()).orElseThrow(() -> new AppException("Such customer isn't registered in our db"));
+            .findFirst());
   }
 }
