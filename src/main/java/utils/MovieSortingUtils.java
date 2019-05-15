@@ -2,13 +2,13 @@ package utils;
 
 import exceptions.AppException;
 import model.sorting.sorting_comparator.MovieSort;
-import model.sorting.sortingCriterion.MovieSortingCriterion;
+import model.sorting.sorting_criterion.MovieSortingCriterion;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static model.sorting.sortingCriterion.MovieSortingCriterion.*;
+import static model.sorting.sorting_criterion.MovieSortingCriterion.*;
 import static utils.UserDataUtils.getString;
 
 public class MovieSortingUtils {

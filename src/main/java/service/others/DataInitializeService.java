@@ -1,4 +1,4 @@
-package service;
+package service.others;
 
 import converters.impl.CustomerListJsonConverter;
 import converters.impl.MovieListJsonConverter;

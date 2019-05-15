@@ -1,21 +1,46 @@
-package service;
+package utils;
 
 import exceptions.AppException;
+import j2html.attributes.Attribute;
+import j2html.tags.ContainerTag;
+import model.others.CustomerWithMoviesAndSalesStand;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.List;
 import java.util.Properties;
 
-public class EmailService {
+import static j2html.TagCreator.*;
+
+public class EmailUtils {
 
   private static final String emailAddress = "the.mountain.057@gmail.com";
   private static final String emailPassword = "tatry321";
 
-  private EmailService() {
+  private EmailUtils() {
   }
 
-  public static void sendAsHtml(String recipient, String subject, String htmlContent) {
+  public static void sendSummaryTable(String recipient, String subject, List<CustomerWithMoviesAndSalesStand> customerWithMoviesAndSalesStandsList) {
+    
+    String htmlContent = tbody(
+            tr().with(
+                    th("Movie title"),
+                    th("Movie genre"),
+                    th("Movie duration"),
+                    th("Movie price"),
+                    th("Movie release date"),
+                    each(customerWithMoviesAndSalesStandsList, i -> tr(
+                                    td(i.getMovieTitle()).with(
+                                    td(i.getMovieGenre())).with(
+                                    td(i.getMovieDuration().toString())).with(
+                                    td(i.getTicketPrice().toString()).with(
+                                    td(i.getMovieReleaseDate().toString()))))))).render();
+
+    sendAsHtml(recipient, subject, htmlContent);
+  }
+
+  private static void sendAsHtml(String recipient, String subject, String htmlContent) {
 
     try {
       System.out.println("Sending email ...");

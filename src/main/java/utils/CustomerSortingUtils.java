@@ -2,12 +2,12 @@ package utils;
 
 import exceptions.AppException;
 import model.sorting.sorting_comparator.CustomerSort;
-import model.sorting.sortingCriterion.CustomerSortingCriterion;
+import model.sorting.sorting_criterion.CustomerSortingCriterion;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static model.sorting.sortingCriterion.CustomerSortingCriterion.*;
+import static model.sorting.sorting_criterion.CustomerSortingCriterion.*;
 import static utils.UserDataUtils.getString;
 
 public class CustomerSortingUtils {

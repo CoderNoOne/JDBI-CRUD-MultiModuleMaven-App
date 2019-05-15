@@ -2,9 +2,11 @@ package repository.impl;
 
 import connection.DbConnection;
 import exceptions.AppException;
+import model.entity.Customer;
 import model.others.CustomerWithMoviesAndSalesStand;
 import model.entity.SalesStand;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.mapper.reflect.BeanMapper;
 import repository.CrudRepository;
 
 import java.util.List;
@@ -121,6 +123,15 @@ public class SalesStandRepository implements CrudRepository<SalesStand> {
                             .ticketPrice(rs.getBigDecimal("m_price"))
                             .startDateTime(rs.getTimestamp("s_startTime").toLocalDateTime())
                             .build()).list());
+  }
+
+  public String getCustomerEmailByCustomerId(Integer id) {
+    return jdbi.withHandle(handle -> handle.createQuery("select c.email from sales_stands as s join customers as c on s.customer_id = c.id where s.customer_id = :customerId")
+//            .registerRowMapper(BeanMapper.factory(Customer.class, "c"))
+//            .registerRowMapper(BeanMapper.factory(SalesStand.class, "s"))
+            .bind("customerId", id)
+            .mapTo(String.class)
+            .findFirst().orElseThrow());
   }
 }
 

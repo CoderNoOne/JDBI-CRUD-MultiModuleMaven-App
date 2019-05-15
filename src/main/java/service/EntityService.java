@@ -137,9 +137,9 @@ public class EntityService {
     SalesStand salesStand = SalesStand.builder().movieId(movieById.getId()).customerId(customer.getId()).startDateTime(localDateTime).build();
 
     var isValid = new SalesStandValidator().validateEntity(salesStand);
-    if (!isValid) {
+//    if (!isValid) {
       salesStandRepository.add(salesStand);
-    }
+//    }
 
     if (salesStandRepository.ticketsNumberBoughtByCustomerId(customer.getId()) >= LOYALTY_CARD_MIN_MOVIE_NUMBER) {
       switch (UserDataUtils.getString("Do you want to add a loyalty card? (y/n)").toLowerCase()) {

@@ -6,7 +6,7 @@ import repository.impl.CustomerRepository;
 import repository.impl.LoyaltyCardRepository;
 import repository.impl.MovieRepository;
 import repository.impl.SalesStandRepository;
-import service.DataInitializeService;
+import service.others.DataInitializeService;
 import service.EntityService;
 import utils.UserDataUtils;
 
