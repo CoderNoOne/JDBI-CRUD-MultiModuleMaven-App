@@ -6,7 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Data
 @AllArgsConstructor
@@ -19,6 +21,24 @@ public class Movie {
   private String genre;
   private BigDecimal price;
   private Integer duration;
-  private LocalDate releaseDate; // LocalDate
+  private LocalDate releaseDate;
 
+  @Override
+  public String toString() {
+    return MessageFormat.format(
+            "\nMovie id - {0}\n" +
+                    "Movie title - {1}\n" +
+                    "Movie genre- {2}\n" +
+                    "Movie price - {3}\n" +
+                    "Movie duration - {4}\n" +
+                    "Movie releaseDate - {5}",
+
+            Objects.nonNull(id) ? id : "Movie object not persisted in db yet",
+            title,
+            genre,
+            price,
+            duration,
+            releaseDate
+    );
+  }
 }

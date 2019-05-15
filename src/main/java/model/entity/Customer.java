@@ -24,17 +24,19 @@ public class Customer {
   @Override
   public String toString() {
     return MessageFormat.format(
-            "\nCustomer name - {0}\n" +
-                    "Customer surname- {1}\n" +
-                    "Customer age - {2}\n" +
-                    "Customer email - {3}\n" +
-                    "Customer loyaltyCardId - {4}",
+            "Customer id - {0}\n" +
+                    "Customer name - {1}\n" +
+                    "Customer surname- {2}\n" +
+                    "Customer age - {3}\n" +
+                    "Customer email - {4}\n" +
+                    "Customer loyaltyCardId - {5}",
 
+            Objects.nonNull(id) ? id : "Customer object not persisted in db yet",
             name,
             surname,
             age,
             email,
-            Objects.nonNull(loyaltyCardId) ? loyaltyCardId: "NO LOYALTY CARD YET"
+            Objects.nonNull(loyaltyCardId) ? loyaltyCardId : "NO LOYALTY CARD YET"
     );
   }
 }

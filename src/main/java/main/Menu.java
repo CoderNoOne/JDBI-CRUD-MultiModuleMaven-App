@@ -140,6 +140,7 @@ public class Menu {
     customerService.deleteCustomer(integer);
   }
 
+  //zakup biletu
   private void option5() {
     var customer = customerService.getCustomerByFromUser();
     var movie = movieService.getMovieById();
