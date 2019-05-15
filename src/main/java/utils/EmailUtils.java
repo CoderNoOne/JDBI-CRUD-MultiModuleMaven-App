@@ -25,20 +25,17 @@ public class EmailUtils {
 
 
   public static void sendSummaryTableByFilters(String recipient, String subject, List<CustomerWithMoviesAndSalesStand> allFilteredTickets, Map<MovieFilteringCriterion, List<?>> filters) {
-
-
-    String htmlContent = h1("YOUR SUMMARY HISTORY FILTERED BY:").render() +
-            tbody(
+    
+    String htmlContent = String.join(
+            h1("YOUR SUMMARY HISTORY FILTERED BY:").render(),
+            tbody(tr().with(
+                    th("Filter type"),
+                    th("Filter values")),
                     tr().with(
                             each(filters, i ->
-                                    tr(i.getKey().name()).with(
-                                    each(filters.get(i.getKey()), j -> td(
-                                            j.toString()
-                                    )))))).render()
-            +
-            createHtmlTable(allFilteredTickets);
-
-    createHtmlTable(allFilteredTickets);
+                                    tr(i.getKey().name()).with(td(
+                                            i.getValue().toString()))))).with(br()).render(),
+            createHtmlTable(allFilteredTickets));
 
     sendAsHtml(recipient, subject, htmlContent);
 
@@ -65,7 +62,7 @@ public class EmailUtils {
                                     td(i.getMovieDuration().toString())).with(
                                     td(i.getTicketPrice().toString())).with(
                                     td(i.getMovieReleaseDate().toString())).with(
-                                    td(i.getStartDateTime().toString())))))).render();
+                                    td(i.getStartDateTime().toString())))))).renderFormatted();
 
   }
 
