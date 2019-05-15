@@ -9,8 +9,6 @@ import utils.EmailUtils;
 import utils.TicketsFilteringUtils;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -26,32 +24,29 @@ public class SalesStandService {
 
     var allTicketsByCustomerId = salesStandRepository.getAllTicketsByCustomerId(id);
 
-
-    EmailUtils.sendSummaryTable("firelight.code@gmail.com", "Movie summary", allTicketsByCustomerId);
+    EmailUtils.sendAllSummaryTable("firelight.code@gmail.com"/*salesStandRepository.getCustomerEmailByCustomerId(id)*/, "Movie summary", allTicketsByCustomerId);
     return allTicketsByCustomerId;
   }
 
   public List<CustomerWithMoviesAndSalesStand> filterTicketsTransactionHistory(Integer id) {
 
+    var filters = TicketsFilteringUtils.getMovieFilters("Specify your movie filters\n").getFilters();
 
     var allFilteredTickets = salesStandRepository.getAllTicketsByCustomerId(id)
             .stream()
-            .filter(SalesStandService::getMovieFilterPredicate)
+            .filter(customerWithMoviesAndSalesStand -> getMovieFilterPredicate(filters).test(customerWithMoviesAndSalesStand))
             .collect(Collectors.toList());
 
-
-    //wysyłanie maila
-
-    EmailUtils.sendSummaryTable("firelight.code@gmail.com","From app", allFilteredTickets);
+    EmailUtils.sendSummaryTableByFilters("firelight.code@gmail.com"/*salesStandRepository.getCustomerEmailByCustomerId(id)*/, "From app", allFilteredTickets, filters);
     return allFilteredTickets;
   }
 
-  private static boolean getMovieFilterPredicate(CustomerWithMoviesAndSalesStand customerWith) {
-    return TicketsFilteringUtils.getMovieFilters("Specify your movie filters\n").getFilters()
+  private static Predicate<CustomerWithMoviesAndSalesStand> getMovieFilterPredicate(Map<MovieFilteringCriterion, List<?>> filters) {
+    return filters
             .entrySet()
             .stream()
             .map(SalesStandService::getPredicate)
-            .reduce(Predicate::and).orElseThrow(() -> new AppException("")).test(customerWith);
+            .reduce(Predicate::and).orElseThrow(() -> new AppException(""));
   }
 
   private static Predicate<CustomerWithMoviesAndSalesStand> getPredicate(Map.Entry<MovieFilteringCriterion, List<?>> cus) {

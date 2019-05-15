@@ -4,11 +4,13 @@ import exceptions.AppException;
 import j2html.attributes.Attribute;
 import j2html.tags.ContainerTag;
 import model.others.CustomerWithMoviesAndSalesStand;
+import model.tickets_data_filtering.MovieFilteringCriterion;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import static j2html.TagCreator.*;
@@ -21,29 +23,56 @@ public class EmailUtils {
   private EmailUtils() {
   }
 
-  public static void sendSummaryTable(String recipient, String subject, List<CustomerWithMoviesAndSalesStand> customerWithMoviesAndSalesStandsList) {
-    
-    String htmlContent = tbody(
+
+  public static void sendSummaryTableByFilters(String recipient, String subject, List<CustomerWithMoviesAndSalesStand> allFilteredTickets, Map<MovieFilteringCriterion, List<?>> filters) {
+
+
+    String htmlContent = h1("YOUR SUMMARY HISTORY FILTERED BY:").render() +
+            tbody(
+                    tr().with(
+                            each(filters, i ->
+                                    tr(i.getKey().name()).with(
+                                    each(filters.get(i.getKey()), j -> td(
+                                            j.toString()
+                                    )))))).render()
+            +
+            createHtmlTable(allFilteredTickets);
+
+    createHtmlTable(allFilteredTickets);
+
+    sendAsHtml(recipient, subject, htmlContent);
+
+  }
+
+  public static void sendAllSummaryTable(String recipient, String subject, List<CustomerWithMoviesAndSalesStand> customerWithMoviesAndSalesStandsList) {
+    String htmlContent = h1("YOUR ALL SUMMARY HISTORY").render() + createHtmlTable(customerWithMoviesAndSalesStandsList);
+    sendAsHtml(recipient, subject, htmlContent);
+  }
+
+  private static String createHtmlTable(List<CustomerWithMoviesAndSalesStand> customerWithMoviesAndSalesStandsList) {
+
+    return tbody(
             tr().with(
                     th("Movie title"),
                     th("Movie genre"),
                     th("Movie duration"),
                     th("Movie price"),
                     th("Movie release date"),
+                    th("Movie start date time"),
                     each(customerWithMoviesAndSalesStandsList, i -> tr(
-                                    td(i.getMovieTitle()).with(
+                            td(i.getMovieTitle()).with(
                                     td(i.getMovieGenre())).with(
                                     td(i.getMovieDuration().toString())).with(
-                                    td(i.getTicketPrice().toString()).with(
-                                    td(i.getMovieReleaseDate().toString()))))))).render();
+                                    td(i.getTicketPrice().toString())).with(
+                                    td(i.getMovieReleaseDate().toString())).with(
+                                    td(i.getStartDateTime().toString())))))).render();
 
-    sendAsHtml(recipient, subject, htmlContent);
   }
 
   private static void sendAsHtml(String recipient, String subject, String htmlContent) {
 
     try {
-      System.out.println("Sending email ...");
+      System.out.println("Sending email to " + recipient + " ...");
 
       Session session = createSession();
 
@@ -85,5 +114,4 @@ public class EmailUtils {
       }
     });
   }
-
 }

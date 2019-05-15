@@ -110,6 +110,7 @@ public class SalesStandRepository implements CrudRepository<SalesStand> {
 
     final String sql = "select movies.title m_title, movies.genre m_genre, movies.price m_price, movies.duration m_duration, movies.release_date m_releaseDate," +
             " sales_stands.start_date_time as s_startTime from sales_stands join customers on sales_stands.customer_id = customers.id join movies on movies.id = sales_stands.movie_id where sales_stands.customer_id = :customerId";
+
     return jdbi.withHandle(handle ->
             handle
                     .createQuery(sql)
@@ -126,9 +127,7 @@ public class SalesStandRepository implements CrudRepository<SalesStand> {
   }
 
   public String getCustomerEmailByCustomerId(Integer id) {
-    return jdbi.withHandle(handle -> handle.createQuery("select c.email from sales_stands as s join customers as c on s.customer_id = c.id where s.customer_id = :customerId")
-//            .registerRowMapper(BeanMapper.factory(Customer.class, "c"))
-//            .registerRowMapper(BeanMapper.factory(SalesStand.class, "s"))
+    return jdbi.withHandle(handle -> handle.createQuery("select customers.email from sales_stands join customers on sales_stands.customer_id = customers.id where sales_stands.customer_id = :customerId")
             .bind("customerId", id)
             .mapTo(String.class)
             .findFirst().orElseThrow());
