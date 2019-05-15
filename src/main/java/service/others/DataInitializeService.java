@@ -24,8 +24,10 @@ public class DataInitializeService {
   }
 
   public static void init() {
-    deleteLoyaltyCards();
     deleteSalesStands();
+    deleteCustomers();
+    deleteLoyaltyCards();
+    deleteMovies();
     initMovies("exampleMovies.json");
     initCustomers("exampleCustomers.json");
   }
@@ -77,5 +79,13 @@ public class DataInitializeService {
 
   private static void deleteSalesStands() {
     SALES_STAND_REPOSITORY.deleteAll();
+  }
+
+  private static void deleteCustomers() {
+    CUSTOMER_REPOSITORY.deleteAll();
+  }
+
+  private static void deleteMovies() {
+    MOVIE_REPOSITORY.deleteAll();
   }
 }

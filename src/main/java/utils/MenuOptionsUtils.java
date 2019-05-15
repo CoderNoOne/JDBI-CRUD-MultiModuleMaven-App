@@ -18,31 +18,22 @@ public class MenuOptionsUtils {
                     "Option no. 6 - {5}\n" +
                     "Option no. 7 - {6}\n" +
                     "Option no. 8 - {7}\n" +
-                    "Option no. 9 - {8}\n" +
-                    "Option no. 10 - {9}\n" +
-                    "Option no. 11 - {10}\n" +
-                    "Option no. 12  -{11}\n" +
-                    "Option no. 13 - {12}\n" +
-                    "Option no. 14 - {13}",
+                    "Option no. 9 - {8}",
 
             "Add new Customer",
-            "Add new movie",
-            "Delete a customer by id",
-            "Delete a movie by id",
-            "Show all customers",
-            "Shows all movies",
-            "Show one row from movies",
-            "Show one row from customers",
+            "Add new movie from json file",
             "Generate example data for table movies and customers",
+            "Movie and customer table management",
             "Buy a ticket",
             "History - summary",
             "Some statistics",
-            "Show menu options"
+            "Show menu options",
+            "Exit the program"
 
     ));
   }
 
-  public static void option3Menu() {
+  public static void customerAndMovieTableManagmentMenu() {
     System.out.println(MessageFormat.format(
             "\nOption no. 1 - {0}\n" +
                     "Option no. 2 - {1}\n" +
@@ -51,20 +42,25 @@ public class MenuOptionsUtils {
                     "Option no. 5 - {4}\n" +
                     "Option no. 6 - {5}\n" +
                     "Option no. 7 - {6}\n" +
-                    "Option no. 8 - {7}",
+                    "Option no. 8 - {7}\n" +
+                    "Option no. 9 - {8}",
 
             "Delete customer",
             "Delete movie",
             "Show all customers",
-            "Shows all movies",
-            "Show customer by id",
-            "Show movie by id",
+            "Shows all movies bought by specified customer",
+            "Show customer detail by his email",
+            "Show movie detail by title",
+            "Tickets bought in the specified time interval",
+            "Tickets bought by specified customer and in the specified time interval",
+            "Show movies that lasts in the specified time range",
             "Update customer",
-            "Update movie"
-    ));
+            "Update movie",
+            "Back to main menu",
+            "Update movie"));
   }
 
-  public void option11Menu() {
+  public void transactionHistoryMenu() {
     System.out.println(MessageFormat.format(
             "\nOption no. 1 - {0}\n" +
                     "Option no. 2 - {1}\n" +
@@ -79,5 +75,32 @@ public class MenuOptionsUtils {
             ""
     ));
 
+  }
+
+
+  public static void statisticsOptionsMenu() {
+
+    System.out.println(MessageFormat.format(
+            "\nOption no. 1 - {0}\n" +
+                    "Option no. 2 - {1}\n" +
+                    "Option no. 3 - {2}\n" +
+                    "Option no. 4 - {3}\n" +
+                    "Option no. 5 - {4}\n" +
+                    "Option no. 6 - {5}\n" +
+                    "Option no. 7 - {6}\n" +
+                    "Option no. 8 - {7}\n" +
+                    "Option no. 9 - {8}",
+
+            "Movies grouped by the most popular ones",
+            "Most popular movie category grouped by each customer ",
+            "The most expensive ticket bought grouped each customer",
+            "The cheapest ticket bought grouped for each customer",
+            "Average ticket price grouped by month",
+            "Total monthly expenses on tickets grouped by month for each customer",
+            "Total amount of tickets bought with discount by movie category and grouped by each customer",
+            "Total amount of tickets bought without discount by movie category and grouped by each customer",
+            "Back to main menu"
+
+    ));
   }
 }

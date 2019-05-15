@@ -37,11 +37,12 @@ public class Menu {
           case 4 -> option4();
           case 5 -> option5();
           case 6 -> option6();
-          case 7 -> {
+          case 7 -> option7();
+          case 8 -> MenuOptionsUtils.mainMenuOptions();
+          case 9 -> {
             UserDataUtils.close();
             return;
           }
-          case 8 -> MenuOptionsUtils.mainMenuOptions();
           default -> throw new AppException("INPUT OPTION IS NOT DEFINED");
         }
       } catch (AppException e) {
@@ -50,7 +51,6 @@ public class Menu {
       }
     }
   }
-
 
   private void option1() {
 
@@ -81,22 +81,24 @@ public class Menu {
   }
 
   private void option3() {
-    MenuOptionsUtils.option3Menu();
+    DataInitializeService.init();
+  }
+
+  private void option4() {
+    MenuOptionsUtils.customerAndMovieTableManagmentMenu();
     while (true) {
       try {
         int option = UserDataUtils.getInt("INPUT YOUR OPTION: ");
         switch (option) {
-          case 1 -> option3_1();
-          case 2 -> option3_2();
-          case 3 -> option3_3();
-          case 4 -> option3_4();
-          case 5 -> option3_5();
-          case 6 -> option3_6();
-
-          case 7 -> {
-            return;
-          }
-          case 8 -> MenuOptionsUtils.option3Menu();
+          case 1 -> option4_1();
+          case 2 -> option4_2();
+          case 3 -> option4_3();
+          case 4 -> option4_4();
+          case 5 -> option4_5();
+          case 6 -> option4_6();
+          case 7 -> option4_7();
+          case 8 -> MenuOptionsUtils.customerAndMovieTableManagmentMenu();
+          case 9 -> mainMenu();
           default -> throw new AppException("INPUT OPTION IS NOT DEFINED");
         }
       } catch (AppException e) {
@@ -106,36 +108,36 @@ public class Menu {
     }
   }
 
-  private void option3_6() {
+  private void option4_7() {
+
+  }
+
+  private void option4_6() {
     int movieId = UserDataUtils.getInt("Input movie id");
     movieService.findMovieById(movieId).ifPresent(System.out::println);
   }
 
-  private void option3_5() {
+  private void option4_5() {
     int customerId = UserDataUtils.getInt("Input customer id");
     movieService.findMovieById(customerId).ifPresent(System.out::println);
   }
 
-  private void option3_4() {
+  private void option4_4() {
     movieService.showAllMovies();
   }
 
-  private void option3_3() {
+  private void option4_3() {
     customerService.showAllCustomers();
   }
 
-  private void option3_2() {
+  private void option4_2() {
     Integer integer = UserDataUtils.getInt("Input movie id you want to delete from database");
     movieService.deleteMovie(integer);
   }
 
-  private void option3_1() {
+  private void option4_1() {
     Integer integer = UserDataUtils.getInt("Input customer id you want to delete from database");
     customerService.deleteCustomer(integer);
-  }
-
-  private void option4() {
-    DataInitializeService.init();
   }
 
   private void option5() {
@@ -151,16 +153,15 @@ public class Menu {
     customerService.update(customer);
   }
 
+  //historia
+  private void option6() {
 
-  /*private Customer option5getCustomer() {
-    customerService.showAllCustomers();
+  }
 
-    var name = UserDataUtils.getString("Input your name");
-    var surname = UserDataUtils.getString("Input your surname");
-    var email = UserDataUtils.getString("Input your email");
+  //statystyki
+  private void option7() {
 
-    return customerService.getCustomerByFromUser(name, surname, email);
-  }*/
+  }
 }
 
 

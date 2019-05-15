@@ -48,13 +48,13 @@ public class CustomerRepository implements CrudRepository<Customer> {
             .mapToBean(Customer.class)
             .findFirst())
             .ifPresent(customerFromDb -> jdbi.withHandle(handle -> handle
-                    .createUpdate("update customers set name = ?, surname = ?, age = ?, email = ?, loyalty_card_id = ? where id = ?")
-                    .bind(0, customer.getName() == null ? customerFromDb.getName() : customer.getName())
-                    .bind(1, customer.getSurname() == null ? customerFromDb.getSurname() : customer.getSurname())
-                    .bind(2, customer.getAge() == null ? customerFromDb.getAge() : customer.getAge())
-                    .bind(3, customer.getEmail() == null ? customerFromDb.getEmail() : customer.getEmail())
-                    .bind(4, customer.getId())
-                    .bind(5, customer.getLoyaltyCardId())
+                    .createUpdate("update customers set name = :name, surname = :surname, age = :age, email = :email, loyalty_card_id = :loyaltyCardId where id = customerId")
+                    .bind("name", customer.getName() == null ? customerFromDb.getName() : customer.getName())
+                    .bind("surname", customer.getSurname() == null ? customerFromDb.getSurname() : customer.getSurname())
+                    .bind("age", customer.getAge() == null ? customerFromDb.getAge() : customer.getAge())
+                    .bind("email", customer.getEmail() == null ? customerFromDb.getEmail() : customer.getEmail())
+                    .bind("loyaltyCardId", customer.getLoyaltyCardId() == null ? customerFromDb.getLoyaltyCardId() : customer.getLoyaltyCardId())
+                    .bind("id", customer.getId())
                     .execute()));
 
   }
