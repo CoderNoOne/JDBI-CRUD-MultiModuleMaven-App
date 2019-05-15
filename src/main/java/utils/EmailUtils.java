@@ -25,7 +25,7 @@ public class EmailUtils {
 
 
   public static void sendSummaryTableByFilters(String recipient, String subject, List<CustomerWithMoviesAndSalesStand> allFilteredTickets, Map<MovieFilteringCriterion, List<?>> filters) {
-    
+
     String htmlContent = String.join(
             h1("YOUR SUMMARY HISTORY FILTERED BY:").render(),
             tbody(tr().with(
@@ -42,7 +42,7 @@ public class EmailUtils {
   }
 
   public static void sendAllSummaryTable(String recipient, String subject, List<CustomerWithMoviesAndSalesStand> customerWithMoviesAndSalesStandsList) {
-    String htmlContent = h1("YOUR ALL SUMMARY HISTORY").render() + createHtmlTable(customerWithMoviesAndSalesStandsList);
+    String htmlContent = String.join(h1("YOUR ALL SUMMARY HISTORY").render(), createHtmlTable(customerWithMoviesAndSalesStandsList));
     sendAsHtml(recipient, subject, htmlContent);
   }
 

@@ -18,6 +18,7 @@ import validators.impl.SalesStandValidator;
 
 
 import java.math.BigDecimal;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -81,7 +82,8 @@ public class EntityService {
   }
 
   public void showAllCustomers() {
-    customerRepository.findAll().forEach(System.out::println);
+    int[] counter = {1};
+    customerRepository.findAll().forEach(cus -> System.out.println(String.join(" ", "Customer no.", String.valueOf(counter[0]++), "\n", cus.toString(), "\n")));
   }
 
   public Optional<Customer> findCustomerById(final Integer id) {
@@ -138,7 +140,7 @@ public class EntityService {
 
     var isValid = new SalesStandValidator().validateEntity(salesStand);
 //    if (!isValid) {
-      salesStandRepository.add(salesStand);
+    salesStandRepository.add(salesStand);
 //    }
 
     if (salesStandRepository.ticketsNumberBoughtByCustomerId(customer.getId()) >= LOYALTY_CARD_MIN_MOVIE_NUMBER) {
@@ -152,7 +154,6 @@ public class EntityService {
       customer.setLoyaltyCardId(loyaltyCardRepository.findAll().get(loyaltyCardRepository.findAll().size() - 1).getId());
       customerRepository.update(customer);
     }
-
 
 
   }
