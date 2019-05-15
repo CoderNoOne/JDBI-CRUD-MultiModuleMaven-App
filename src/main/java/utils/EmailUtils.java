@@ -23,6 +23,11 @@ public class EmailUtils {
   private EmailUtils() {
   }
 
+  // do zakupu biletu
+  public static void sendMoviePurchaseConfirmation(String recipient, String subject) {
+
+
+  }
 
   public static void sendSummaryTableByFilters(String recipient, String subject, List<CustomerWithMoviesAndSalesStand> allFilteredTickets, Map<MovieFilteringCriterion, List<?>> filters) {
 

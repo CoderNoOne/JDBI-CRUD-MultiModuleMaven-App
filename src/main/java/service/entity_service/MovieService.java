@@ -10,7 +10,11 @@ import validators.impl.MovieValidator;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 public class MovieService {
@@ -71,4 +75,21 @@ public class MovieService {
     return movieRepository.findById(movieId).orElseThrow(() -> new AppException(""));
   }
 
+  public LocalDateTime chooseMovieStartTime(String message) {
+
+    System.out.println(message);
+    possibleShowTimes();
+    return UserDataUtils.getLocalDateTime("Input movie start time in format 'year-month-day HH:mm'");
+  }
+
+  private void possibleShowTimes() {
+
+    var presentDateTime = LocalDateTime.now();
+    var seedDateTime = presentDateTime.getMinute() < 30 ? presentDateTime.truncatedTo(ChronoUnit.HOURS).plusMinutes(30) : presentDateTime.plusHours(1).truncatedTo(ChronoUnit.HOURS);
+
+    Stream.iterate(seedDateTime, date -> date.plusMinutes(30))
+            .limit(ChronoUnit.HOURS.between(seedDateTime, presentDateTime.plusHours(50)))
+            .filter(date -> date.toLocalTime().compareTo(LocalTime.of(8, 0)) >= 0 && date.toLocalTime().compareTo(LocalTime.of(22, 30)) <= 0)
+            .forEach(System.out::println);
+  }
 }

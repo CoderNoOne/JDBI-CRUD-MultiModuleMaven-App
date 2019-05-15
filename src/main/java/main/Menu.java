@@ -140,13 +140,13 @@ public class Menu {
     customerService.deleteCustomer(integer);
   }
 
-  //zakup biletu
+  //zakup biletu - dodac sprawdzenie czy jest znizka i aktualziwowac loyaltyCard movie numbers dla klienta
   private void option5() {
     var customer = customerService.getCustomerByFromUser();
     var movie = movieService.getMovieById();
-    var localDateTime = UserDataUtils.getLocalDateTime("Input movie start time in format 'year-month-day HH:mm'");
+    var movieStartTime = movieService.chooseMovieStartTime("Choose movie start time in format 'year-month-day HH:mm'");
 
-    salesStandService.addSalesStand(movie.getId(), customer.getId(), localDateTime);
+    salesStandService.addSalesStand(movie.getId(), customer.getId(), movieStartTime);
     var ticketsNumber = salesStandService.ticketsNumberBoughtByCustomerId(customer.getId());
 
     loyaltyCardService.verifyLoyaltyCard(ticketsNumber);

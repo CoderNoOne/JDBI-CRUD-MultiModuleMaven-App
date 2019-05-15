@@ -4,6 +4,7 @@ import model.entity.SalesStand;
 import validators.Validator;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,11 +28,12 @@ public class SalesStandValidator implements Validator<SalesStand> {
   }
 
   private boolean isStartDateTimeValid(SalesStand salesStand) {
-    LocalDateTime now = LocalDateTime.now();
 
-    int minHour = 8;
-    int hour = now.getHour() + 1;
-    return salesStand.getStartDateTime().compareTo(now) > 0;
+    var startDateTime = salesStand.getStartDateTime();
+    var presentDateTime = LocalDateTime.now();
+
+    return startDateTime.compareTo(presentDateTime) > 0 && (startDateTime.getMinute() == 0 || startDateTime.getMinute() == 30)
+            && (startDateTime.toLocalTime().compareTo(LocalTime.of(8, 0)) >= 0 && startDateTime.toLocalTime().compareTo(LocalTime.of(22, 30)) <= 0);
   }
 
 
