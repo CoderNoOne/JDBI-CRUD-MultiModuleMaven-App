@@ -2,6 +2,7 @@ package service.entity_service;
 
 import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
+import model.entity.Customer;
 import model.entity.LoyaltyCard;
 import repository.impl.LoyaltyCardRepository;
 import utils.UserDataUtils;
@@ -35,15 +36,16 @@ public class LoyaltyCardService {
   }
 
 
-  public void verifyLoyaltyCard(Integer ticketsNumber) {
+  public void verifyIfCustomerCanGetLoyaltyCard(Integer ticketsNumber) {
 
     if (ticketsNumber >= LOYALTY_CARD_MIN_MOVIE_NUMBER) {
       switch (UserDataUtils.getString("Do you want to add a loyalty card? (y/n)").toLowerCase()) {
         case "y" -> addNewLoyaltyCard();
         case "n" -> System.out.println("TOO BAD. MAYBE NEXT TIME!");
-        default -> throw new AppException("ACTION NOT DEFINED");
+        default -> verifyIfCustomerCanGetLoyaltyCard(ticketsNumber);/*throw new AppException("ACTION NOT DEFINED");*/
       }
     }
+
   }
 
   private boolean addNewLoyaltyCard() {
@@ -52,5 +54,10 @@ public class LoyaltyCardService {
 
   public Integer getNewlyCreatedLoyaltyCardId() {
     return loyaltyCardRepository.findAll().get(loyaltyCardRepository.findAll().size() - 1).getId();
+  }
+
+  public boolean doCustomerPosesActiveLoyaltyCardByCustomerId(Integer customerId) {
+    return loyaltyCardRepository.getCustomerWithLoyaltyCardInfoByCustomerId(customerId).isPresent() &&
+            loyaltyCardRepository.getCustomerWithLoyaltyCardInfoByCustomerId(customerId).get().getLoyaltyCardExpirationDate().compareTo(LocalDate.now()) > 0;
   }
 }

@@ -121,7 +121,7 @@
 //
 //  public void buyTicket(String name, String surname, String email) {
 //    CustomerService customerService = new CustomerService(new CustomerRepository());
-//    Customer customer = customerService.getCustomerByFromUser(name, surname, email);
+//    Customer customer = customerService.getCustomerFromUserInput(name, surname, email);
 //
 ////    System.out.println("AVAILABLE MOVIES");
 ////    showAllMovies();

@@ -55,5 +55,4 @@ public class SalesStandValidator implements Validator<SalesStand> {
     }
     return !hasErrors();
   }
-
 }

@@ -65,7 +65,7 @@ public class MovieService {
     return isValid;
   }
 
-  public Movie getMovieById() {
+  public Movie chooseMovieById() {
 
     System.out.println("AVAILABLE MOVIES");
     showAllMovies();

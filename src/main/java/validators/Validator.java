@@ -9,6 +9,4 @@ public interface Validator<T> {
   boolean hasErrors();
 
   boolean validateEntity(T t);
-
-
 }

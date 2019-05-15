@@ -60,7 +60,7 @@ public class CustomerService {
     return isValid;
   }
 
-  public Customer getCustomerByFromUser() {
+  public Customer getCustomerFromUserInput() {
     showAllCustomers();
 
     var name = UserDataUtils.getString("Input your name");

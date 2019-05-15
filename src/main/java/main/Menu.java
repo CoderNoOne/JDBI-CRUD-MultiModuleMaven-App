@@ -142,16 +142,20 @@ public class Menu {
 
   //zakup biletu - dodac sprawdzenie czy jest znizka i aktualziwowac loyaltyCard movie numbers dla klienta
   private void option5() {
-    var customer = customerService.getCustomerByFromUser();
-    var movie = movieService.getMovieById();
+    var customer = customerService.getCustomerFromUserInput();
+    var movie = movieService.chooseMovieById();
     var movieStartTime = movieService.chooseMovieStartTime("Choose movie start time in format 'year-month-day HH:mm'");
 
     salesStandService.addSalesStand(movie.getId(), customer.getId(), movieStartTime);
     var ticketsNumber = salesStandService.ticketsNumberBoughtByCustomerId(customer.getId());
 
-    loyaltyCardService.verifyLoyaltyCard(ticketsNumber);
-    customer.setLoyaltyCardId(loyaltyCardService.getNewlyCreatedLoyaltyCardId());
-    customerService.update(customer);
+    if (!loyaltyCardService.doCustomerPosesActiveLoyaltyCardByCustomerId(customer.getId())) {
+      loyaltyCardService.verifyIfCustomerCanGetLoyaltyCard(ticketsNumber);
+      customer.setLoyaltyCardId(loyaltyCardService.getNewlyCreatedLoyaltyCardId());
+      customerService.update(customer);
+    } else {
+
+    }
   }
 
   //historia

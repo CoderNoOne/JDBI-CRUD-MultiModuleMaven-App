@@ -11,8 +11,6 @@ Z
 *src/main/java/connection/DbConnection.java,1\a\1a38d6fdfcfe42ba272eee829ee231ce15d3b00a
 9
 	movie.txt,8\9\8999ac8f6bfebde3f35fe453e46cc84e74e87cb5
-L
-src/main/java/main/Test.java,3\e\3ebdfcd051ae19d2ea08ce0c8c3908a8616e32ba
 c
 3src/main/java/connection/SqlCreateTableCommand.java,f\2\f227a8a7dc02cd8bdf711a7932613cdee9c99f54
 [
@@ -99,3 +97,9 @@ k
 ;src/main/java/service/entity_service/SalesStandService.java,a\b\abd72252ade54fe9dec4dfbf75d066eb589fd1d8
 e
 5src/main/java/service/entity_service/TestService.java,0\a\0aab1195bf318177727c9bb5364e46fa6433dd6b
+Y
+)src/main/java/utils/MenuOptionsUtils.java,d\b\db8d8a4b7c35e36c75defd7855643e4dd8a50129
+L
+src/main/java/main/Main.java,7\f\7f08be4e9c62f2e5f8f02242af89b918cb9a135f
+g
+7src/main/java/model/others/CustomerWithLoyaltyCard.java,3\6\36deab9d22e3ba603a8809c1a6f8406802df86b6

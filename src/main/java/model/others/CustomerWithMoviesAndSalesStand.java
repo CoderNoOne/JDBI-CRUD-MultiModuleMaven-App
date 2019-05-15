@@ -22,5 +22,4 @@ public class CustomerWithMoviesAndSalesStand {
   private Integer movieDuration;
   private LocalDate movieReleaseDate;
   private LocalDateTime startDateTime;
-
 }
