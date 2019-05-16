@@ -1,6 +1,4 @@
 
-\
-,src/main/java/repository/CrudRepository.java,d\7\d718cf7fe4b42a253b17caf2a6a5f2c90454231c
 Z
 *src/main/java/exceptions/AppException.java,6\e\6e88797e7e4e85eca5725730e02e81d6d99b381c
 7
@@ -33,18 +31,10 @@ B
 ss.json,1\c\1c3c6560d5e847c10aa2b298a41164575cd40b92
 `
 0src/main/java/validators/impl/MailValidator.java,8\2\82ad32c6b934e44d9dc765a0c202c6063117a9a0
-b
-2src/main/java/repository/impl/MovieRepository.java,a\5\a5733f3d7ef06f72ac32a56c06ee8804d1df1b4a
 g
 7src/main/java/validators/impl/LoyaltyCardValidator.java,a\e\ae7dbdb7d5e13d4d2431ec92d1eb7493686e2370
-h
-8src/main/java/repository/impl/LoyaltyCardRepository.java,f\c\fc653cd309a651527f6477061f56b435a3a2153e
-g
-7src/main/java/repository/impl/SalesStandRepository.java,4\f\4f5ecf8c463856d70997803248ee75e7f67faaf9
 f
 6src/main/java/validators/impl/SalesStandValidator.java,d\a\da26d8c8c09cea4f2834412947750bb8fb22890c
-e
-5src/main/java/repository/impl/CustomerRepository.java,8\4\84485a231cce5f62a32e7cbbd8ea773eca8a41cd
 X
 (src/main/java/model/entity/Customer.java,d\8\d86520474da6068d71e0c7a9fec152dd0bbf0fb7
 [
@@ -105,3 +95,19 @@ g
 7src/main/java/model/others/CustomerWithLoyaltyCard.java,3\6\36deab9d22e3ba603a8809c1a6f8406802df86b6
 ^
 .src/main/java/utils/SimulateTimeFlowUtils.java,c\d\cd4f69f6b0a075422174e502a1e41845b7ceee1d
+c
+3src/main/java/model/others/MovieWithSalesStand.java,5\7\576e38aeceecc8a2410e7c62c276a05a5e1c5a9b
+w
+Gsrc/main/java/repository/entity_repository/impl/CustomerRepository.java,9\d\9dc0d16ce286f672f9567b33d1bfa84582af336d
+z
+Jsrc/main/java/repository/entity_repository/impl/LoyaltyCardRepository.java,d\2\d25efd1eb21e4cf24850b18b1f0111e8d8d37c25
+t
+Dsrc/main/java/repository/entity_repository/impl/MovieRepository.java,c\a\ca9259a45f2f9eb7e1c89f5bbb55278d781c2a9d
+n
+>src/main/java/repository/entity_repository/CrudRepository.java,d\6\d691bff4508f710ae024c3ac7b7b47c5e73da3af
+m
+=src/main/java/repository/others/JoinedEntitiesRepository.java,a\b\ab3484d4fa679f7244e5e6f357bee6fc7a8a8514
+g
+7src/main/java/service/others/JoinedEntitiesService.java,6\b\6bb491907734d452ee00a89f8b3d062701dd7297
+y
+Isrc/main/java/repository/entity_repository/impl/SalesStandRepository.java,5\d\5d7781643bd8d8cdce514dc36898cc3fa22c720c

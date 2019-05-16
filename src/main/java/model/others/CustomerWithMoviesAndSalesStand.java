@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CustomerWithMoviesAndSalesStand {
 
-  private Integer id;
+  private Integer customerId;
   private String movieTitle;
   private String movieGenre;
   private BigDecimal ticketPrice;

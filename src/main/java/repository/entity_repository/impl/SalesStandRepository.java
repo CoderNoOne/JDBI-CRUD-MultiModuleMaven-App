@@ -114,7 +114,7 @@ public class SalesStandRepository implements CrudRepository<SalesStand> {
                     .createQuery(sql)
                     .bind("customerId", id)
                     .map((rs, ctx) -> CustomerWithMoviesAndSalesStand.builder()
-                            .id(id)
+                            .customerId(id)
                             .movieTitle(rs.getString("m_title"))
                             .movieDuration(rs.getInt("m_duration"))
                             .movieGenre(rs.getString("m_genre"))

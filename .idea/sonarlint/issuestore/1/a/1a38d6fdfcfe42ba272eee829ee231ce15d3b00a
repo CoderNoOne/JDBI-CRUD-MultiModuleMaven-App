@@ -1,9 +1,9 @@
 
-ysquid:S2068"V'PASSWORD' detected in this expression, review this potentially hard-coded credential.(ÿ†·Çùÿÿÿÿ8ºÌÃ¦-
-Dsquid:S1170"!Make this final field static too.(ÿ†·Çùÿÿÿÿ8ºÌÃ¦-
-rsquid:S00116"SRename this field "USERNAME" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Õï®ñ8ºÌÃ¦-
-Dsquid:S1170"!Make this final field static too.(ıø¯„úÿÿÿÿ8ºÌÃ¦-
 hsquid:S1192)"JDefine a constant instead of duplicating this literal "not null" 15 times.(ó¸ú8¯á•Ç¦-
-{squid:S00116"WRename this field "DATABASE_URL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ıø¯„úÿÿÿÿ8ºÌÃ¦-
-wsquid:S00116"SRename this field "PASSWORD" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÿ†·Çùÿÿÿÿ8ºÌÃ¦-
+Dsquid:S1170"!Make this final field static too.(ÿ†·Çùÿÿÿÿ8ºÌÃ¦-
 ?squid:S1170"!Make this final field static too.(Õï®ñ8ºÌÃ¦-
+wsquid:S00116"SRename this field "PASSWORD" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÿ†·Çùÿÿÿÿ8ºÌÃ¦-
+Dsquid:S1170"!Make this final field static too.(ıø¯„úÿÿÿÿ8ºÌÃ¦-
+rsquid:S00116"SRename this field "USERNAME" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Õï®ñ8ºÌÃ¦-
+{squid:S00116"WRename this field "DATABASE_URL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ıø¯„úÿÿÿÿ8ºÌÃ¦-
+ysquid:S2068"V'PASSWORD' detected in this expression, review this potentially hard-coded credential.(ÿ†·Çùÿÿÿÿ8ºÌÃ¦-
