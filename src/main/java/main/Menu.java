@@ -13,8 +13,10 @@ import service.entity_service.SalesStandService;
 import service.others.DataInitializeService;
 
 import utils.MenuOptionsUtils;
+import utils.SimulateTimeFlowUtils;
 import utils.UserDataUtils;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @Slf4j
@@ -43,6 +45,8 @@ public class Menu {
             UserDataUtils.close();
             return;
           }
+          case 10 -> option10();
+          case 11 -> option11();
           default -> throw new AppException("INPUT OPTION IS NOT DEFINED");
         }
       } catch (AppException e) {
@@ -50,6 +54,16 @@ public class Menu {
         System.err.println(Arrays.toString(e.getStackTrace()));
       }
     }
+  }
+
+  private void option11() {
+    System.out.println(LocalDateTime.now(SimulateTimeFlowUtils.getClock()));
+  }
+
+  private void option10() {
+    var noOfDays = UserDataUtils.getInt("How many days do you want to move in time forwardly?");
+
+    SimulateTimeFlowUtils.moveDateTimeForwardByDaysNumber(noOfDays);
   }
 
   private void option1() {
@@ -149,13 +163,17 @@ public class Menu {
     salesStandService.addSalesStand(movie.getId(), customer.getId(), movieStartTime);
     var ticketsNumber = salesStandService.ticketsNumberBoughtByCustomerId(customer.getId());
 
-    if (!loyaltyCardService.doCustomerPosesActiveLoyaltyCardByCustomerId(customer.getId())) {
-      loyaltyCardService.verifyIfCustomerCanGetLoyaltyCard(ticketsNumber);
-      customer.setLoyaltyCardId(loyaltyCardService.getNewlyCreatedLoyaltyCardId());
-      customerService.update(customer);
-    } else {
+    //jeszcze dorobic wysyłanie maila
 
+    if (!loyaltyCardService.doCustomerPosesActiveLoyaltyCardByCustomerId(customer.getId())) {
+      loyaltyCardService.verifyIfCustomerCanGetLoyaltyCard(ticketsNumber, customer.getId());
+      customer.setLoyaltyCardId(loyaltyCardService.getNewlyCreatedLoyaltyCardId());
+//      customerService.update(customer);
+    } else {
+      //zmeniejsze liczbę moviesNumber w loyaltyCard dla danego klienta o 1
+      loyaltyCardService.u
     }
+    customerService.update(customer);
   }
 
   //historia

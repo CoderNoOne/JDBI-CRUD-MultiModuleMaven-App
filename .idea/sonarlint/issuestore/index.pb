@@ -103,3 +103,5 @@ L
 src/main/java/main/Main.java,7\f\7f08be4e9c62f2e5f8f02242af89b918cb9a135f
 g
 7src/main/java/model/others/CustomerWithLoyaltyCard.java,3\6\36deab9d22e3ba603a8809c1a6f8406802df86b6
+^
+.src/main/java/utils/SimulateTimeFlowUtils.java,c\d\cd4f69f6b0a075422174e502a1e41845b7ceee1d

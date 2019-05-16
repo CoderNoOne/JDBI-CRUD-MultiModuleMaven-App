@@ -4,12 +4,26 @@ import java.time.*;
 
 public class SimulateTimeFlowUtils {
 
-  private static Clock clock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
+  private static Clock clock;
+  private static int days;
 
   private SimulateTimeFlowUtils() {
   }
 
-  private static void moveDateTimeForwardBySpecifiedDaysAmount(int days) {
-      clock = Clock.offset(clock, Duration.ofDays(days));
+  public static void moveDateTimeForwardByDaysNumber(int days) {
+    SimulateTimeFlowUtils.days += days;
+    clock = Clock.offset(Clock.fixed(Instant.now(), ZoneId.systemDefault()), Duration.ofDays(days));
   }
+
+  public static void moveDateTimeBackwardByDaysNumber(int days) {
+    SimulateTimeFlowUtils.days -= days;
+    clock = Clock.offset(Clock.fixed(Instant.now(), ZoneId.systemDefault()), Duration.ofDays(days));
+  }
+
+  public static Clock getClock() {
+    clock = Clock.offset(Clock.fixed(Instant.now(), ZoneId.systemDefault()), Duration.ofDays(days));
+    return clock;
+
+  }
+
 }

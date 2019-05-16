@@ -122,4 +122,13 @@ public class CustomerRepository implements CrudRepository<Customer> {
             .mapToBean(Customer.class)
             .findFirst());
   }
+
+  public Optional<Integer> getLoyaltyCardIdByCustomerId(Integer customerId) {
+
+    return jdbi.withHandle(handle -> handle
+            .createQuery("select customers.loyalty_card_id from customers where customers.id =:customerId")
+            .bind("customerId", customerId)
+            .mapTo(Integer.class)
+            .findFirst());
+  }
 }
