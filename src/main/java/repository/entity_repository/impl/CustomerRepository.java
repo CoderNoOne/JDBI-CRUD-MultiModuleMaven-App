@@ -1,10 +1,10 @@
-package repository.impl;
+package repository.entity_repository.impl;
 
 import connection.DbConnection;
 import exceptions.AppException;
 import model.entity.Customer;
 import org.jdbi.v3.core.Jdbi;
-import repository.CrudRepository;
+import repository.entity_repository.CrudRepository;
 
 
 import java.util.List;

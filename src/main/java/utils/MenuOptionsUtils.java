@@ -92,7 +92,7 @@ public class MenuOptionsUtils {
                     "Option no. 9 - {8}",
 
             "Movies grouped by the most popular ones",
-            "Most popular movie category grouped by each customer ",
+            "Most popular movie genre grouped by each customer ",
             "The most expensive ticket bought grouped each customer",
             "The cheapest ticket bought grouped for each customer",
             "Average ticket price grouped by month",

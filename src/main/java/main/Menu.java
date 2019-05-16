@@ -2,10 +2,10 @@ package main;
 
 import exceptions.AppException;
 import lombok.extern.slf4j.Slf4j;
-import repository.impl.CustomerRepository;
-import repository.impl.LoyaltyCardRepository;
-import repository.impl.MovieRepository;
-import repository.impl.SalesStandRepository;
+import repository.entity_repository.impl.CustomerRepository;
+import repository.entity_repository.impl.LoyaltyCardRepository;
+import repository.entity_repository.impl.MovieRepository;
+import repository.entity_repository.impl.SalesStandRepository;
 import service.entity_service.CustomerService;
 import service.entity_service.LoyaltyCardService;
 import service.entity_service.MovieService;
@@ -235,6 +235,17 @@ public class Menu {
   private void option7_2() {
 
   }
+
+//  "Movies grouped by the most popular ones",
+//          "Most popular movie category grouped by each customer ",
+//          "The most expensive ticket bought grouped each customer",
+//          "The cheapest ticket bought grouped for each customer",
+//          "Average ticket price grouped by month",
+//          "Total monthly expenses on tickets grouped by month for each customer",
+//          "Total amount of tickets bought with discount by movie category and grouped by each customer",
+//          "Total amount of tickets bought without discount by movie category and grouped by each customer",
+//          "Back to main menu"
+
 
   //filmy pogrupowane wg najchętnie kupowanych
   private void option7_1() {

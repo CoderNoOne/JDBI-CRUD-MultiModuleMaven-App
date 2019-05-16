@@ -3,10 +3,10 @@ package service.others;
 import converters.impl.CustomerListJsonConverter;
 import converters.impl.MovieListJsonConverter;
 import exceptions.AppException;
-import repository.impl.CustomerRepository;
-import repository.impl.LoyaltyCardRepository;
-import repository.impl.MovieRepository;
-import repository.impl.SalesStandRepository;
+import repository.entity_repository.impl.CustomerRepository;
+import repository.entity_repository.impl.LoyaltyCardRepository;
+import repository.entity_repository.impl.MovieRepository;
+import repository.entity_repository.impl.SalesStandRepository;
 import validators.impl.CustomerValidator;
 import validators.impl.MovieValidator;
 

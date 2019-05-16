@@ -4,7 +4,7 @@ import converters.impl.MovieJsonConverter;
 import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
 import model.entity.Movie;
-import repository.impl.MovieRepository;
+import repository.entity_repository.impl.MovieRepository;
 import utils.UserDataUtils;
 import validators.impl.MovieValidator;
 

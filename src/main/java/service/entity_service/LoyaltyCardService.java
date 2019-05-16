@@ -5,15 +5,12 @@ import lombok.RequiredArgsConstructor;
 import model.entity.Customer;
 import model.entity.LoyaltyCard;
 import model.entity.Movie;
-import model.others.CustomerWithLoyaltyCard;
-import repository.impl.LoyaltyCardRepository;
+import repository.entity_repository.impl.LoyaltyCardRepository;
 import utils.EmailUtils;
 import utils.UserDataUtils;
 import validators.impl.LoyaltyCardValidator;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -21,10 +18,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 

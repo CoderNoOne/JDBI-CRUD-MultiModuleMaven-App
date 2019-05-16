@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import model.entity.SalesStand;
 import model.others.CustomerWithMoviesAndSalesStand;
 import model.tickets_data_filtering.MovieFilteringCriterion;
-import repository.impl.SalesStandRepository;
+import repository.entity_repository.impl.SalesStandRepository;
 import utils.EmailUtils;
 import utils.TicketsFilteringUtils;
 import validators.impl.SalesStandValidator;

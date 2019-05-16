@@ -3,7 +3,7 @@ package service.entity_service;
 import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
 import model.entity.Customer;
-import repository.impl.CustomerRepository;
+import repository.entity_repository.impl.CustomerRepository;
 import utils.UserDataUtils;
 import validators.impl.CustomerValidator;
 
