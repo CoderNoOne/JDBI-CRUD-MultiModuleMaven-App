@@ -3,12 +3,14 @@ package utils;
 import exceptions.AppException;
 import j2html.attributes.Attribute;
 import j2html.tags.ContainerTag;
+import model.entity.Movie;
 import model.others.CustomerWithMoviesAndSalesStand;
 import model.tickets_data_filtering.MovieFilteringCriterion;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -24,7 +26,7 @@ public class EmailUtils {
   }
 
   // do zakupu biletu
-  public static void sendMoviePurchaseConfirmation(String recipient, String subject) {
+  public static void sendMoviePurchaseConfirmation(String recipient, String subject, Movie movie, LocalDateTime startDateTime) {
 
 
   }

@@ -18,4 +18,5 @@ public class CustomerWithLoyaltyCard {
   private Integer moviesNumber;
   private BigDecimal discount;
   private LocalDate loyaltyCardExpirationDate;
+  private Integer loyaltyCardId;
 }

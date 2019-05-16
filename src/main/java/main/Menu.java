@@ -36,7 +36,7 @@ public class Menu {
           case 1 -> option1();
           case 2 -> option2();
           case 3 -> option3();
-          case 4 -> option4();
+          case 4 -> option4TableManagementMenu();
           case 5 -> option5();
           case 6 -> option6();
           case 7 -> option7();
@@ -98,7 +98,7 @@ public class Menu {
     DataInitializeService.init();
   }
 
-  private void option4() {
+  private void option4TableManagementMenu() {
     MenuOptionsUtils.customerAndMovieTableManagmentMenu();
     while (true) {
       try {
@@ -163,16 +163,19 @@ public class Menu {
     salesStandService.addSalesStand(movie.getId(), customer.getId(), movieStartTime);
     var ticketsNumber = salesStandService.ticketsNumberBoughtByCustomerId(customer.getId());
 
-    //jeszcze dorobic wysyłanie maila
+    //jeszcze dorobic wysyłanie maila wiadomość email,
+    // w której podajemy dane filmu, na który zakupiono bilet, godzinę rozpoczęcia oraz cenę biletu po uwzględnieniu zniżek.
 
-    if (!loyaltyCardService.doCustomerPosesActiveLoyaltyCardByCustomerId(customer.getId())) {
-      loyaltyCardService.verifyIfCustomerCanGetLoyaltyCard(ticketsNumber, customer.getId());
-      customer.setLoyaltyCardId(loyaltyCardService.getNewlyCreatedLoyaltyCardId());
-//      customerService.update(customer);
-    } else {
-      //zmeniejsze liczbę moviesNumber w loyaltyCard dla danego klienta o 1
-      loyaltyCardService.u
-    }
+    loyaltyCardService.buyTicket(customer, ticketsNumber, movie, movieStartTime);
+//    if (!loyaltyCardService.doCustomerPosesActiveLoyaltyCardByCustomerId(customer.getId())) {
+//      loyaltyCardService.verifyIfCustomerCanGetLoyaltyCard(ticketsNumber, customer.getId());
+//      customer.setLoyaltyCardId(loyaltyCardService.getNewlyCreatedLoyaltyCardId());
+////      customerService.update(customer);
+//    } else {
+//      //zmeniejsze liczbę moviesNumber w loyaltyCard dla danego klienta o 1
+//
+//      loyaltyCardService.decreaseMoviesNumberByLoyaltyCardId(loyaltyCardId);
+//    }
     customerService.update(customer);
   }
 
