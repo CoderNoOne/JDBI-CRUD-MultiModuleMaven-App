@@ -157,8 +157,10 @@ public class Menu {
   //zakup biletu - dodac sprawdzenie czy jest znizka i aktualziwowac loyaltyCard movie numbers dla klienta
   private void option5() {
     var customer = customerService.getCustomerFromUserInput();
+    movieService.chooseMovieToWatch();
+
     var movie = movieService.chooseMovieById();
-    var movieStartTime = movieService.chooseMovieStartTime("Choose movie start time in format 'year-month-day HH:mm'");
+    var movieStartTime = movieService.chooseMovieStartTime(movie);
 
     salesStandService.addSalesStand(movie.getId(), customer.getId(), movieStartTime);
     var ticketsNumber = salesStandService.ticketsNumberBoughtByCustomerId(customer.getId());
@@ -187,7 +189,58 @@ public class Menu {
   //statystyki
   private void option7() {
 
+    MenuOptionsUtils.statisticsOptionsMenu();
+    while (true) {
+      try {
+        int option = UserDataUtils.getInt("INPUT YOUR OPTION: ");
+        switch (option) {
+          case 1 -> option7_1();
+          case 2 -> option7_2();
+          case 3 -> option7_3();
+          case 4 -> option7_4();
+          case 5 -> option7_5();
+          case 6 -> option7_6();
+          case 7 -> option7_7();
+          case 8 -> MenuOptionsUtils.statisticsOptionsMenu();
+          case 9 -> mainMenu();
+          default -> throw new AppException("INPUT OPTION IS NOT DEFINED");
+        }
+      } catch (AppException e) {
+        System.out.println(e.getExceptionMessage());
+        System.err.println(Arrays.toString(e.getStackTrace()));
+      }
+    }
   }
+
+  private void option7_7() {
+
+  }
+
+  private void option7_6() {
+
+  }
+
+  private void option7_5() {
+
+  }
+
+  private void option7_4() {
+
+  }
+
+  private void option7_3() {
+
+  }
+
+  private void option7_2() {
+
+  }
+
+  //filmy pogrupowane wg najchętnie kupowanych
+  private void option7_1() {
+
+  }
+
 }
 
 

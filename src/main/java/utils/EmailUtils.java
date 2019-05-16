@@ -1,8 +1,6 @@
 package utils;
 
 import exceptions.AppException;
-import j2html.attributes.Attribute;
-import j2html.tags.ContainerTag;
 import model.entity.Movie;
 import model.others.CustomerWithMoviesAndSalesStand;
 import model.tickets_data_filtering.MovieFilteringCriterion;
@@ -11,6 +9,7 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -28,7 +27,23 @@ public class EmailUtils {
   // do zakupu biletu
   public static void sendMoviePurchaseConfirmation(String recipient, String subject, Movie movie, LocalDateTime startDateTime) {
 
+    var htmlContent = tbody(
+            tr().with(
+                    th("Movie title"),
+                    th("Movie genre"),
+                    th("Movie duration"),
+                    th("Movie price"),
+                    th("Movie release date"),
+                    th("Movie start date time"),
+                    tr().with(
+                            td(movie.getTitle()),
+                            td(movie.getGenre()),
+                            td(movie.getDuration().toString()),
+                            td(movie.getPrice().toString()),
+                            td(movie.getReleaseDate().toString()),
+                            td(startDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))))).renderFormatted();
 
+    sendAsHtml(recipient, subject, htmlContent);
   }
 
   public static void sendSummaryTableByFilters(String recipient, String subject, List<CustomerWithMoviesAndSalesStand> allFilteredTickets, Map<MovieFilteringCriterion, List<?>> filters) {

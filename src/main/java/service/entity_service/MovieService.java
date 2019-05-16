@@ -75,21 +75,31 @@ public class MovieService {
     return movieRepository.findById(movieId).orElseThrow(() -> new AppException(""));
   }
 
-  public LocalDateTime chooseMovieStartTime(String message) {
+  public LocalDateTime chooseMovieStartTime( Movie movie) {
 
-    System.out.println(message);
-    possibleShowTimes();
+//    System.out.println("Choose movie start time in format 'year-month-day HH:mm'");
+    possibleShowTimes(movie);
+
+    //weryfikacja czy wybrał dobrze
     return UserDataUtils.getLocalDateTime("Input movie start time in format 'year-month-day HH:mm'");
   }
 
-  private void possibleShowTimes() {
+  private void possibleShowTimes(Movie movie) {
 
     var presentDateTime = LocalDateTime.now();
-    var seedDateTime = presentDateTime.getMinute() < 30 ? presentDateTime.truncatedTo(ChronoUnit.HOURS).plusMinutes(30) : presentDateTime.plusHours(1).truncatedTo(ChronoUnit.HOURS);
 
+    var localDateTimeToClosesHourOrHalfAnHour = presentDateTime.getMinute() < 30 ? presentDateTime.truncatedTo(ChronoUnit.HOURS).plusMinutes(30) : presentDateTime.plusHours(1).truncatedTo(ChronoUnit.HOURS);
+    var seedDateTime = movie.getReleaseDate().compareTo(presentDateTime.toLocalDate()) < 0 ? localDateTimeToClosesHourOrHalfAnHour : movie.getReleaseDate().atTime(8,0);
+
+    //wykaz godzin potenjalnych seansow na nastpne 24 h od teraz
     Stream.iterate(seedDateTime, date -> date.plusMinutes(30))
             .limit(ChronoUnit.HOURS.between(seedDateTime, presentDateTime.plusHours(50)))
             .filter(date -> date.toLocalTime().compareTo(LocalTime.of(8, 0)) >= 0 && date.toLocalTime().compareTo(LocalTime.of(22, 30)) <= 0)
             .forEach(System.out::println);
+  }
+
+  public void chooseMovieToWatch() {
+    var movie = chooseMovieById();
+    chooseMovieStartTime(movie);
   }
 }
