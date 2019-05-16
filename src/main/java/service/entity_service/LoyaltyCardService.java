@@ -73,7 +73,8 @@ public class LoyaltyCardService {
 
     String ticketsNumber = "-1"; //jeżęli taka wartość customera o danym Id nie ma w zapisanego w pliku
     try {
-      ticketsNumber = Files.readAllLines(Paths.get("updatedTicketNumberForCustomers.txt")).stream()
+      ticketsNumber = Files.readAllLines(Paths.get("updatedTicketNumberForCustomers.txt"))
+              .stream()
               .filter(line -> line.startsWith(String.valueOf(customer.getId())))
               .map(line -> line.substring((line.indexOf('=') + 1)))
               .findFirst().orElse(ticketsNumber);

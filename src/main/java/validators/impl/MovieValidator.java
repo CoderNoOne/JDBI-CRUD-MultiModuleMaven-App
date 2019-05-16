@@ -30,9 +30,9 @@ public class MovieValidator implements Validator<Movie> {
       errors.put("Movie Price", "Movie Price should be greater than 0");
     }
 
-    if (!isReleaseDateValid(movie)) {
-      errors.put("Movie Release Date", "Movie release date takes place in the future");
-    }
+//    if (!isReleaseDateValid(movie)) {
+//      errors.put("Movie Release Date", "Movie release date takes place in the future");
+//    }
 
     return errors;
   }
@@ -56,15 +56,15 @@ public class MovieValidator implements Validator<Movie> {
     return !hasErrors();
   }
 
-  public boolean isDurationValid(Movie movie) {
+  private boolean isDurationValid(Movie movie) {
     return movie.getDuration() > 0 && movie.getDuration() < 6;
   }
 
-  public boolean isPriceValid(Movie movie) {
+  private boolean isPriceValid(Movie movie) {
     return movie.getPrice().compareTo(BigDecimal.ZERO) > 0;
   }
 
-  public boolean isReleaseDateValid(Movie movie) {
+  private boolean isReleaseDateValid(Movie movie) {
     return movie.getReleaseDate().compareTo(LocalDate.now()) > 0;
   }
 

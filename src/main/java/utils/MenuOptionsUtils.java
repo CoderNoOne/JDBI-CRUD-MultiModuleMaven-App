@@ -18,7 +18,9 @@ public class MenuOptionsUtils {
                     "Option no. 6 - {5}\n" +
                     "Option no. 7 - {6}\n" +
                     "Option no. 8 - {7}\n" +
-                    "Option no. 9 - {8}",
+                    "Option no. 9 - {8}\n" +
+                    "Option no. 10 - {9}\n" +
+                    "Option no. 11 - {10}",
 
             "Add new Customer",
             "Add new movie from json file",
