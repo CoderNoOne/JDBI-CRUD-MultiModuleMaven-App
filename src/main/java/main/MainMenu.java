@@ -108,14 +108,11 @@ public class MainMenu {
   //zakup biletu - dodac sprawdzenie czy jest znizka i aktualziwowac loyaltyCard movie numbers dla klienta
   private void option5() {
     var customer = customerService.getCustomerFromUserInput();
-    System.out.println(customer);
 
     var ticketDetails = movieService.chooseMovieStartTime();
     var ticketsNumber = salesStandService.buyTicket((Movie) ticketDetails.get("movie"), customer, (LocalDateTime) ticketDetails.get("movieStartTime"));
-
     //zmien na adekwatnną nazwę metody
     loyaltyCardService.buyTicket(customer, ticketsNumber, (Movie) ticketDetails.get("movie"), (LocalDateTime) ticketDetails.get("movieStartTime"));
-    System.out.println(customer);
     customerService.update(customer);
   }
 

@@ -22,10 +22,15 @@ public class CustomerService {
     Customer customer = createCustomer(name, surname, age, email);
     boolean isValid = new CustomerValidator().validateEntity(customer);
 
-    if (isValid) {
-      customerRepository.add(customer);
+    var customerEmailUnique = isCustomerEmailUnique(customer.getEmail());
+    if (isValid && customerEmailUnique) {
+     addCustomerToDb(customer);
     }
-    return isValid;
+    return isValid && customerEmailUnique;
+  }
+
+  public void addCustomerToDb(Customer customer){
+    customerRepository.add(customer);
   }
 
   public void deleteCustomer(final Integer id) {
@@ -76,5 +81,9 @@ public class CustomerService {
 
   public void update(Customer customer) {
     customerRepository.update(customer);
+  }
+
+  public boolean isCustomerEmailUnique(String email){
+    return customerRepository.findCustomerByEmail(email).isEmpty();
   }
 }

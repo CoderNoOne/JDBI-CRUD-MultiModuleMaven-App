@@ -7,14 +7,10 @@ W
 'src/main/java/validators/Validator.java,e\7\e73c995b07eb0e57ce1a40c06fc6e86ff0cfb7c8
 Z
 *src/main/java/connection/DbConnection.java,1\a\1a38d6fdfcfe42ba272eee829ee231ce15d3b00a
-9
-	movie.txt,8\9\8999ac8f6bfebde3f35fe453e46cc84e74e87cb5
 c
 3src/main/java/connection/SqlCreateTableCommand.java,f\2\f227a8a7dc02cd8bdf711a7932613cdee9c99f54
 [
 +src/main/java/converters/JsonConverter.java,c\4\c4bd7eada5fccccdf56852a863c77ed8b78da173
-H
-src/main/java/movie.json,6\3\638178219b317b35c7c31fffbf2069391f985c29
 L
 src/main/java/main/Menu.java,3\8\38874e97868eab190dfeb4b67c6c143182a14784
 X
@@ -27,8 +23,6 @@ E
 exampleCustomers.json,d\5\d5c253b834805c0f521ecde0408d888ecd9e9074
 B
 exampleMovies.json,b\6\b6919aca1ba36d155a33b33c720d7f3214a395d1
-7
-ss.json,1\c\1c3c6560d5e847c10aa2b298a41164575cd40b92
 `
 0src/main/java/validators/impl/MailValidator.java,8\2\82ad32c6b934e44d9dc765a0c202c6063117a9a0
 g
@@ -111,3 +105,18 @@ g
 7src/main/java/service/others/JoinedEntitiesService.java,6\b\6bb491907734d452ee00a89f8b3d062701dd7297
 y
 Isrc/main/java/repository/entity_repository/impl/SalesStandRepository.java,5\d\5d7781643bd8d8cdce514dc36898cc3fa22c720c
+j
+:src/main/java/main/CustomerAndMovieTableManagmentMenu.java,9\4\944bf776a451655f5bf56b1b95748dd0dae1e6da
+V
+&src/main/java/main/StatisticsMenu.java,f\c\fc689ecb1b128a2e62b2f3bd5a7aba5ec25e16ab
+^
+.src/main/java/main/TransactionHistoryMenu.java,2\a\2a2177da5416d4437bc12cd7ffbcf6fdb1e180f6
+:
+
+movie.json,7\c\7ce1e4c267455817d1db5b77be56a77dc2d58842
+S
+#updatedTicketNumberForCustomers.txt,4\b\4bb38056fc5a50925ba8ddbca4723e87298828f4
+L
+src/main/java/main/Test.java,3\e\3ebdfcd051ae19d2ea08ce0c8c3908a8616e32ba
+P
+ src/main/java/main/MainMenu.java,f\1\f119f91fd4710ec35e22f32b0072cdf1f3e400eb

@@ -49,6 +49,7 @@ public class LoyaltyCardRepository implements CrudRepository<LoyaltyCard> {
                     .bind(0, loyaltyCard.getExpirationDate() == null ? loyaltyCardFromDb.getExpirationDate() : loyaltyCard.getExpirationDate())
                     .bind(1, loyaltyCard.getDiscount() == null ? loyaltyCardFromDb.getDiscount() : loyaltyCard.getDiscount())
                     .bind(2, loyaltyCard.getMoviesNumber() == null ? loyaltyCardFromDb.getMoviesNumber() : loyaltyCard.getMoviesNumber())
+                    .bind(3, loyaltyCard.getId())
                     .execute()));
 
   }
