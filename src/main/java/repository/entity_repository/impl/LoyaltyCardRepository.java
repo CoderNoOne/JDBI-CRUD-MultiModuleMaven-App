@@ -96,22 +96,22 @@ public class LoyaltyCardRepository implements CrudRepository<LoyaltyCard> {
             .execute());
   }
 
-  public Optional<CustomerWithLoyaltyCard> getCustomerWithLoyaltyCardInfoByCustomerId(Integer customerId) {
-
-    final String sql = String.join(" ", "select customers.id c_id, loyalty_cards.movies_number lc_movie_numbers,"
-            , "loyalty_cards.discount lc_discount, loyalty_cards.expiration_date lc_exp_date, loyalty_cards.id lc_id"
-            , "from customers join loyalty_cards on customers.loyalty_card_id = loyalty_cards.id where customers.id =:customerId");
-
-    return jdbi.withHandle(handle ->
-            handle
-                    .createQuery(sql)
-                    .bind("customerId", customerId)
-                    .map((rs, ctx) -> CustomerWithLoyaltyCard.builder()
-                            .customerId(rs.getInt("c_id"))
-                            .discount(rs.getBigDecimal("lc_discount"))
-                            .moviesNumber(rs.getInt("lc_movie_numbers"))
-                            .loyaltyCardExpirationDate(rs.getDate("lc_exp_date").toLocalDate())
-                            .loyaltyCardId(rs.getInt("lc_id"))
-                            .build()).findFirst());
-  }
+//  public Optional<CustomerWithLoyaltyCard> getCustomerWithLoyaltyCardInfoByCustomerId(Integer customerId) {
+//
+//    final String sql = String.join(" ", "select customers.id c_id, loyalty_cards.movies_number lc_movie_numbers,"
+//            , "loyalty_cards.discount lc_discount, loyalty_cards.expiration_date lc_exp_date, loyalty_cards.id lc_id"
+//            , "from customers join loyalty_cards on customers.loyalty_card_id = loyalty_cards.id where customers.id =:customerId");
+//
+//    return jdbi.withHandle(handle ->
+//            handle
+//                    .createQuery(sql)
+//                    .bind("customerId", customerId)
+//                    .map((rs, ctx) -> CustomerWithLoyaltyCard.builder()
+//                            .customerId(rs.getInt("c_id"))
+//                            .discount(rs.getBigDecimal("lc_discount"))
+//                            .moviesNumber(rs.getInt("lc_movie_numbers"))
+//                            .loyaltyCardExpirationDate(rs.getDate("lc_exp_date").toLocalDate())
+//                            .loyaltyCardId(rs.getInt("lc_id"))
+//                            .build()).findFirst());
+//  }
 }

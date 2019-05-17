@@ -12,11 +12,11 @@ import repository.others.JoinedEntitiesRepository;
 import service.entity_service.SalesStandService;
 import utils.EmailUtils;
 import utils.TicketsFilteringUtils;
+import utils.UserDataUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -33,6 +33,29 @@ public class JoinedEntitiesService {
             .collect(Collectors.groupingBy(JoinedEntitiesService::convertMovieWithSalesStandToMovie, Collectors.summingInt(e -> 1)));
   }
 
+  public Set<Movie> allMoviesBoughtSortedAlphabetically() {
+    return joinedEntitiesRepository.getMovieWithSalesStand()
+            .stream().map(JoinedEntitiesService::convertMovieWithSalesStandToMovie)
+            .sorted(Comparator.comparing(Movie::getTitle))
+            .collect(Collectors.toCollection(LinkedHashSet::new));
+  }
+
+  public Set<Movie> allDistinctMoviesBoughtBySpecifiedCustomerSortedAlphabetically(Integer customerId) {
+    return joinedEntitiesRepository.getAllTicketsByCustomerId(customerId)
+            .stream()
+            .map(JoinedEntitiesService::convertCustomerWithMoviesAndSalesStandsToMovie)
+            .collect(Collectors.toCollection(TreeSet::new));
+  }
+
+  private static Movie convertCustomerWithMoviesAndSalesStandsToMovie(CustomerWithMoviesAndSalesStand customerWithMoviesAndSalesStand) {
+    return Movie.builder()
+            .title(customerWithMoviesAndSalesStand.getMovieTitle())
+            .genre(customerWithMoviesAndSalesStand.getMovieGenre())
+            .price(customerWithMoviesAndSalesStand.getTicketPrice())
+            .duration(customerWithMoviesAndSalesStand.getMovieDuration())
+            .releaseDate(customerWithMoviesAndSalesStand.getMovieReleaseDate())
+            .build();
+  }
 
   public Map<Integer, Map<String, Integer>> mostPopularMovieGenreForEachCustomer() {
 
@@ -62,13 +85,13 @@ public class JoinedEntitiesService {
             .build();
   }
 
-  public List<CustomerWithMoviesAndSalesStand> allTicketsTransactionHistory(Integer id) {
+ /* public List<CustomerWithMoviesAndSalesStand> allTicketsTransactionHistory(Integer id) {
 
     var allTicketsByCustomerId = joinedEntitiesRepository.getAllTicketsByCustomerId(id);
 
-    EmailUtils.sendAllSummaryTable("firelight.code@gmail.com"/*salesStandRepository.getCustomerEmailByCustomerId(id)*/, "Movie summary", allTicketsByCustomerId);
+    EmailUtils.sendAllSummaryTable(joinedEntitiesRepository.getCustomerEmailByCustomerId(id), "Movie summary", allTicketsByCustomerId);
     return allTicketsByCustomerId;
-  }
+  }*/
 
   public List<CustomerWithMoviesAndSalesStand> filterTicketsTransactionHistory(Integer id) {
 
@@ -131,10 +154,46 @@ public class JoinedEntitiesService {
     return joinedEntitiesRepository.getAllTicketsByCustomerId(customerId).size();
   }
 
-//  public boolean isTransactionDone(Movie movie, Customer customer, LocalDateTime startDateTime) {
-//    if (!addSalesStand(movie, customer, startDateTime)) {
-//      throw new AppException("Movie start date time is not valid");
+  private boolean doCustomerPosesActiveLoyaltyCardByCustomerId(Integer customerId) {
+    var customerWithLoyaltyCardOptional = joinedEntitiesRepository.getCustomerWithLoyaltyCardInfoByCustomerId(customerId);
+
+    return customerWithLoyaltyCardOptional.isPresent() &&
+            customerWithLoyaltyCardOptional.get().getMoviesNumber() > 0 &&
+            customerWithLoyaltyCardOptional.get().getLoyaltyCardExpirationDate().compareTo(LocalDate.now()) > 0;
+  }
+
+//    public void manageLoyaltyCard(Customer customer, Integer ticketsNumber, Movie movie, LocalDateTime movieStartTime) {
+//
+//    if (!doCustomerPosesActiveLoyaltyCardByCustomerId(customer.getId())) {
+//      verifyIfCustomerCanGetLoyaltyCard(ticketsNumber, customer);//dorobic to aby  resetowac ilosc ticketow po założeniu loyaltyCard tak aby przy następnym założeniu była brana aktualna liczba ticketow
+//    } else {
+//      var loyaltyCardId = joinedEntitiesRepository.getCustomerWithLoyaltyCardInfoByCustomerId(customer.getId()).get().getLoyaltyCardId();
+//      decreaseMoviesNumberByLoyaltyCardId(loyaltyCardId);
+//      movie.setPrice(movie.getPrice().subtract(joinedEntitiesRepository.findById(loyaltyCardId).get().getDiscount()));
 //    }
-//    return true /*ticketsNumberBoughtByCustomerId(customer.getId())*/;
+//
+//    sendMovieDetailsToCustomerEmail(customer.getEmail(), "Movie Ticket purchase detail", movie, movieStartTime);
 //  }
+//
+//  private void verifyIfCustomerCanGetLoyaltyCard(Integer ticketsNumber, Customer customer) {
+//
+//    /*odczyt z pliku jesli nie ma id customera !=-1 to wez ticketsNumber z argumentu metody, w przeciwnym razie wez ticketsNumber - wartosc odczytana z pliku*/
+//    ticketsNumber = readTicketsNumberFromFileByCustomerId(customer) == -1 ? ticketsNumber : ticketsNumber - readTicketsNumberFromFileByCustomerId(customer);
+//
+//    if (ticketsNumber >= LOYALTY_CARD_MIN_MOVIE_NUMBER) {
+//      switch (UserDataUtils.getString("Do you want to add a loyalty card? (y/n)").toLowerCase()) {
+//        case "y" -> {
+//          addLoyaltyCardForCustomer(customer);
+//          //zapis do pliku aktualnej wartosci ticketsNumber dla klienta
+//          addOrUpdateTicketsNumberToFileBoughtByCustomer(ticketsNumber, customer);
+//        }
+//        case "n" -> System.out.println("TOO BAD. MAYBE NEXT TIME!");
+//        default -> verifyIfCustomerCanGetLoyaltyCard(ticketsNumber, customer);/*throw new AppException("ACTION NOT DEFINED");*/
+//      }
+//    }
+//  }
+
+  private void sendMovieDetailsToCustomerEmail(String email, String subject, Movie movie, LocalDateTime startDateTime) {
+    EmailUtils.sendMoviePurchaseConfirmation(email, subject, movie, startDateTime);
+  }
 }

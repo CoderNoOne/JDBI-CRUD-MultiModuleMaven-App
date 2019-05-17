@@ -18,6 +18,7 @@ import utils.MenuOptionsUtils;
 import utils.SimulateTimeFlowUtils;
 import utils.UserDataUtils;
 
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
@@ -43,7 +44,7 @@ class MainMenu {
           case 5 -> option5();
           case 6 -> option6();
           case 7 -> option7();
-          case 8 -> MenuOptionsUtils.mainMenuOptions();
+          case 8 -> mainMenuOptions();
           case 9 -> {
             UserDataUtils.close();
             return;
@@ -59,12 +60,44 @@ class MainMenu {
     }
   }
 
+  private void option5() {
+
+  }
+
+  private void mainMenuOptions() {
+
+    System.out.println(MessageFormat.format(
+            "\nOption no. 1 - {0}\n" +
+                    "Option no. 2 - {1}\n" +
+                    "Option no. 3 - {2}\n" +
+                    "Option no. 4 - {3}\n" +
+                    "Option no. 5 - {4}\n" +
+                    "Option no. 6 - {5}\n" +
+                    "Option no. 7 - {6}\n" +
+                    "Option no. 8 - {7}\n" +
+                    "Option no. 9 - {8}\n" +
+                    "Option no. 10 - {9}\n" +
+                    "Option no. 11 - {10}",
+
+            "Add new Customer",
+            "Add new movie from json file",
+            "Generate example data for table movies and customers",
+            "Movie and customer table management",
+            "Buy a ticket",
+            "History - summary",
+            "Some statistics",
+            "Show menu options",
+            "Exit the program"
+
+    ));
+  }
+
   private void option7() {
     new StatisticsMenu().menu();
   }
 
   private void option6() {
-
+    new TransactionHistoryMenu().menu();
   }
 
 
@@ -106,20 +139,20 @@ class MainMenu {
   }
 
   //zakup biletu - dodac sprawdzenie czy jest znizka i aktualziwowac loyaltyCard movie numbers dla klienta ale nie moze zmeniejsza poniezej 0
-  private void option5() {
-
-    var customer = customerService.getCustomerFromUserInput();
-    var ticketDetails = movieService.chooseMovieStartTime();
-
-    if  (salesStandService.isTransactionDone((Movie) ticketDetails.get("movie"), customer, (LocalDateTime) ticketDetails.get("movieStartTime"))) {
-      Integer ticketsNumber = joinedEntitiesService.ticketsNumberBoughtByCustomerId(customer.getId());
-      loyaltyCardService.manageLoyaltyCard(customer, ticketsNumber, (Movie) ticketDetails.get("movie"), (LocalDateTime) ticketDetails.get("movieStartTime"));
-      customerService.update(customer);
-    } else {
-      throw new AppException("Movie start date time is not valid");
-    }
-
-  }
+//  private void option5() {
+//
+//    var customer = customerService.getCustomerFromUserInput();
+//    var ticketDetails = movieService.chooseMovieStartTime();
+//
+//    if (salesStandService.isTransactionDone((Movie) ticketDetails.get("movie"), customer, (LocalDateTime) ticketDetails.get("movieStartTime"))) {
+//      Integer ticketsNumber = joinedEntitiesService.ticketsNumberBoughtByCustomerId(customer.getId());
+//      loyaltyCardService.manageLoyaltyCard(customer, ticketsNumber, (Movie) ticketDetails.get("movie"), (LocalDateTime) ticketDetails.get("movieStartTime"));
+//      customerService.update(customer);
+//    } else {
+//      throw new AppException("Movie start date time is not valid");
+//    }
+//
+//  }
 
   private void option11() {
     System.out.println(LocalDateTime.now(SimulateTimeFlowUtils.getClock()));

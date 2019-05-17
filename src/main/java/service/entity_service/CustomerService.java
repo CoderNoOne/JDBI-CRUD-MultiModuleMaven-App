@@ -7,6 +7,7 @@ import repository.entity_repository.impl.CustomerRepository;
 import utils.UserDataUtils;
 import validators.impl.CustomerValidator;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -24,12 +25,12 @@ public class CustomerService {
 
     var customerEmailUnique = isCustomerEmailUnique(customer.getEmail());
     if (isValid && customerEmailUnique) {
-     addCustomerToDb(customer);
+      addCustomerToDb(customer);
     }
     return isValid && customerEmailUnique;
   }
 
-  public void addCustomerToDb(Customer customer){
+  public void addCustomerToDb(Customer customer) {
     customerRepository.add(customer);
   }
 
@@ -37,8 +38,10 @@ public class CustomerService {
     customerRepository.delete(id);
   }
 
-  public void showAllCustomers() {
-    customerRepository.findAll().forEach(System.out::println);
+  public List<Customer> showAllCustomers() {
+    var allCustomers = customerRepository.findAll();
+    allCustomers.forEach(System.out::println);
+    return allCustomers;
   }
 
   public Optional<Customer> findCustomerById(final Integer id) {
@@ -83,7 +86,7 @@ public class CustomerService {
     customerRepository.update(customer);
   }
 
-  public boolean isCustomerEmailUnique(String email){
+  public boolean isCustomerEmailUnique(String email) {
     return customerRepository.findCustomerByEmail(email).isEmpty();
   }
 }

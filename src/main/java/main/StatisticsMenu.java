@@ -17,6 +17,7 @@ import service.others.JoinedEntitiesService;
 import utils.MenuOptionsUtils;
 import utils.UserDataUtils;
 
+import java.text.MessageFormat;
 import java.util.Arrays;
 
 @Slf4j
@@ -28,9 +29,9 @@ class StatisticsMenu {
   private final SalesStandService salesStandService = new SalesStandService(new SalesStandRepository());
   private final JoinedEntitiesService joinedEntitiesService = new JoinedEntitiesService(new JoinedEntitiesRepository());
 
-  public void menu() {
+   void menu() {
 
-    MenuOptionsUtils.statisticsOptionsMenu();
+    menuOptions();
     while (true) {
       try {
         int option = UserDataUtils.getInt("INPUT YOUR OPTION: ");
@@ -42,7 +43,7 @@ class StatisticsMenu {
           case 5 -> option7_5();
           case 6 -> option7_6();
           case 7 -> option7_7();
-          case 8 -> MenuOptionsUtils.statisticsOptionsMenu();
+          case 8 -> menuOptions();
           case 9 -> new MainMenu().mainMenu();
           default -> throw new AppException("INPUT OPTION IS NOT DEFINED");
         }
@@ -51,6 +52,32 @@ class StatisticsMenu {
         log.error(Arrays.toString(e.getStackTrace()));
       }
     }
+  }
+
+  public static void menuOptions() {
+
+    System.out.println(MessageFormat.format(
+            "\nOption no. 1 - {0}\n" +
+                    "Option no. 2 - {1}\n" +
+                    "Option no. 3 - {2}\n" +
+                    "Option no. 4 - {3}\n" +
+                    "Option no. 5 - {4}\n" +
+                    "Option no. 6 - {5}\n" +
+                    "Option no. 7 - {6}\n" +
+                    "Option no. 8 - {7}\n" +
+                    "Option no. 9 - {8}",
+
+            "Movies grouped by the most popular ones",
+            "Most popular movie genre grouped by each customer ",
+            "The most expensive ticket bought grouped each customer",
+            "The cheapest ticket bought grouped for each customer",
+            "Average ticket price grouped by month",
+            "Total monthly expenses on tickets grouped by month for each customer",
+            "Total amount of tickets bought with discount by movie category and grouped by each customer",
+            "Total amount of tickets bought without discount by movie category and grouped by each customer",
+            "Back to main menu"
+
+    ));
   }
 
   private void option7_7() {

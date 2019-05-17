@@ -17,7 +17,6 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -51,23 +50,23 @@ public class LoyaltyCardService {
     }
   }
 
-  private void verifyIfCustomerCanGetLoyaltyCard(Integer ticketsNumber, Customer customer) {
-
-    /*odczyt z pliku jesli nie ma id customera !=-1 to wez ticketsNumber z argumentu metody, w przeciwnym razie wez ticketsNumber - wartosc odczytana z pliku*/
-    ticketsNumber = readTicketsNumberFromFileByCustomerId(customer) == -1 ? ticketsNumber : ticketsNumber - readTicketsNumberFromFileByCustomerId(customer);
-
-    if (ticketsNumber >= LOYALTY_CARD_MIN_MOVIE_NUMBER) {
-      switch (UserDataUtils.getString("Do you want to add a loyalty card? (y/n)").toLowerCase()) {
-        case "y" -> {
-          addLoyaltyCardForCustomer(customer);
-          //zapis do pliku aktualnej wartosci ticketsNumber dla klienta
-          addOrUpdateTicketsNumberToFileBoughtByCustomer(ticketsNumber, customer);
-        }
-        case "n" -> System.out.println("TOO BAD. MAYBE NEXT TIME!");
-        default -> verifyIfCustomerCanGetLoyaltyCard(ticketsNumber, customer);/*throw new AppException("ACTION NOT DEFINED");*/
-      }
-    }
-  }
+//  private void verifyIfCustomerCanGetLoyaltyCard(Integer ticketsNumber, Customer customer) {
+//
+//    /*odczyt z pliku jesli nie ma id customera !=-1 to wez ticketsNumber z argumentu metody, w przeciwnym razie wez ticketsNumber - wartosc odczytana z pliku*/
+//    ticketsNumber = readTicketsNumberFromFileByCustomerId(customer) == -1 ? ticketsNumber : ticketsNumber - readTicketsNumberFromFileByCustomerId(customer);
+//
+//    if (ticketsNumber >= LOYALTY_CARD_MIN_MOVIE_NUMBER) {
+//      switch (UserDataUtils.getString("Do you want to add a loyalty card? (y/n)").toLowerCase()) {
+//        case "y" -> {
+//          addLoyaltyCardForCustomer(customer);
+//          //zapis do pliku aktualnej wartosci ticketsNumber dla klienta
+//          addOrUpdateTicketsNumberToFileBoughtByCustomer(ticketsNumber, customer);
+//        }
+//        case "n" -> System.out.println("TOO BAD. MAYBE NEXT TIME!");
+//        default -> verifyIfCustomerCanGetLoyaltyCard(ticketsNumber, customer);/*throw new AppException("ACTION NOT DEFINED");*/
+//      }
+//    }
+//  }
 
   private Integer readTicketsNumberFromFileByCustomerId(Customer customer) {
 
@@ -128,13 +127,13 @@ public class LoyaltyCardService {
     return loyaltyCardRepository.findAll().get(loyaltyCardRepository.findAll().size() - 1).getId();
   }
 
-  private boolean doCustomerPosesActiveLoyaltyCardByCustomerId(Integer customerId) {
-    var customerWithLoyaltyCardOptional = loyaltyCardRepository.getCustomerWithLoyaltyCardInfoByCustomerId(customerId);
-
-    return customerWithLoyaltyCardOptional.isPresent() &&
-            customerWithLoyaltyCardOptional.get().getMoviesNumber() > 0 &&
-            customerWithLoyaltyCardOptional.get().getLoyaltyCardExpirationDate().compareTo(LocalDate.now()) > 0;
-  }
+//  private boolean doCustomerPosesActiveLoyaltyCardByCustomerId(Integer customerId) {
+//    var customerWithLoyaltyCardOptional = loyaltyCardRepository.getCustomerWithLoyaltyCardInfoByCustomerId(customerId);
+//
+//    return customerWithLoyaltyCardOptional.isPresent() &&
+//            customerWithLoyaltyCardOptional.get().getMoviesNumber() > 0 &&
+//            customerWithLoyaltyCardOptional.get().getLoyaltyCardExpirationDate().compareTo(LocalDate.now()) > 0;
+//  }
 
   private void decreaseMoviesNumberByLoyaltyCardId(Integer loyaltyCardId) {
     var loyaltyCardOptional = loyaltyCardRepository.findById(loyaltyCardId);
@@ -146,20 +145,20 @@ public class LoyaltyCardService {
     }
   }
 
-  public void manageLoyaltyCard(Customer customer, Integer ticketsNumber, Movie movie, LocalDateTime movieStartTime) {
+//  public void manageLoyaltyCard(Customer customer, Integer ticketsNumber, Movie movie, LocalDateTime movieStartTime) {
+//
+//    if (!doCustomerPosesActiveLoyaltyCardByCustomerId(customer.getId())) {
+//      verifyIfCustomerCanGetLoyaltyCard(ticketsNumber, customer);//dorobic to aby  resetowac ilosc ticketow po założeniu loyaltyCard tak aby przy następnym założeniu była brana aktualna liczba ticketow
+//    } else {
+//      var loyaltyCardId = loyaltyCardRepository.getCustomerWithLoyaltyCardInfoByCustomerId(customer.getId()).get().getLoyaltyCardId();
+//      decreaseMoviesNumberByLoyaltyCardId(loyaltyCardId);
+//      movie.setPrice(movie.getPrice().subtract(loyaltyCardRepository.findById(loyaltyCardId).get().getDiscount()));
+//    }
+//
+//    sendMovieDetailsToCustomerEmail(customer.getEmail(), "Movie Ticket purchase detail", movie, movieStartTime);
+//  }
 
-    if (!doCustomerPosesActiveLoyaltyCardByCustomerId(customer.getId())) {
-      verifyIfCustomerCanGetLoyaltyCard(ticketsNumber, customer);//dorobic to aby  resetowac ilosc ticketow po założeniu loyaltyCard tak aby przy następnym założeniu była brana aktualna liczba ticketow
-    } else {
-      var loyaltyCardId = loyaltyCardRepository.getCustomerWithLoyaltyCardInfoByCustomerId(customer.getId()).get().getLoyaltyCardId();
-      decreaseMoviesNumberByLoyaltyCardId(loyaltyCardId);
-      movie.setPrice(movie.getPrice().subtract(loyaltyCardRepository.findById(loyaltyCardId).get().getDiscount()));
-    }
-
-    sendMovieDetailsToCustomerEmail(customer.getEmail(), "Movie Ticket purchase detail", movie, movieStartTime);
-  }
-
-  private void sendMovieDetailsToCustomerEmail(String email, String subject, Movie movie, LocalDateTime startDateTime) {
-    EmailUtils.sendMoviePurchaseConfirmation(email, subject, movie, startDateTime);
-  }
+//  private void sendMovieDetailsToCustomerEmail(String email, String subject, Movie movie, LocalDateTime startDateTime) {
+//    EmailUtils.sendMoviePurchaseConfirmation(email, subject, movie, startDateTime);
+//  }
 }

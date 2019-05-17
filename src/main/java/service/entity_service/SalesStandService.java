@@ -16,7 +16,6 @@ public class SalesStandService {
 
   private final SalesStandRepository salesStandRepository;
 
-
   private static SalesStand createSalesStand(Integer movieId, Integer customerId, LocalDateTime startDateTime) {
     return SalesStand.builder()
             .customerId(customerId)

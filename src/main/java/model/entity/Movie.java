@@ -14,7 +14,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Movie {
+public class Movie implements Comparable<Movie>{
 
   private Integer id;
   private String title;
@@ -23,4 +23,8 @@ public class Movie {
   private Integer duration;
   private LocalDate releaseDate;
 
+  @Override
+  public int compareTo(Movie o) {
+    return this.getTitle().compareTo(o.getTitle());
+  }
 }

@@ -5,14 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.text.MessageFormat;
-import java.util.Objects;
+import java.util.Comparator;
+
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Customer {
+public class Customer implements Comparable<Customer> {
 
   private Integer id;
   private String name;
@@ -21,4 +21,8 @@ public class Customer {
   private String email;
   private Integer loyaltyCardId;
 
+  @Override
+  public int compareTo(Customer o) {
+    return Comparator.comparing(Customer::getSurname).thenComparing(Customer::getName).compare(this, o);
+  }
 }
