@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+
 @RequiredArgsConstructor
 public class MovieService {
 
@@ -68,14 +69,14 @@ public class MovieService {
     return isValid;
   }
 
-  public Movie chooseMovieById() {
+  private Movie chooseMovieById() {
 
     System.out.println("AVAILABLE MOVIES");
     showAllMovies();
 
     Integer movieId = UserDataUtils.getInt("Input movie id");
 
-    return movieRepository.findById(movieId).orElseThrow(() -> new AppException(""));
+    return movieRepository.findById(movieId).orElseGet(this::getMovieAgain);
   }
 
   public Map<String, Object> chooseMovieStartTime() {
@@ -109,4 +110,8 @@ public class MovieService {
   }
 
 
+  private Movie getMovieAgain() {
+    System.out.println("That film isn't in our database. Check again");
+    return chooseMovieById();
+  }
 }

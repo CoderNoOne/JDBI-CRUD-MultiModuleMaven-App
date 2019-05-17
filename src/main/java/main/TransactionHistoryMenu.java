@@ -1,5 +1,6 @@
 package main;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import repository.entity_repository.impl.CustomerRepository;
@@ -13,14 +14,14 @@ import service.entity_service.MovieService;
 import service.entity_service.SalesStandService;
 import service.others.JoinedEntitiesService;
 
-public class TransactionHistoryMenu {
+@Slf4j
+class TransactionHistoryMenu {
 
   private final CustomerService customerService = new CustomerService(new CustomerRepository());
   private final MovieService movieService = new MovieService(new MovieRepository());
   private final LoyaltyCardService loyaltyCardService = new LoyaltyCardService(new LoyaltyCardRepository());
   private final SalesStandService salesStandService = new SalesStandService(new SalesStandRepository());
   private final JoinedEntitiesService joinedEntitiesService = new JoinedEntitiesService(new JoinedEntitiesRepository());
-  private final Logger logger = LoggerFactory.getLogger(TransactionHistoryMenu.class);
 
   //historia
   public void menu() {

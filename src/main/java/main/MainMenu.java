@@ -3,8 +3,6 @@ package main;
 import exceptions.AppException;
 import lombok.extern.slf4j.Slf4j;
 import model.entity.Movie;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import repository.entity_repository.impl.CustomerRepository;
 import repository.entity_repository.impl.LoyaltyCardRepository;
 import repository.entity_repository.impl.MovieRepository;
@@ -20,7 +18,6 @@ import utils.MenuOptionsUtils;
 import utils.SimulateTimeFlowUtils;
 import utils.UserDataUtils;
 
-
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
@@ -32,7 +29,6 @@ class MainMenu {
   private final LoyaltyCardService loyaltyCardService = new LoyaltyCardService(new LoyaltyCardRepository());
   private final SalesStandService salesStandService = new SalesStandService(new SalesStandRepository());
   private final JoinedEntitiesService joinedEntitiesService = new JoinedEntitiesService(new JoinedEntitiesRepository());
-  private final Logger logger = LoggerFactory.getLogger(MainMenu.class);
 
   void mainMenu() {
     MenuOptionsUtils.mainMenuOptions();
@@ -57,8 +53,8 @@ class MainMenu {
           default -> throw new AppException("INPUT OPTION IS NOT DEFINED");
         }
       } catch (AppException e) {
-        logger.error(e.getExceptionMessage());
-        logger.error(Arrays.toString(e.getStackTrace()));
+        log.error(e.getExceptionMessage());
+        log.error(Arrays.toString(e.getStackTrace()));
       }
     }
   }
@@ -109,7 +105,7 @@ class MainMenu {
     new CustomerAndMovieTableManagementMenu().menu();
   }
 
-  //zakup biletu - dodac sprawdzenie czy jest znizka i aktualziwowac loyaltyCard movie numbers dla klienta
+  //zakup biletu - dodac sprawdzenie czy jest znizka i aktualziwowac loyaltyCard movie numbers dla klienta ale nie moze zmeniejsza poniezej 0
   private void option5() {
     var customer = customerService.getCustomerFromUserInput();
 

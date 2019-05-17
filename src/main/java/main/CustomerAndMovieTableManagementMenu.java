@@ -1,6 +1,7 @@
 package main;
 
 import exceptions.AppException;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import repository.entity_repository.impl.CustomerRepository;
@@ -18,14 +19,14 @@ import utils.UserDataUtils;
 
 import java.util.Arrays;
 
-public class CustomerAndMovieTableManagementMenu {
+@Slf4j
+class CustomerAndMovieTableManagementMenu {
 
   private final CustomerService customerService = new CustomerService(new CustomerRepository());
   private final MovieService movieService = new MovieService(new MovieRepository());
   private final LoyaltyCardService loyaltyCardService = new LoyaltyCardService(new LoyaltyCardRepository());
   private final SalesStandService salesStandService = new SalesStandService(new SalesStandRepository());
   private final JoinedEntitiesService joinedEntitiesService = new JoinedEntitiesService(new JoinedEntitiesRepository());
-  private final Logger logger = LoggerFactory.getLogger(CustomerAndMovieTableManagementMenu.class);
 
   void menu() {
     MenuOptionsUtils.customerAndMovieTableManagmentMenu();
@@ -45,8 +46,8 @@ public class CustomerAndMovieTableManagementMenu {
           default -> throw new AppException("INPUT OPTION IS NOT DEFINED");
         }
       } catch (AppException e) {
-        logger.info(e.getExceptionMessage());
-        logger.error(Arrays.toString(e.getStackTrace()));
+        log.info(e.getExceptionMessage());
+        log.error(Arrays.toString(e.getStackTrace()));
       }
     }
   }

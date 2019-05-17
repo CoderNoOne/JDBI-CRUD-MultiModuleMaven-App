@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LoyaltyCardService {
 
-  private final int LOYALTY_CARD_MIN_MOVIE_NUMBER = 0;
+  private final int LOYALTY_CARD_MIN_MOVIE_NUMBER = 3;
   private final LoyaltyCardRepository loyaltyCardRepository;
 
   private LoyaltyCard createLoyaltyCard(BigDecimal discount, LocalDate expirationDate, Integer moviesNumber) {
@@ -132,14 +132,14 @@ public class LoyaltyCardService {
     var customerWithLoyaltyCardOptional = loyaltyCardRepository.getCustomerWithLoyaltyCardInfoByCustomerId(customerId);
 
     return customerWithLoyaltyCardOptional.isPresent() &&
-            Objects.nonNull(customerWithLoyaltyCardOptional.get().getLoyaltyCardId()) &&
+            customerWithLoyaltyCardOptional.get().getMoviesNumber() > 0 &&
             customerWithLoyaltyCardOptional.get().getLoyaltyCardExpirationDate().compareTo(LocalDate.now()) > 0;
   }
 
   private void decreaseMoviesNumberByLoyaltyCardId(Integer loyaltyCardId) {
     var loyaltyCardOptional = loyaltyCardRepository.findById(loyaltyCardId);
 
-    if (loyaltyCardOptional.isPresent()) {
+    if (loyaltyCardOptional.isPresent() && loyaltyCardOptional.get().getExpirationDate().compareTo(LocalDate.now()) > 0) {
       var loyaltyCard = loyaltyCardOptional.get();
       loyaltyCard.setMoviesNumber(loyaltyCard.getMoviesNumber() - 1);
       loyaltyCardRepository.update(loyaltyCard);
@@ -149,7 +149,7 @@ public class LoyaltyCardService {
   public void buyTicket(Customer customer, Integer ticketsNumber, Movie movie, LocalDateTime movieStartTime) {
 
     if (!doCustomerPosesActiveLoyaltyCardByCustomerId(customer.getId())) {
-      verifyIfCustomerCanGetLoyaltyCard(ticketsNumber, customer);
+      verifyIfCustomerCanGetLoyaltyCard(ticketsNumber, customer);//dorobic to aby  resetowac ilosc ticketow po założeniu loyaltyCard tak aby przy następnym założeniu była brana aktualna liczba ticketow
     } else {
       var loyaltyCardId = loyaltyCardRepository.getCustomerWithLoyaltyCardInfoByCustomerId(customer.getId()).get().getLoyaltyCardId();
       decreaseMoviesNumberByLoyaltyCardId(loyaltyCardId);
