@@ -107,13 +107,18 @@ class MainMenu {
 
   //zakup biletu - dodac sprawdzenie czy jest znizka i aktualziwowac loyaltyCard movie numbers dla klienta ale nie moze zmeniejsza poniezej 0
   private void option5() {
-    var customer = customerService.getCustomerFromUserInput();
 
+    var customer = customerService.getCustomerFromUserInput();
     var ticketDetails = movieService.chooseMovieStartTime();
-    var ticketsNumber = salesStandService.buyTicket((Movie) ticketDetails.get("movie"), customer, (LocalDateTime) ticketDetails.get("movieStartTime"));
-    //zmien na adekwatnną nazwę metody
-    loyaltyCardService.buyTicket(customer, ticketsNumber, (Movie) ticketDetails.get("movie"), (LocalDateTime) ticketDetails.get("movieStartTime"));
-    customerService.update(customer);
+
+    if  (salesStandService.isTransactionDone((Movie) ticketDetails.get("movie"), customer, (LocalDateTime) ticketDetails.get("movieStartTime"))) {
+      Integer ticketsNumber = joinedEntitiesService.ticketsNumberBoughtByCustomerId(customer.getId());
+      loyaltyCardService.manageLoyaltyCard(customer, ticketsNumber, (Movie) ticketDetails.get("movie"), (LocalDateTime) ticketDetails.get("movieStartTime"));
+      customerService.update(customer);
+    } else {
+      throw new AppException("Movie start date time is not valid");
+    }
+
   }
 
   private void option11() {

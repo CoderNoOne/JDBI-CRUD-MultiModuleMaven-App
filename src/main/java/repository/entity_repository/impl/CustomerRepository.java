@@ -23,11 +23,11 @@ public class CustomerRepository implements CrudRepository<Customer> {
     }
 
     jdbi.withHandle(handle -> handle
-            .createUpdate("insert into customers (name, surname, age, email) values (?, ?, ?, ?)")
-            .bind(0, customer.getName())
-            .bind(1, customer.getSurname())
-            .bind(2, customer.getAge())
-            .bind(3, customer.getEmail())
+            .createUpdate("insert into customers (name, surname, age, email) values (:name, :surname, :age, :email)")
+            .bind("name", customer.getName())
+            .bind("surname", customer.getSurname())
+            .bind("age", customer.getAge())
+            .bind("email", customer.getEmail())
             .execute());
   }
 

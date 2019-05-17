@@ -21,10 +21,10 @@ public class LoyaltyCardRepository implements CrudRepository<LoyaltyCard> {
     }
 
     jdbi.withHandle(handle -> handle
-            .createUpdate("insert into loyalty_cards (expiration_date, discount, movies_number) values (?, ?, ?)")
-            .bind(0, loyaltyCard.getExpirationDate())
-            .bind(1, loyaltyCard.getDiscount())
-            .bind(2, loyaltyCard.getMoviesNumber())
+            .createUpdate("insert into loyalty_cards (expiration_date, discount, movies_number) values (:expirationDate, :discount, :moviesNumber)")
+            .bind("expirationDate", loyaltyCard.getExpirationDate())
+            .bind("discount", loyaltyCard.getDiscount())
+            .bind("moviesNumber", loyaltyCard.getMoviesNumber())
             .execute());
   }
 
@@ -45,11 +45,11 @@ public class LoyaltyCardRepository implements CrudRepository<LoyaltyCard> {
             .mapToBean(LoyaltyCard.class)
             .findFirst())
             .ifPresent(loyaltyCardFromDb -> jdbi.withHandle(handle -> handle
-                    .createUpdate("update loyalty_cards set expiration_date = ?, discount = ?, movies_number = ? where id = ?")
-                    .bind(0, loyaltyCard.getExpirationDate() == null ? loyaltyCardFromDb.getExpirationDate() : loyaltyCard.getExpirationDate())
-                    .bind(1, loyaltyCard.getDiscount() == null ? loyaltyCardFromDb.getDiscount() : loyaltyCard.getDiscount())
-                    .bind(2, loyaltyCard.getMoviesNumber() == null ? loyaltyCardFromDb.getMoviesNumber() : loyaltyCard.getMoviesNumber())
-                    .bind(3, loyaltyCard.getId())
+                    .createUpdate("update loyalty_cards set expiration_date = :expirationDate, discount = :discount, movies_number = :moviesNumber where id = :id ?")
+                    .bind("expirationDate", loyaltyCard.getExpirationDate() == null ? loyaltyCardFromDb.getExpirationDate() : loyaltyCard.getExpirationDate())
+                    .bind("discount", loyaltyCard.getDiscount() == null ? loyaltyCardFromDb.getDiscount() : loyaltyCard.getDiscount())
+                    .bind("moviesNumber", loyaltyCard.getMoviesNumber())
+                    .bind("id", loyaltyCard.getId())
                     .execute()));
 
   }

@@ -170,7 +170,7 @@
 //    //jeszcze dorobic wysyłanie maila wiadomość email,
 //    // w której podajemy dane filmu, na który zakupiono bilet, godzinę rozpoczęcia oraz cenę biletu po uwzględnieniu zniżek.
 //
-//    loyaltyCardService.buyTicket(customer, ticketsNumber, movie, movieStartTime);
+//    loyaltyCardService.isTransactionDone(customer, ticketsNumber, movie, movieStartTime);
 ////    if (!loyaltyCardService.doCustomerPosesActiveLoyaltyCardByCustomerId(customer.getId())) {
 ////      loyaltyCardService.verifyIfCustomerCanGetLoyaltyCard(ticketsNumber, customer.getId());
 ////      customer.setLoyaltyCardId(loyaltyCardService.getNewlyCreatedLoyaltyCardId());

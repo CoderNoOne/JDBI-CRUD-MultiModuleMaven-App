@@ -9,6 +9,5 @@ public interface CrudRepository<T> {
   void delete(Integer id);
   Optional<T> findById(Integer id);
   List<T> findAll();
-
   void deleteAll();
 }

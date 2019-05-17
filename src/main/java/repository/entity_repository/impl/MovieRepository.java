@@ -21,12 +21,12 @@ public class MovieRepository implements CrudRepository<Movie> {
     }
 
     jdbi.withHandle(handle -> handle
-            .createUpdate("insert into movies (title, genre, price, duration, release_date) values (?, ?, ?, ?, ?)")
-            .bind(0, movie.getTitle())
-            .bind(1, movie.getGenre())
-            .bind(2, movie.getPrice())
-            .bind(3, movie.getDuration())
-            .bind(4, movie.getReleaseDate())
+            .createUpdate("insert into movies (title, genre, price, duration, release_date) values (:title, :genre, :price, :duration, :releaseDate)")
+            .bind("title", movie.getTitle())
+            .bind("genre", movie.getGenre())
+            .bind("price", movie.getPrice())
+            .bind("duration", movie.getDuration())
+            .bind("releaseDate", movie.getReleaseDate())
             .execute());
   }
 
@@ -47,12 +47,13 @@ public class MovieRepository implements CrudRepository<Movie> {
             .mapToBean(Movie.class)
             .findFirst())
             .ifPresent(movieFromDB -> jdbi.withHandle(handle -> handle
-                    .createUpdate("update movies set title = ?, genre = ?, price = ?, duration = ?, release_date = ? where id = ?")
-                    .bind(0, movie.getTitle() == null ? movieFromDB.getTitle() : movie.getTitle())
-                    .bind(1, movie.getGenre() == null ? movieFromDB.getGenre() : movie.getGenre())
-                    .bind(2, movie.getPrice() == null ? movieFromDB.getPrice() : movie.getPrice())
-                    .bind(2, movie.getDuration() == null ? movieFromDB.getDuration() : movie.getDuration())
-                    .bind(2, movie.getReleaseDate() == null ? movieFromDB.getReleaseDate() : movie.getReleaseDate())
+                    .createUpdate("update movies set title = :title, genre = :genre, price = :price, duration = :duration, release_date = :releaseDate where id = :id")
+                    .bind("title", movie.getTitle() == null ? movieFromDB.getTitle() : movie.getTitle())
+                    .bind("genre", movie.getGenre() == null ? movieFromDB.getGenre() : movie.getGenre())
+                    .bind("price", movie.getPrice() == null ? movieFromDB.getPrice() : movie.getPrice())
+                    .bind("duration", movie.getDuration() == null ? movieFromDB.getDuration() : movie.getDuration())
+                    .bind("releaseDate", movie.getReleaseDate() == null ? movieFromDB.getReleaseDate() : movie.getReleaseDate())
+                    .bind("id", movie.getId())
                     .execute()));
 
   }

@@ -47,8 +47,6 @@ l
 <src/main/java/service/entity_service/LoyaltyCardService.java,e\8\e8b1b127981f060db43ee8edc089a62799b8bb77
 ]
 -src/main/java/utils/CustomerSortingUtils.java,3\c\3c27c425d4e7def4ec02137b8be2098cd9a60d04
-=
-db.properties,3\b\3b8c33088fa60dfa967fdedbf4c75fa52fdece9a
 l
 <src/main/java/converters/impl/CustomerListJsonConverter.java,d\7\d77a02675ecea74a9ea57a8ae9bdccf7ce49af19
 e
@@ -105,8 +103,6 @@ g
 7src/main/java/service/others/JoinedEntitiesService.java,6\b\6bb491907734d452ee00a89f8b3d062701dd7297
 y
 Isrc/main/java/repository/entity_repository/impl/SalesStandRepository.java,5\d\5d7781643bd8d8cdce514dc36898cc3fa22c720c
-j
-:src/main/java/main/CustomerAndMovieTableManagmentMenu.java,9\4\944bf776a451655f5bf56b1b95748dd0dae1e6da
 V
 &src/main/java/main/StatisticsMenu.java,f\c\fc689ecb1b128a2e62b2f3bd5a7aba5ec25e16ab
 ^
@@ -120,3 +116,7 @@ L
 src/main/java/main/Test.java,3\e\3ebdfcd051ae19d2ea08ce0c8c3908a8616e32ba
 P
  src/main/java/main/MainMenu.java,f\1\f119f91fd4710ec35e22f32b0072cdf1f3e400eb
+S
+#src/main/resources/log4j.properties,7\5\755950bb690295904a49d36e60958901c54013b8
+P
+ src/main/resources/db.properties,7\7\779348f654a78c25c1b2a58c09d119b35347dc0d

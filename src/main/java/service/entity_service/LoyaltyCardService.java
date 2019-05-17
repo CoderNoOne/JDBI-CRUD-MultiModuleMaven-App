@@ -146,7 +146,7 @@ public class LoyaltyCardService {
     }
   }
 
-  public void buyTicket(Customer customer, Integer ticketsNumber, Movie movie, LocalDateTime movieStartTime) {
+  public void manageLoyaltyCard(Customer customer, Integer ticketsNumber, Movie movie, LocalDateTime movieStartTime) {
 
     if (!doCustomerPosesActiveLoyaltyCardByCustomerId(customer.getId())) {
       verifyIfCustomerCanGetLoyaltyCard(ticketsNumber, customer);//dorobic to aby  resetowac ilosc ticketow po założeniu loyaltyCard tak aby przy następnym założeniu była brana aktualna liczba ticketow
@@ -156,6 +156,10 @@ public class LoyaltyCardService {
       movie.setPrice(movie.getPrice().subtract(loyaltyCardRepository.findById(loyaltyCardId).get().getDiscount()));
     }
 
-    EmailUtils.sendMoviePurchaseConfirmation(customer.getEmail(), "Movie Ticket purchase detail", movie, movieStartTime);
+    sendMovieDetailsToCustomerEmail(customer.getEmail(), "Movie Ticket purchase detail", movie, movieStartTime);
+  }
+
+  private void sendMovieDetailsToCustomerEmail(String email, String subject, Movie movie, LocalDateTime startDateTime) {
+    EmailUtils.sendMoviePurchaseConfirmation(email, subject, movie, startDateTime);
   }
 }

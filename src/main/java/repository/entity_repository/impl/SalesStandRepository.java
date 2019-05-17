@@ -2,7 +2,6 @@ package repository.entity_repository.impl;
 
 import connection.DbConnection;
 import exceptions.AppException;
-import model.others.CustomerWithMoviesAndSalesStand;
 import model.entity.SalesStand;
 import org.jdbi.v3.core.Jdbi;
 import repository.entity_repository.CrudRepository;
@@ -22,10 +21,10 @@ public class SalesStandRepository implements CrudRepository<SalesStand> {
     }
 
     jdbi.withHandle(handle -> handle
-            .createUpdate("insert into sales_stands (customer_id, movie_id, start_date_time) values (?, ?, ?)")
-            .bind(0, salesStand.getCustomerId())
-            .bind(1, salesStand.getMovieId())
-            .bind(2, salesStand.getStartDateTime())
+            .createUpdate("insert into sales_stands (customer_id, movie_id, start_date_time) values (:customerId, :movieId, :startDateTime)")
+            .bind("customerId", salesStand.getCustomerId())
+            .bind("movieId", salesStand.getMovieId())
+            .bind("startDateTime", salesStand.getStartDateTime())
             .execute());
   }
 
@@ -46,10 +45,11 @@ public class SalesStandRepository implements CrudRepository<SalesStand> {
             .mapToBean(SalesStand.class)
             .findFirst())
             .ifPresent(saleStandFromDb -> jdbi.withHandle(handle -> handle
-                    .createUpdate("update sales_stands set customer_id = ?, movie_id = ?, start_date_time = ? where id = ?")
-                    .bind(0, salesStand.getCustomerId() == null ? saleStandFromDb.getCustomerId() : salesStand.getCustomerId())
-                    .bind(1, salesStand.getMovieId() == null ? saleStandFromDb.getMovieId() : salesStand.getMovieId())
-                    .bind(2, salesStand.getStartDateTime() == null ? saleStandFromDb.getStartDateTime() : salesStand.getStartDateTime())
+                    .createUpdate("update sales_stands set customer_id = :customerId, movie_id = :movieId, startDateTime = :startDateTime where id = :id")
+                    .bind("customerId", salesStand.getCustomerId() == null ? saleStandFromDb.getCustomerId() : salesStand.getCustomerId())
+                    .bind("movieId", salesStand.getMovieId() == null ? saleStandFromDb.getMovieId() : salesStand.getMovieId())
+                    .bind("startDateTime", salesStand.getStartDateTime() == null ? saleStandFromDb.getStartDateTime() : salesStand.getStartDateTime())
+                    .bind("id", salesStand.getId())
                     .execute()));
 
   }
@@ -94,34 +94,6 @@ public class SalesStandRepository implements CrudRepository<SalesStand> {
     jdbi.withHandle(handle -> handle
             .createUpdate("delete from sales_stands")
             .execute());
-  }
-
-//  public Integer ticketsNumberBoughtByCustomerId(Integer customerId) {
-//
-//    return jdbi.withHandle(handle -> handle
-//            .select("select count(*) from sales_stands where customer_id = ?", customerId)
-//            .mapTo(Integer.class)
-//            .findOnly());
-//  }
-
-  public List<CustomerWithMoviesAndSalesStand> getAllTicketsByCustomerId(Integer id) {
-
-    final String sql = "select movies.title m_title, movies.genre m_genre, movies.price m_price, movies.duration m_duration, movies.release_date m_releaseDate," +
-            " sales_stands.start_date_time as s_startTime from sales_stands join customers on sales_stands.customer_id = customers.id join movies on movies.id = sales_stands.movie_id where sales_stands.customer_id = :customerId";
-
-    return jdbi.withHandle(handle ->
-            handle
-                    .createQuery(sql)
-                    .bind("customerId", id)
-                    .map((rs, ctx) -> CustomerWithMoviesAndSalesStand.builder()
-                            .customerId(id)
-                            .movieTitle(rs.getString("m_title"))
-                            .movieDuration(rs.getInt("m_duration"))
-                            .movieGenre(rs.getString("m_genre"))
-                            .movieReleaseDate(rs.getDate("m_releaseDate").toLocalDate())
-                            .ticketPrice(rs.getBigDecimal("m_price"))
-                            .startDateTime(rs.getTimestamp("s_startTime").toLocalDateTime())
-                            .build()).list());
   }
 
   public String getCustomerEmailByCustomerId(Integer id) {

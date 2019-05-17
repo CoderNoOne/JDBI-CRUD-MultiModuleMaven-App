@@ -42,5 +42,27 @@ public class JoinedEntitiesRepository {
                             .build())
                     .list());
   }
+
+  public List<CustomerWithMoviesAndSalesStand> getAllTicketsByCustomerId(Integer id) {
+
+    final String sql = "select movies.title m_title, movies.genre m_genre, movies.price m_price, movies.duration m_duration, movies.release_date m_releaseDate," +
+            " sales_stands.start_date_time as s_startTime from sales_stands join customers on sales_stands.customer_id = customers.id join movies on movies.id = sales_stands.movie_id where sales_stands.customer_id = :customerId";
+
+    return jdbi.withHandle(handle ->
+            handle
+                    .createQuery(sql)
+                    .bind("customerId", id)
+                    .map((rs, ctx) -> CustomerWithMoviesAndSalesStand.builder()
+                            .customerId(id)
+                            .movieTitle(rs.getString("m_title"))
+                            .movieDuration(rs.getInt("m_duration"))
+                            .movieGenre(rs.getString("m_genre"))
+                            .movieReleaseDate(rs.getDate("m_releaseDate").toLocalDate())
+                            .ticketPrice(rs.getBigDecimal("m_price"))
+                            .startDateTime(rs.getTimestamp("s_startTime").toLocalDateTime())
+                            .build()).list());
+  }
+
+
 }
 

@@ -119,7 +119,7 @@
 //    return isValid;
 //  }
 //
-//  public void buyTicket(String name, String surname, String email) {
+//  public void isTransactionDone(String name, String surname, String email) {
 //    CustomerService customerService = new CustomerService(new CustomerRepository());
 //    Customer customer = customerService.getCustomerFromUserInput(name, surname, email);
 //
