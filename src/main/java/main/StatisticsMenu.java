@@ -1,6 +1,8 @@
 package main;
 
 import exceptions.AppException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import repository.entity_repository.impl.CustomerRepository;
 import repository.entity_repository.impl.LoyaltyCardRepository;
 import repository.entity_repository.impl.MovieRepository;
@@ -23,6 +25,7 @@ public class StatisticsMenu {
   private final LoyaltyCardService loyaltyCardService = new LoyaltyCardService(new LoyaltyCardRepository());
   private final SalesStandService salesStandService = new SalesStandService(new SalesStandRepository());
   private final JoinedEntitiesService joinedEntitiesService = new JoinedEntitiesService(new JoinedEntitiesRepository());
+  private final Logger logger = LoggerFactory.getLogger(StatisticsMenu.class);
 
   public void menu() {
 
@@ -43,8 +46,8 @@ public class StatisticsMenu {
           default -> throw new AppException("INPUT OPTION IS NOT DEFINED");
         }
       } catch (AppException e) {
-        System.out.println(e.getExceptionMessage());
-        System.err.println(Arrays.toString(e.getStackTrace()));
+        logger.info(e.getExceptionMessage());
+        logger.error(Arrays.toString(e.getStackTrace()));
       }
     }
   }

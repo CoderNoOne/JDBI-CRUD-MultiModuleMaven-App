@@ -1,5 +1,7 @@
 package main;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import repository.entity_repository.impl.CustomerRepository;
 import repository.entity_repository.impl.LoyaltyCardRepository;
 import repository.entity_repository.impl.MovieRepository;
@@ -18,7 +20,7 @@ public class TransactionHistoryMenu {
   private final LoyaltyCardService loyaltyCardService = new LoyaltyCardService(new LoyaltyCardRepository());
   private final SalesStandService salesStandService = new SalesStandService(new SalesStandRepository());
   private final JoinedEntitiesService joinedEntitiesService = new JoinedEntitiesService(new JoinedEntitiesRepository());
-
+  private final Logger logger = LoggerFactory.getLogger(TransactionHistoryMenu.class);
 
   //historia
   public void menu() {
