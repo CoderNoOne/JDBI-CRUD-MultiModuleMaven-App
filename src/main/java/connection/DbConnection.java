@@ -10,7 +10,7 @@ public class DbConnection {
     return ourInstance;
   }
 
-  private final String DATABASE_URL = "jdbc:mysql://localhost:3306/jdbi_db3?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+  private final String DATABASE_URL = "jdbc:mysql://localhost:3306/jdbi_db4?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
   private final String USERNAME = "root";
   private final String PASSWORD = "admin";
   private final Jdbi jdbi;

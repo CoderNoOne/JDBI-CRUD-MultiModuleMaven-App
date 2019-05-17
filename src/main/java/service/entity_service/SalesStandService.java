@@ -2,6 +2,8 @@ package service.entity_service;
 
 import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
+import model.entity.Customer;
+import model.entity.Movie;
 import model.entity.SalesStand;
 import model.others.CustomerWithMoviesAndSalesStand;
 import model.tickets_data_filtering.MovieFilteringCriterion;
@@ -94,8 +96,8 @@ public class SalesStandService {
             .build();
   }
 
-  public boolean addSalesStand(Integer movieId, Integer customerId, LocalDateTime startDateTime) {
-    var salesStand = createSalesStand(movieId, customerId, startDateTime);
+  public boolean addSalesStand(Movie movie, Customer customer, LocalDateTime startDateTime) {
+    var salesStand = createSalesStand(movie.getId(), customer.getId(), startDateTime);
     boolean isValid = new SalesStandValidator().validateEntity(salesStand);
 
     if (isValid) {
@@ -110,6 +112,13 @@ public class SalesStandService {
 
   public Integer ticketsNumberBoughtByCustomerId(Integer customerId) {
     return salesStandRepository.getAllTicketsByCustomerId(customerId).size();
+  }
+
+  public Integer buyTicket(Movie movie, Customer customer, LocalDateTime startDateTime) {
+    if (!addSalesStand(movie, customer, startDateTime)) {
+      throw new AppException("Movie start date time is not valid");
+    }
+    return ticketsNumberBoughtByCustomerId(customer.getId());
   }
 }
 

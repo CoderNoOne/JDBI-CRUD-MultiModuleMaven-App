@@ -48,7 +48,7 @@ public class CustomerRepository implements CrudRepository<Customer> {
             .mapToBean(Customer.class)
             .findFirst())
             .ifPresent(customerFromDb -> jdbi.withHandle(handle -> handle
-                    .createUpdate("update customers set name = :name, surname = :surname, age = :age, email = :email, loyalty_card_id = :loyaltyCardId where id = customerId")
+                    .createUpdate("update customers set name = :name, surname = :surname, age = :age, email = :email, loyalty_card_id = :loyaltyCardId where customers.id =:id")
                     .bind("name", customer.getName() == null ? customerFromDb.getName() : customer.getName())
                     .bind("surname", customer.getSurname() == null ? customerFromDb.getSurname() : customer.getSurname())
                     .bind("age", customer.getAge() == null ? customerFromDb.getAge() : customer.getAge())

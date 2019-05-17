@@ -19,7 +19,7 @@ public class MovieFilterCommand {
 
   public static class FilterCommandBuilder {
 
-    private Map<MovieFilteringCriterion,  List<? extends Object>> filters = new HashMap<>();
+    private Map<MovieFilteringCriterion,  List<? extends Object>> filters = new EnumMap<>(MovieFilteringCriterion.class);
 
     public MovieFilterCommand.FilterCommandBuilder genre(List<String> genre) {
       filters.put(MOVIE_GENRE, genre);

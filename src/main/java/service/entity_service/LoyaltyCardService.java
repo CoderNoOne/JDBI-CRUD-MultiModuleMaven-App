@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LoyaltyCardService {
 
-  private final int LOYALTY_CARD_MIN_MOVIE_NUMBER = 5;
+  private final int LOYALTY_CARD_MIN_MOVIE_NUMBER = 0;
   private final LoyaltyCardRepository loyaltyCardRepository;
 
   private LoyaltyCard createLoyaltyCard(BigDecimal discount, LocalDate expirationDate, Integer moviesNumber) {
