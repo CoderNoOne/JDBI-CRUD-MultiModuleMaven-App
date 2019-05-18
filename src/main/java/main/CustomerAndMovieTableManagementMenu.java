@@ -64,18 +64,17 @@ class CustomerAndMovieTableManagementMenu {
 
             "Delete customer",
             "Delete movie",
-            "Show all customers",
-            "Shows all movies bought by specified customer",
+            "Show all customers", /*czy sortowac*/
+            "Shows all movies bought by specified customer", /*czy sortowac*/
             "Show customer detail by his email",
-            "Show movie detail by title",
-            "Tickets bought in the specified time interval",
-            "Tickets bought by specified customer and in the specified time interval",
-            "Show movies that lasts in the specified time range",
-            "Update customer",
-            "Update movie",
-            "Back to main menu",
-            "Update movie"));
+            "Show customers with age with specified range", /*czy sortowac*/
+            "Show movies that lasts in the specified time range", /*czy sortowac*/
+            "Update customer", /*wyswietlenie wszystkich customerow + co chcesz updetowac*/
+            "Update movie", /*wyswietlenei wszystkich filmow  + co chcesz updatetowac */
+            "Back to main menu"
+    ));
   }
+
   private void option4_7() {
 
   }

@@ -2,6 +2,8 @@ package main;
 
 import exceptions.AppException;
 import lombok.extern.slf4j.Slf4j;
+import model.entity.Customer;
+import model.entity.Movie;
 import model.others.CustomerWithMoviesAndSalesStand;
 import repository.entity_repository.impl.CustomerRepository;
 import repository.entity_repository.impl.LoyaltyCardRepository;
@@ -13,13 +15,14 @@ import service.entity_service.LoyaltyCardService;
 import service.entity_service.MovieService;
 import service.entity_service.SalesStandService;
 import service.others.JoinedEntitiesService;
+import utils.EmailUtils;
 import utils.TicketsFilteringUtils;
 import utils.UserDataUtils;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Slf4j
 class TransactionHistoryMenu {
@@ -34,7 +37,7 @@ class TransactionHistoryMenu {
   void menu() {
 
     while (true) {
-    menuOptions();
+      menuOptions();
       try {
         int option = UserDataUtils.getInt("\nINPUT YOUR OPTION: ");
         switch (option) {
@@ -56,13 +59,14 @@ class TransactionHistoryMenu {
     joinedEntitiesService.allMoviesBoughtSortedAlphabetically().forEach(System.out::println);
   }
 
-  private void option2() {
+  private Map<Integer, Set<Movie>> option2Help() {
+
     var allCustomers = customerService.showAllCustomers();
     int customerId;
 
     if (allCustomers.isEmpty()) {
       System.out.println("There are no customers in database yet");
-      return;
+      return Collections.emptyMap();
     }
 
     do {
@@ -71,20 +75,26 @@ class TransactionHistoryMenu {
 
     var distinctMovies = joinedEntitiesService.allDistinctMoviesBoughtBySpecifiedCustomerSortedAlphabetically(customerId);
 
-    if (distinctMovies.size() == 0) {
-      System.out.println("Selected customer didn't bought any ticket yet");
-    } else {
-      var movieFilters = TicketsFilteringUtils.inputMovieFilters("Specify movie filters").getFilters();
-      var filteredCustomerMovies = joinedEntitiesService.getCustomerMoviesByFilters(customerId, movieFilters);
-      System.out.println("Selected customer bought " + distinctMovies.size() + " tickets for different movies\n");
-      AtomicInteger counter = new AtomicInteger(1);
-      distinctMovies.forEach(movie -> System.out.println("No. " + counter.getAndIncrement() + ". " + movie));
-    }
+    return Collections.singletonMap(customerId, distinctMovies);
+  }
+
+  private void option2() {
+    var distinctMovies = option2Help().values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
+    System.out.println("Selected customer bought " + distinctMovies.size() + " tickets for different movies\n");
+    optionPrint(distinctMovies);
+  }
+
+  private void optionPrint(Set<? extends Object> distinctMovies) {
+    AtomicInteger counter = new AtomicInteger(1);
+    distinctMovies.forEach((movie) -> System.out.println("No. " + counter.getAndIncrement() + ". " + movie));
   }
 
   private void option3() {
-
-
+    var customerId = option2Help().keySet().iterator().next();
+    var movieFilters = TicketsFilteringUtils.inputMovieFilters("Specify movie filters").getFilters();
+    var filteredCustomerMovies = joinedEntitiesService.getCustomerMoviesByFilters(customerId, movieFilters);
+    EmailUtils.sendSummaryTableByFilters(/*"firelight.code@gmail.com"*/customerService.findCustomerById(customerId).get().getEmail(), "From app", new ArrayList<>(filteredCustomerMovies), movieFilters);
+    optionPrint(filteredCustomerMovies);
   }
 
   public void menuOptions() {
@@ -97,7 +107,7 @@ class TransactionHistoryMenu {
 
             "All distinct movies bought by all customers",
             "All distinct movies bought by specified customer",
-            "Filter tickets transaction history",
+            "Filter tickets transaction history bought by specified customer",
             "",
             ""
     ));

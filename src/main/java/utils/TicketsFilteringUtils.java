@@ -1,9 +1,11 @@
 package utils;
 
 import exceptions.AppException;
+import lombok.extern.slf4j.Slf4j;
 import model.tickets_data_filtering.MovieFilterCommand;
 import model.tickets_data_filtering.MovieFilteringCriterion;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static model.tickets_data_filtering.MovieFilteringCriterion.*;
 import static utils.UserDataUtils.*;
 
+@Slf4j
 public class TicketsFilteringUtils {
 
   private static MovieFilterCommand.FilterCommandBuilder builder;
@@ -74,17 +77,44 @@ public class TicketsFilteringUtils {
   }
 
   private static void filterByReleaseDate() {
-    var minimumReleaseDate = getLocalDate("Input minimum release date");
-    var maximumReleaseDate = getLocalDate("Input maximum release date");
+
+    LocalDate minimumReleaseDate = LocalDate.now(), maximumReleaseDate = LocalDate.now();
+    boolean isValid = false;
+
+    do {
+      try {
+        minimumReleaseDate = getLocalDate("Input minimum release date");
+        maximumReleaseDate = getLocalDate("Input maximum release date");
+        if (!(isValid = minimumReleaseDate.compareTo(maximumReleaseDate) <= 0)) {
+          System.out.println("Min release date has to be greater or equal to max release date!");
+        }
+      } catch (AppException e) {
+        log.info(e.getMessage(), e);
+      }
+    } while (!isValid);
+
     builder.releaseDate(minimumReleaseDate, maximumReleaseDate);
 
   }
 
   private static void filterByMovieDuration() {
-    var minDuration = getInt("Choose the min movie duration");
-    var maxDuration = getInt("Choose the max movie duration");
-    builder.duration(minDuration, maxDuration);
 
+    int minDuration = 0, maxDuration = 0;
+    boolean isValid = false;
+
+    do {
+      try {
+        minDuration = getInt("Choose the min movie duration");
+        maxDuration = getInt("Choose the max movie duration");
+        if (!(isValid = minDuration <= maxDuration)) {
+          System.out.println("Min duration has to be greater or equal to max duration!");
+        }
+      } catch (AppException e) {
+        log.info(e.getMessage(), e);
+      }
+    } while (!isValid);
+
+    builder.duration(minDuration, maxDuration);
   }
 
 }
