@@ -2,6 +2,8 @@ package main;
 
 import exceptions.AppException;
 import lombok.extern.slf4j.Slf4j;
+import model.entity.Customer;
+import model.entity.Movie;
 import repository.entity_repository.impl.CustomerRepository;
 import repository.entity_repository.impl.LoyaltyCardRepository;
 import repository.entity_repository.impl.MovieRepository;
@@ -12,10 +14,22 @@ import service.entity_service.LoyaltyCardService;
 import service.entity_service.MovieService;
 import service.entity_service.SalesStandService;
 import service.others.JoinedEntitiesService;
+
 import utils.UserDataUtils;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+
+import static utils.CustomerSortingUtils.getCustomerSortingAlgorithm;
+import static utils.MovieSortingUtils.getMovieSortingAlgorithm;
+import static utils.UserDataUtils.*;
 
 @Slf4j
 class CustomerAndMovieTableManagementMenu {
@@ -65,18 +79,104 @@ class CustomerAndMovieTableManagementMenu {
             "Delete customer",
             "Delete movie",
             "Show all customers", /*czy sortowac*/
-            "Shows all movies bought by specified customer", /*czy sortowac*/
+            "Shows all movies", /*czy sortowac*/
+            "Show movies with duration in the specified time range", /*czy sortowac*/
             "Show customer detail by his email",
+            "Show customers with active loyalty card",
             "Show customers with age with specified range", /*czy sortowac*/
-            "Show movies that lasts in the specified time range", /*czy sortowac*/
             "Update customer", /*wyswietlenie wszystkich customerow + co chcesz updetowac*/
             "Update movie", /*wyswietlenei wszystkich filmow  + co chcesz updatetowac */
             "Back to main menu"
     ));
   }
 
-  private void option4_7() {
+  private Comparator<Movie> getMovieComparators() {
+    return getMovieSortingAlgorithm("Input your movie sorting algorithms").getComparator();
+  }
 
+  private Comparator<Customer> getCustomerComparator() {
+    return getCustomerSortingAlgorithm("Input your customer sorting algorithms").getComparator();
+  }
+
+  //updatetowanie customera
+  private void option4_12(){
+
+
+  }
+
+  //updatetowanie movie
+  private void option4_11(){
+    printMessage("Choose");
+  }
+
+  private void option4_10() {
+
+    var minMoviePrice = getBigDecimal("Input minimum movie price");
+    var maxMoviePrice = getBigDecimal("Input maximum movie price");
+
+    if (minMoviePrice.compareTo(, maxMoviePrice) > 0) {
+      throw new AppException("Minimum movie price cannot be greater than maximum one");
+    }
+
+    var moviesWithPriceWithinRange = movieService.getAllMovies().stream().filter(movie -> movie.getPrice().compareTo(minMoviePrice) >= 0 && movie.getPrice().compareTo(maxMoviePrice) <= 0)
+            .collect(Collectors.toList());
+
+    var choice = getString("Do you want to sort movies with price between specified time interval (Y/N").equalsIgnoreCase("Y");
+
+    if (choice) {
+      moviesWithPriceWithinRange.sort(getMovieComparators());
+    }
+
+    printMessage(choice ? "Sorted movies with price between " + minMoviePrice + " and " + maxMoviePrice + "\n" : "Unsorted movies with duration between " + minMoviePrice + " and " + maxMoviePrice + "\n");
+
+    printCollectionWithNumeration(moviesWithPriceWithinRange);
+  }
+
+  private void option4_9() {
+
+    var minMovieDuration = getInt("Input minimum movie duration");
+    var maxMovieDuration = getInt("Input maximum movie duration");
+    if (maxMovieDuration < minMovieDuration) {
+      throw new AppException("Minimum movie duration cannot be greater than maximum one");
+    }
+
+    var moviesWithDurationWithinRange = movieService.getAllMovies().stream().filter(movie -> movie.getDuration() >= minMovieDuration && movie.getDuration() <= maxMovieDuration)
+            .collect(Collectors.toList());
+
+    var choice = getString("Do you want to sort customers with active loyalty card (Y/N").equalsIgnoreCase("Y");
+
+    if (choice) {
+      moviesWithDurationWithinRange.sort(getMovieComparators());
+    }
+
+    printMessage(choice ? "Sorted movies with duration between " + minMovieDuration + " and " + maxMovieDuration + "\n" : "Unsorted movies with duration between " + minMovieDuration + " and " + maxMovieDuration + "\n");
+    printCollectionWithNumeration(moviesWithDurationWithinRange);
+  }
+
+  private void option4_8() {
+
+    var choice = getString("Do you want to sort customers with active loyalty card (Y/N").equalsIgnoreCase("Y");
+
+    var customersWithActiveLoyaltyCard = joinedEntitiesService.getCustomersWithLoyaltyCardWithActiveLoyaltyCard().stream().map(obj -> customerService.findCustomerById(obj.getCustomerId()).get())
+            .collect(Collectors.toList());
+    if (choice) {
+      customersWithActiveLoyaltyCard.sort(getCustomerComparator());
+    }
+
+    printMessage(choice ? "Sorted customer with active loyalty card \n" : "Unsorted customer with active loyalty card \n");
+    printCollectionWithNumeration(customersWithActiveLoyaltyCard);
+  }
+
+  private void option4_7() {
+    var choice = getString("Do you want to sort all movies bought by all customers (Y/N").equalsIgnoreCase("Y");
+
+    var allMovies = movieService.getAllMovies();
+    if (choice) {
+      allMovies.sort(getMovieComparators());
+    }
+
+    printMessage(choice ? "Sorted movie list \n" : "Unsorted movie list \n");
+    printCollectionWithNumeration(allMovies);
   }
 
   private void option4_6() {
@@ -90,11 +190,27 @@ class CustomerAndMovieTableManagementMenu {
   }
 
   private void option4_4() {
-    movieService.showAllMovies();
+    var minCustomerAge = getInt("Input minimum customer age");
+    var maxCustomerAge = getInt("Input maximum customer age");
+    if (maxCustomerAge < minCustomerAge) {
+      throw new AppException("Minimum age cannot be greater than maximum one");
+    }
+    printCollectionWithNumeration(customerService.getAllCustomers()
+            .stream().filter(customer -> customer.getAge() > minCustomerAge && customer.getAge() < maxCustomerAge)
+            .collect(Collectors.toList()));
   }
 
   private void option4_3() {
-    customerService.showAllCustomers();
+    customerService.getAllCustomers();
+    var choice = getString("Do you want to sort all customers (Y/N").equalsIgnoreCase("Y");
+
+    var allCustomers = customerService.getAllCustomers();
+    if (choice) {
+      allCustomers.sort(getCustomerComparator());
+    }
+
+    printMessage(choice ? "Sorted customer list \n" : "Unsorted customer list \n");
+    printCollectionWithNumeration(allCustomers);
   }
 
   private void option4_2() {
@@ -106,6 +222,5 @@ class CustomerAndMovieTableManagementMenu {
     Integer integer = UserDataUtils.getInt("Input customer id you want to delete from database");
     customerService.deleteCustomer(integer);
   }
-
 }
 

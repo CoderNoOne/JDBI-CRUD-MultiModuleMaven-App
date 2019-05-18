@@ -85,5 +85,20 @@ public class JoinedEntitiesRepository {
   }
 
 
+  public List<CustomerWithLoyaltyCard> getAllCustomerWithLoyaltyCard() {
+
+    final String sql = "select customers.id c_id, loyalty_cards.movies_number lc_mn, loyalty_cards.discount lc_discount, loyalty_cards.expiration_date lc_exp_date, loyalty_cards.id lc_id from customers join loyalty_cards on customers.loyalty_card_id = loyalty_cards.id";
+
+    return jdbi.withHandle(handle ->
+            handle
+                    .createQuery(sql)
+                    .map((rs, ctx) -> CustomerWithLoyaltyCard.builder()
+                            .customerId(rs.getInt("c_id"))
+                            .loyaltyCardId(rs.getInt("lc_id")).loyaltyCardExpirationDate(rs.getDate("lc_exp_date").toLocalDate())
+                            .moviesNumber(rs.getInt("lc_mn"))
+                            .discount(rs.getBigDecimal("lc_discount"))
+                            .build()).list());
+  }
+
 }
 

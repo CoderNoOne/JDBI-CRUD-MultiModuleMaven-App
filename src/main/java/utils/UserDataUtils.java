@@ -8,7 +8,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class UserDataUtils {
 
@@ -30,7 +32,7 @@ public class UserDataUtils {
 
   public static String getString(String inputMessage) {
 
-    System.out.println(inputMessage);
+    printMessage(inputMessage);
 
     String input = sc.nextLine();
 
@@ -39,6 +41,15 @@ public class UserDataUtils {
     }
 
     return input;
+  }
+
+  public static void printCollectionWithNumeration(Collection<? extends Object> collectionToPrint) {
+    AtomicInteger counter = new AtomicInteger(1);
+    collectionToPrint.forEach(obj -> printMessage("No. " + counter.getAndIncrement() + " : " + obj));
+  }
+
+  public static void printMessage(String message) {
+    System.out.println(message);
   }
 
   public static void close() {

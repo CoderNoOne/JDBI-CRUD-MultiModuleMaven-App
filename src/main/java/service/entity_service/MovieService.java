@@ -45,8 +45,8 @@ public class MovieService {
     movieRepository.delete(id);
   }
 
-  public void showAllMovies() {
-    movieRepository.findAll().forEach(System.out::println);
+  public List<Movie> getAllMovies() {
+    return movieRepository.findAll();
   }
 
   public Optional<Movie> findMovieById(final Integer id) {
@@ -72,7 +72,7 @@ public class MovieService {
   private Movie chooseMovieById() {
 
     System.out.println("AVAILABLE MOVIES");
-    showAllMovies();
+    getAllMovies();
 
     Integer movieId = UserDataUtils.getInt("Input movie id");
 

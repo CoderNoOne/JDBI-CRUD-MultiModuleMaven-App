@@ -139,11 +139,11 @@
 //  }
 //
 //  private void option4_4() {
-//    movieService.showAllMovies();
+//    movieService.getAllMovies();
 //  }
 //
 //  private void option4_3() {
-//    customerService.showAllCustomers();
+//    customerService.getAllCustomers();
 //  }
 //
 //  private void option4_2() {

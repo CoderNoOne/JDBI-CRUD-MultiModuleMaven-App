@@ -38,10 +38,9 @@ public class CustomerService {
     customerRepository.delete(id);
   }
 
-  public List<Customer> showAllCustomers() {
-    var allCustomers = customerRepository.findAll();
-    allCustomers.forEach(System.out::println);
-    return allCustomers;
+  public List<Customer> getAllCustomers() {
+    return customerRepository.findAll();
+//    allCustomers.forEach(System.out::println);
   }
 
   public Optional<Customer> findCustomerById(final Integer id) {
@@ -69,7 +68,7 @@ public class CustomerService {
   }
 
   public Customer getCustomerFromUserInput() {
-    showAllCustomers();
+    getAllCustomers();
 
     var name = UserDataUtils.getString("Input your name");
     var surname = UserDataUtils.getString("Input your surname");

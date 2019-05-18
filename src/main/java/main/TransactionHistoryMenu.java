@@ -2,9 +2,7 @@ package main;
 
 import exceptions.AppException;
 import lombok.extern.slf4j.Slf4j;
-import model.entity.Customer;
 import model.entity.Movie;
-import model.others.CustomerWithMoviesAndSalesStand;
 import repository.entity_repository.impl.CustomerRepository;
 import repository.entity_repository.impl.LoyaltyCardRepository;
 import repository.entity_repository.impl.MovieRepository;
@@ -61,7 +59,7 @@ class TransactionHistoryMenu {
 
   private Map<Integer, Set<Movie>> option2Help() {
 
-    var allCustomers = customerService.showAllCustomers();
+    var allCustomers = customerService.getAllCustomers();
     int customerId;
 
     if (allCustomers.isEmpty()) {
