@@ -2,7 +2,7 @@ package main;
 
 import exceptions.AppException;
 import lombok.extern.slf4j.Slf4j;
-import model.entity.Customer;
+import model.others.CustomerWithMoviesAndSalesStand;
 import repository.entity_repository.impl.CustomerRepository;
 import repository.entity_repository.impl.LoyaltyCardRepository;
 import repository.entity_repository.impl.MovieRepository;
@@ -13,12 +13,12 @@ import service.entity_service.LoyaltyCardService;
 import service.entity_service.MovieService;
 import service.entity_service.SalesStandService;
 import service.others.JoinedEntitiesService;
+import utils.TicketsFilteringUtils;
 import utils.UserDataUtils;
 
-import java.io.OutputStream;
 import java.text.MessageFormat;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
@@ -33,22 +33,24 @@ class TransactionHistoryMenu {
   //historia
   void menu() {
 
-    menuOptions();
     while (true) {
+    menuOptions();
       try {
         int option = UserDataUtils.getInt("\nINPUT YOUR OPTION: ");
         switch (option) {
           case 1 -> option1();
           case 2 -> option2();
+          case 3 -> option3();
 
           default -> throw new AppException("INPUT OPTION IS NOT DEFINED");
         }
       } catch (AppException e) {
-        log.info(e.getExceptionMessage());
+        log.error(e.getExceptionMessage());
         log.error(Arrays.toString(e.getStackTrace()));
       }
     }
   }
+
 
   private void option1() {
     joinedEntitiesService.allMoviesBoughtSortedAlphabetically().forEach(System.out::println);
@@ -72,12 +74,18 @@ class TransactionHistoryMenu {
     if (distinctMovies.size() == 0) {
       System.out.println("Selected customer didn't bought any ticket yet");
     } else {
+      var movieFilters = TicketsFilteringUtils.inputMovieFilters("Specify movie filters").getFilters();
+      var filteredCustomerMovies = joinedEntitiesService.getCustomerMoviesByFilters(customerId, movieFilters);
       System.out.println("Selected customer bought " + distinctMovies.size() + " tickets for different movies\n");
       AtomicInteger counter = new AtomicInteger(1);
       distinctMovies.forEach(movie -> System.out.println("No. " + counter.getAndIncrement() + ". " + movie));
     }
   }
 
+  private void option3() {
+
+
+  }
 
   public void menuOptions() {
     System.out.println(MessageFormat.format(
@@ -87,9 +95,9 @@ class TransactionHistoryMenu {
                     "Option no. 4 - {3}\n" +
                     "Option no. 5 - {4}",
 
-            "Movies ticket bought",
-            "Movies bought by specified customer",
-            "",
+            "All distinct movies bought by all customers",
+            "All distinct movies bought by specified customer",
+            "Filter tickets transaction history",
             "",
             ""
     ));

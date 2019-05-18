@@ -2,8 +2,6 @@ package main;
 
 import exceptions.AppException;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import repository.entity_repository.impl.CustomerRepository;
 import repository.entity_repository.impl.LoyaltyCardRepository;
 import repository.entity_repository.impl.MovieRepository;
@@ -14,7 +12,6 @@ import service.entity_service.LoyaltyCardService;
 import service.entity_service.MovieService;
 import service.entity_service.SalesStandService;
 import service.others.JoinedEntitiesService;
-import utils.MenuOptionsUtils;
 import utils.UserDataUtils;
 
 import java.text.MessageFormat;

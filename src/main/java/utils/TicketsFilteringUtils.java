@@ -3,12 +3,11 @@ package utils;
 import exceptions.AppException;
 import model.tickets_data_filtering.MovieFilterCommand;
 import model.tickets_data_filtering.MovieFilteringCriterion;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static model.tickets_data_filtering.MovieFilteringCriterion.*;
 import static utils.UserDataUtils.*;
@@ -17,52 +16,59 @@ public class TicketsFilteringUtils {
 
   private static MovieFilterCommand.FilterCommandBuilder builder;
   private static List<MovieFilteringCriterion> filteringCriteria;
-  private static Logger logger = LoggerFactory.getLogger(TicketsFilteringUtils.class);
 
   private TicketsFilteringUtils() {
   }
 
-  public static MovieFilterCommand getMovieFilters(String message) {
+  private static void printCriteria(List<MovieFilteringCriterion> movieFilters) {
+    AtomicInteger counter = new AtomicInteger(1);
+    filteringCriteria.forEach(criterion -> {
+      System.out.println("Criterion no. " + counter.getAndIncrement() + " - > " + criterion);
+    });
+  }
+
+  public static MovieFilterCommand inputMovieFilters(String message) {
     filteringCriteria = new ArrayList<>(Arrays.asList(values()));
     builder = new MovieFilterCommand.FilterCommandBuilder();
     System.out.println(message);
 
     while (true) {
+
       MovieFilteringCriterion filteringCriterion;
-      filteringCriterion = valueOf(getString("CHOOSE FILTERING CRITERION FROM BELOW: \n " + filteringCriteria).toUpperCase());
-      if (!filteringCriteria.contains(filteringCriterion)) {
-        throw new AppException("Filtered criterion has been already selected!");
-      }
+      do {
+        printCriteria(filteringCriteria);
+        filteringCriterion = valueOf(getString("CHOOSE PROPER FILTERING CRITERION FROM ABOVE: (NOT CASE SENSITIVE) \n ").toUpperCase());
+      } while (!filteringCriteria.contains(filteringCriterion));
+
       switch (filteringCriterion) {
-        case MOVIE_DURATION -> {
+        case DURATION -> {
           filterByMovieDuration();
-          filteringCriteria.remove(MOVIE_DURATION);
+          filteringCriteria.remove(DURATION);
         }
-        case MOVIE_RELEASE_DATE -> {
+        case RELEASE_DATE -> {
           filterByReleaseDate();
-          filteringCriteria.remove(MOVIE_RELEASE_DATE);
+          filteringCriteria.remove(RELEASE_DATE);
         }
-        case MOVIE_GENRE -> {
+        case GENRE -> {
           filterByGenre();
-          filteringCriteria.remove(MOVIE_GENRE);
+          filteringCriteria.remove(GENRE);
         }
       }
       if (filteringCriteria.isEmpty() || !getString("DO YOU WANT TO ADD NEW SORTING CRITERION? Y/N").equalsIgnoreCase("Y"))
         break;
     }
     return builder.build();
-
   }
 
   private static void filterByGenre() {
 
     List<String> movieGenres = new ArrayList<>();
-    boolean isNext;
+    boolean hasNext;
     do {
       var genre = getString("Input movie genre");
       movieGenres.add(genre);
-      isNext = getString("Do you want to add next movie genre? (Y/N)").equalsIgnoreCase("Y");
-    } while (isNext);
+      hasNext = getString("Do you want to add next movie genre? (Y/N)").equalsIgnoreCase("Y");
+    } while (hasNext);
 
     builder.genre(movieGenres);
   }

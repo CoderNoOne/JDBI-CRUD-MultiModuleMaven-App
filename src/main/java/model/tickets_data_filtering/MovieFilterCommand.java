@@ -22,17 +22,17 @@ public class MovieFilterCommand {
     private Map<MovieFilteringCriterion,  List<? extends Object>> filters = new EnumMap<>(MovieFilteringCriterion.class);
 
     public MovieFilterCommand.FilterCommandBuilder genre(List<String> genre) {
-      filters.put(MOVIE_GENRE, genre);
+      filters.put(GENRE, genre);
       return this;
     }
 
     public MovieFilterCommand.FilterCommandBuilder duration(int minDuration, int maxDuration) {
-      filters.put(MOVIE_DURATION, new ArrayList<>(Arrays.asList(minDuration, maxDuration)));
+      filters.put(DURATION, new ArrayList<>(Arrays.asList(minDuration, maxDuration)));
       return this;
     }
 
     public MovieFilterCommand.FilterCommandBuilder releaseDate(LocalDate minReleaseDate, LocalDate maxReleaseDate) {
-      filters.put(MOVIE_RELEASE_DATE, new ArrayList<>(Arrays.asList(minReleaseDate, maxReleaseDate)));
+      filters.put(RELEASE_DATE, new ArrayList<>(Arrays.asList(minReleaseDate, maxReleaseDate)));
       return this;
     }
 

@@ -13,8 +13,6 @@ c
 +src/main/java/converters/JsonConverter.java,c\4\c4bd7eada5fccccdf56852a863c77ed8b78da173
 L
 src/main/java/main/Menu.java,3\8\38874e97868eab190dfeb4b67c6c143182a14784
-X
-(src/main/java/service/EntityService.java,d\f\df3d7121d8d39ceb932166e5eaab711a4b9b0b98
 d
 4src/main/java/validators/impl/CustomerValidator.java,d\4\d461dae34350e423ffad47181d024e66c01bf018
 a
@@ -79,8 +77,6 @@ k
 ;src/main/java/service/entity_service/SalesStandService.java,a\b\abd72252ade54fe9dec4dfbf75d066eb589fd1d8
 e
 5src/main/java/service/entity_service/TestService.java,0\a\0aab1195bf318177727c9bb5364e46fa6433dd6b
-Y
-)src/main/java/utils/MenuOptionsUtils.java,d\b\db8d8a4b7c35e36c75defd7855643e4dd8a50129
 L
 src/main/java/main/Main.java,7\f\7f08be4e9c62f2e5f8f02242af89b918cb9a135f
 g
@@ -118,5 +114,3 @@ P
  src/main/java/main/MainMenu.java,f\1\f119f91fd4710ec35e22f32b0072cdf1f3e400eb
 S
 #src/main/resources/log4j.properties,7\5\755950bb690295904a49d36e60958901c54013b8
-P
- src/main/resources/db.properties,7\7\779348f654a78c25c1b2a58c09d119b35347dc0d

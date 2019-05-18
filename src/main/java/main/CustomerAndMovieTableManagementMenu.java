@@ -12,7 +12,6 @@ import service.entity_service.LoyaltyCardService;
 import service.entity_service.MovieService;
 import service.entity_service.SalesStandService;
 import service.others.JoinedEntitiesService;
-import utils.MenuOptionsUtils;
 import utils.UserDataUtils;
 
 import java.text.MessageFormat;
@@ -28,7 +27,7 @@ class CustomerAndMovieTableManagementMenu {
   private final JoinedEntitiesService joinedEntitiesService = new JoinedEntitiesService(new JoinedEntitiesRepository());
 
   void menu() {
-    MenuOptionsUtils.customerAndMovieTableManagmentMenu();
+    menuOptions();
     while (true) {
       try {
         int option = UserDataUtils.getInt("INPUT YOUR OPTION: ");

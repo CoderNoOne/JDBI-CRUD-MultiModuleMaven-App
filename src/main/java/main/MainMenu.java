@@ -2,7 +2,6 @@ package main;
 
 import exceptions.AppException;
 import lombok.extern.slf4j.Slf4j;
-import model.entity.Movie;
 import repository.entity_repository.impl.CustomerRepository;
 import repository.entity_repository.impl.LoyaltyCardRepository;
 import repository.entity_repository.impl.MovieRepository;
@@ -14,7 +13,6 @@ import service.entity_service.MovieService;
 import service.entity_service.SalesStandService;
 import service.others.DataInitializeService;
 import service.others.JoinedEntitiesService;
-import utils.MenuOptionsUtils;
 import utils.SimulateTimeFlowUtils;
 import utils.UserDataUtils;
 
@@ -32,8 +30,8 @@ class MainMenu {
   private final JoinedEntitiesService joinedEntitiesService = new JoinedEntitiesService(new JoinedEntitiesRepository());
 
   void mainMenu() {
-    MenuOptionsUtils.mainMenuOptions();
     while (true) {
+      mainMenuOptions();
       try {
         int option = UserDataUtils.getInt("INPUT YOUR OPTION: ");
         switch (option) {

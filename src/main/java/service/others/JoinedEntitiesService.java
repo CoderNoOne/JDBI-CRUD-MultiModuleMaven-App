@@ -2,17 +2,12 @@ package service.others;
 
 import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
-import model.entity.Customer;
 import model.entity.Movie;
 import model.others.CustomerWithMoviesAndSalesStand;
 import model.others.MovieWithSalesStand;
 import model.tickets_data_filtering.MovieFilteringCriterion;
-import repository.entity_repository.impl.SalesStandRepository;
 import repository.others.JoinedEntitiesRepository;
-import service.entity_service.SalesStandService;
 import utils.EmailUtils;
-import utils.TicketsFilteringUtils;
-import utils.UserDataUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -85,7 +80,7 @@ public class JoinedEntitiesService {
             .build();
   }
 
- /* public List<CustomerWithMoviesAndSalesStand> allTicketsTransactionHistory(Integer id) {
+/*  public List<CustomerWithMoviesAndSalesStand> allTicketsTransactionHistory(Integer id) {
 
     var allTicketsByCustomerId = joinedEntitiesRepository.getAllTicketsByCustomerId(id);
 
@@ -93,74 +88,76 @@ public class JoinedEntitiesService {
     return allTicketsByCustomerId;
   }*/
 
-  public List<CustomerWithMoviesAndSalesStand> filterTicketsTransactionHistory(Integer id) {
+  public Set<CustomerWithMoviesAndSalesStand> getCustomerMoviesByFilters(Integer customerId, Map<MovieFilteringCriterion, List<? extends Object>> movieFilters) {
 
-    var filters = TicketsFilteringUtils.getMovieFilters("Specify your movie filters\n").getFilters();
-
-    var allFilteredTickets = joinedEntitiesRepository.getAllTicketsByCustomerId(id)
+    return joinedEntitiesRepository.getAllTicketsByCustomerId(customerId)
             .stream()
-            .filter(customerWithMoviesAndSalesStand -> getMovieFilterPredicate(filters).test(customerWithMoviesAndSalesStand))
-            .collect(Collectors.toList());
-
-    EmailUtils.sendSummaryTableByFilters("firelight.code@gmail.com"/*salesStandRepository.getCustomerEmailByCustomerId(id)*/, "From app", allFilteredTickets, filters);
-    return allFilteredTickets;
+            .filter(customerWithMoviesAndSalesStand -> getMovieFilterPredicate(movieFilters).test(customerWithMoviesAndSalesStand))
+            .collect(Collectors.toSet());
   }
+//    EmailUtils.sendSummaryTableByFilters("firelight.code@gmail.com"/*salesStandRepository.getCustomerEmailByCustomerId(id)*/, "From app", allFilteredTickets, filters);
 
-  private static Predicate<CustomerWithMoviesAndSalesStand> getMovieFilterPredicate(Map<MovieFilteringCriterion, List<?>> filters) {
-    return filters
-            .entrySet()
-            .stream()
-            .map(JoinedEntitiesService::getPredicate)
-            .reduce(Predicate::and).orElseThrow(() -> new AppException(""));
-  }
 
-  private static Predicate<CustomerWithMoviesAndSalesStand> getPredicate(Map.Entry<MovieFilteringCriterion, List<?>> cus) {
-    Predicate<CustomerWithMoviesAndSalesStand> predicate;
-    switch (cus.getKey()) {
-      case MOVIE_DURATION -> predicate = filterByMovieDurationPredicate(cus);
-      case MOVIE_RELEASE_DATE -> predicate = filterByMovieReleaseDate(cus);
-      case MOVIE_GENRE -> predicate = filterByMoviesGenre(cus);
-      default -> throw new AppException("");
+    private static Predicate<CustomerWithMoviesAndSalesStand> getMovieFilterPredicate
+    (Map < MovieFilteringCriterion, List < ?>>filters){
+      return filters
+              .entrySet()
+              .stream()
+              .map(JoinedEntitiesService::getPredicate)
+              .reduce(Predicate::and).orElseThrow(() -> new AppException(""));
     }
-    return predicate;
-  }
 
-  private static Predicate<CustomerWithMoviesAndSalesStand> filterByMoviesGenre(Map.Entry<MovieFilteringCriterion, List<?>> cus) {
-    return customerWithMoviesAndSalesStand -> cus.getValue().stream().map(String::valueOf).
-            anyMatch(genre -> customerWithMoviesAndSalesStand.getMovieGenre().equalsIgnoreCase(genre));
-  }
+    private static Predicate<CustomerWithMoviesAndSalesStand> getPredicate
+    (Map.Entry < MovieFilteringCriterion, List < ?>>cus){
+      Predicate<CustomerWithMoviesAndSalesStand> predicate;
+      switch (cus.getKey()) {
+        case DURATION -> predicate = filterByMovieDurationPredicate(cus);
+        case RELEASE_DATE -> predicate = filterByMovieReleaseDate(cus);
+        case GENRE -> predicate = filterByMoviesGenre(cus);
+        default -> throw new AppException("");
+      }
+      return predicate;
+    }
 
-  private static Predicate<CustomerWithMoviesAndSalesStand> filterByMovieReleaseDate(Map.Entry<MovieFilteringCriterion, List<?>> cus) {
+    private static Predicate<CustomerWithMoviesAndSalesStand> filterByMoviesGenre
+    (Map.Entry < MovieFilteringCriterion, List < ?>>cus){
+      return customerWithMoviesAndSalesStand -> cus.getValue().stream().map(String::valueOf).
+              anyMatch(genre -> customerWithMoviesAndSalesStand.getMovieGenre().equalsIgnoreCase(genre));
+    }
 
-    var minLocalDate = LocalDate.parse(String.valueOf(cus.getValue().get(0)));
-    var maxLocalDate = LocalDate.parse(String.valueOf(cus.getValue().get(1)));
-    return customerWithMoviesAndSalesStand ->
-            customerWithMoviesAndSalesStand.getMovieReleaseDate().compareTo(minLocalDate) >= 0 &&
-                    customerWithMoviesAndSalesStand.getMovieReleaseDate().compareTo(maxLocalDate) <= 0;
-  }
+    private static Predicate<CustomerWithMoviesAndSalesStand> filterByMovieReleaseDate
+    (Map.Entry < MovieFilteringCriterion, List < ?>>cus){
 
-  private static Predicate<CustomerWithMoviesAndSalesStand> filterByMovieDurationPredicate(Map.Entry<MovieFilteringCriterion, List<?>> cus) {
+      var minLocalDate = LocalDate.parse(String.valueOf(cus.getValue().get(0)));
+      var maxLocalDate = LocalDate.parse(String.valueOf(cus.getValue().get(1)));
+      return customerWithMoviesAndSalesStand ->
+              customerWithMoviesAndSalesStand.getMovieReleaseDate().compareTo(minLocalDate) >= 0 &&
+                      customerWithMoviesAndSalesStand.getMovieReleaseDate().compareTo(maxLocalDate) <= 0;
+    }
 
-    return customerWithMoviesAndSalesStand ->
-            customerWithMoviesAndSalesStand.getMovieDuration() >= Integer.parseInt(String.valueOf(cus.getValue().get(0)))
-                    && customerWithMoviesAndSalesStand.getMovieDuration() <= Integer.parseInt(String.valueOf(cus.getValue().get(1)));
-  }
+    private static Predicate<CustomerWithMoviesAndSalesStand> filterByMovieDurationPredicate
+    (Map.Entry < MovieFilteringCriterion, List < ?>>cus){
 
-  public List<CustomerWithMoviesAndSalesStand> getMoviesDetailsByCustomerId(Integer id) {
-    return joinedEntitiesRepository.getAllTicketsByCustomerId(id);
-  }
+      return customerWithMoviesAndSalesStand ->
+              customerWithMoviesAndSalesStand.getMovieDuration() >= Integer.parseInt(String.valueOf(cus.getValue().get(0)))
+                      && customerWithMoviesAndSalesStand.getMovieDuration() <= Integer.parseInt(String.valueOf(cus.getValue().get(1)));
+    }
 
-  public Integer ticketsNumberBoughtByCustomerId(Integer customerId) {
-    return joinedEntitiesRepository.getAllTicketsByCustomerId(customerId).size();
-  }
+    public List<CustomerWithMoviesAndSalesStand> getMoviesDetailsByCustomerId (Integer id){
+      return joinedEntitiesRepository.getAllTicketsByCustomerId(id);
+    }
 
-  private boolean doCustomerPosesActiveLoyaltyCardByCustomerId(Integer customerId) {
-    var customerWithLoyaltyCardOptional = joinedEntitiesRepository.getCustomerWithLoyaltyCardInfoByCustomerId(customerId);
+    public Integer ticketsNumberBoughtByCustomerId (Integer customerId){
+      return joinedEntitiesRepository.getAllTicketsByCustomerId(customerId).size();
+    }
 
-    return customerWithLoyaltyCardOptional.isPresent() &&
-            customerWithLoyaltyCardOptional.get().getMoviesNumber() > 0 &&
-            customerWithLoyaltyCardOptional.get().getLoyaltyCardExpirationDate().compareTo(LocalDate.now()) > 0;
-  }
+    private boolean doCustomerPosesActiveLoyaltyCardByCustomerId (Integer customerId){
+      var customerWithLoyaltyCardOptional = joinedEntitiesRepository.getCustomerWithLoyaltyCardInfoByCustomerId(customerId);
+
+      return customerWithLoyaltyCardOptional.isPresent() &&
+              customerWithLoyaltyCardOptional.get().getMoviesNumber() > 0 &&
+              customerWithLoyaltyCardOptional.get().getLoyaltyCardExpirationDate().compareTo(LocalDate.now()) > 0;
+    }
 
 //    public void manageLoyaltyCard(Customer customer, Integer ticketsNumber, Movie movie, LocalDateTime movieStartTime) {
 //
@@ -193,7 +190,8 @@ public class JoinedEntitiesService {
 //    }
 //  }
 
-  private void sendMovieDetailsToCustomerEmail(String email, String subject, Movie movie, LocalDateTime startDateTime) {
-    EmailUtils.sendMoviePurchaseConfirmation(email, subject, movie, startDateTime);
+    private void sendMovieDetailsToCustomerEmail (String email, String subject, Movie movie, LocalDateTime startDateTime)
+    {
+      EmailUtils.sendMoviePurchaseConfirmation(email, subject, movie, startDateTime);
+    }
   }
-}
