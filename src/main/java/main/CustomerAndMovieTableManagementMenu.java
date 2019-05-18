@@ -18,11 +18,8 @@ import service.others.JoinedEntitiesService;
 import utils.UserDataUtils;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
+import java.util.*;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -99,14 +96,24 @@ class CustomerAndMovieTableManagementMenu {
   }
 
   //updatetowanie customera
-  private void option4_12(){
+  private void option4_12() {
+    printCollectionWithNumeration(customerService.getAllCustomers());
 
+    var customerId = getInt("Choose customer id you want to update");
+
+    Optional<Customer> customerById = customerService.findCustomerById(customerId);
+    if(customerById.isEmpty()){
+      throw new AppException("There is no customer with such an id in our database!");
+    }
+    printMessage("Choose customer property you want to change/update");
+
+    customerService.update();
 
   }
 
   //updatetowanie movie
-  private void option4_11(){
-    printMessage("Choose");
+  private void option4_11() {
+    printMessage("Choose customer property you want to change/update");
   }
 
   private void option4_10() {

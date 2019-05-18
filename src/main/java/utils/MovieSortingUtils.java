@@ -10,6 +10,7 @@ import java.util.List;
 
 import static model.sorting.sorting_criterion.MovieSortingCriterion.*;
 import static utils.UserDataUtils.getString;
+import static utils.UserDataUtils.printMessage;
 
 public class MovieSortingUtils {
 
@@ -21,13 +22,13 @@ public class MovieSortingUtils {
 
   public static MovieSort getMovieSortingAlgorithm(String message) {
 
+    printMessage(message);
     sortingAlgorithms = new ArrayList<>(Arrays.asList(MovieSortingCriterion.values()));
     builder = new MovieSort.MovieSortBuilder();
-    System.out.println(message);
 
     while (true) {
 
-      MovieSortingCriterion sortingCriterion = MovieSortingCriterion.valueOf(getString("CHOOSE FROM ABOVE: " + sortingAlgorithms).toUpperCase());
+      var sortingCriterion = MovieSortingCriterion.valueOf(getString("CHOOSE FROM ABOVE: " + sortingAlgorithms).toUpperCase());
 
       if (!sortingAlgorithms.contains(sortingCriterion))
         throw new AppException("UNDEFINED SORTING CRITERION OR ALREADY SORTED BY THIS ONE");
@@ -37,10 +38,17 @@ public class MovieSortingUtils {
         case GENRE -> sortByGenre();
         case DURATION -> sortByDuration();
         case RELEASE_DATE -> sortByReleaseDate();
+        case PRICE -> sortByPrice();
       }
-      if (sortingAlgorithms.isEmpty() || !getString("DO YOU WANT TO ADD NEW SORTING CRITERION? Y/N").equalsIgnoreCase("Y")) break;
+      if (sortingAlgorithms.isEmpty() || !getString("DO YOU WANT TO ADD NEW SORTING CRITERION? Y/N").equalsIgnoreCase("Y"))
+        break;
     }
     return builder.build();
+  }
+
+  private static void sortByPrice() {
+    builder = chooseOrdering().equals("ASC") ? builder.title(true) : builder.title(false);
+    sortingAlgorithms.remove(PRICE);
   }
 
   private static void sortByTitle() {
