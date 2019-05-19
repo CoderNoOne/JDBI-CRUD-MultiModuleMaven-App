@@ -1,6 +1,7 @@
 package validators.impl;
 
 import model.entity.Movie;
+import utils.others.UserDataUtils;
 import validators.Validator;
 
 import java.math.BigDecimal;
@@ -8,6 +9,8 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static utils.others.UserDataUtils.printMessage;
 
 public class MovieValidator implements Validator<Movie> {
 
@@ -44,10 +47,10 @@ public class MovieValidator implements Validator<Movie> {
 
   @Override
   public boolean validateEntity(Movie movie) {
-    Map<String, String> errors = validate(movie);
+    validate(movie);
 
     if (hasErrors()) {
-      System.out.println(errors
+      printMessage(errors
               .entrySet()
               .stream()
               .map(e -> e.getKey() + " : " + e.getValue())

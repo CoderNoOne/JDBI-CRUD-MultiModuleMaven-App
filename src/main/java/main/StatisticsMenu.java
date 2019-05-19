@@ -17,6 +17,8 @@ import utils.others.UserDataUtils;
 import java.text.MessageFormat;
 import java.util.Arrays;
 
+import static utils.others.UserDataUtils.printMessage;
+
 @Slf4j
 class StatisticsMenu {
 
@@ -26,7 +28,7 @@ class StatisticsMenu {
   private final SalesStandService salesStandService = new SalesStandService(new SalesStandRepository());
   private final JoinedEntitiesService joinedEntitiesService = new JoinedEntitiesService(new JoinedEntitiesRepository());
 
-   void menu() {
+  void menu() {
 
     menuOptions();
     while (true) {
@@ -53,7 +55,7 @@ class StatisticsMenu {
 
   public static void menuOptions() {
 
-    System.out.println(MessageFormat.format(
+    printMessage(MessageFormat.format(
             "\nOption no. 1 - {0}\n" +
                     "Option no. 2 - {1}\n" +
                     "Option no. 3 - {2}\n" +
@@ -65,27 +67,32 @@ class StatisticsMenu {
                     "Option no. 9 - {8}",
 
             "Movies grouped by the most popular ones",
-            "Most popular movie genre grouped by each customer ",
-            "The most expensive ticket bought grouped each customer",
-            "The cheapest ticket bought grouped for each customer",
+            "The most popular movie genre grouped by each customer ",
+            "The most expensive ticket bought by each customer",
+            "The cheapest ticket bought by each customer",
             "Average ticket price grouped by month",
             "Total monthly expenses on tickets grouped by month for each customer",
-            "Total amount of tickets bought with discount by movie category and grouped by each customer",
-            "Total amount of tickets bought without discount by movie category and grouped by each customer",
+            "Total amount of tickets bought with discount grouped by movie category and for each customer",
+            "Total amount of tickets bought without discount by grouped by movie category and for each customer",
             "Back to main menu"
-
     ));
   }
 
-  private void option7_7() {
-
+  //filmy pogrupowane wg najchętnie kupowanych
+  private void option7_1() {
+    joinedEntitiesService.movieGroupedByPopularity().forEach((movie, number) -> System.out.println("Movie: " + movie.getTitle()
+            + " - > " + number));
   }
 
-  private void option7_6() {
-
+  private void option7_2() {
+    joinedEntitiesService.mostPopularMovieGenreForEachCustomer().forEach((customerId, innerMap) -> {
+      printMessage(customerService.findCustomerById(customerId).get().toString() + "\n");
+      innerMap.forEach((category, number) -> printMessage("Category: " + category + " -> Bought:" + number + " times."));
+      printMessage("\n");
+    });
   }
 
-  private void option7_5() {
+  private void option7_3() {
 
   }
 
@@ -93,31 +100,16 @@ class StatisticsMenu {
 
   }
 
-  private void option7_3() {
+  private void option7_5() {
 
   }
 
-  private void option7_2() {
-//    joinedEntitiesService.mostPopularMovieGenreForEachCustomer().forEach((customerId, innerMap) -> {
-//      customerService.
-//    });
+  private void option7_6() {
+
   }
 
-//  "Movies grouped by the most popular ones",
-//          "Most popular movie category grouped by each customer ",
-//          "The most expensive ticket bought grouped each customer",
-//          "The cheapest ticket bought grouped for each customer",
-//          "Average ticket price grouped by month",
-//          "Total monthly expenses on tickets grouped by month for each customer",
-//          "Total amount of tickets bought with discount by movie category and grouped by each customer",
-//          "Total amount of tickets bought without discount by movie category and grouped by each customer",
-//          "Back to main menu"
+  private void option7_7() {
 
-
-  //filmy pogrupowane wg najchętnie kupowanych
-  private void option7_1() {
-    joinedEntitiesService.movieGroupedByPopularity().forEach((movie, number) -> System.out.println("Movie: " + movie.getTitle()
-            + " - > " + number));
   }
 
 }

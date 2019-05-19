@@ -26,12 +26,9 @@ public class MovieSortingUtils {
     sortingAlgorithms = new ArrayList<>(Arrays.asList(MovieField.values()));
     builder = new MovieSort.MovieSortBuilder();
 
-    while (true) {
-
+    boolean hasNext;
+    do {
       var sortingCriterion = MovieField.valueOf(getString("CHOOSE FROM ABOVE: " + sortingAlgorithms).toUpperCase());
-
-      if (!sortingAlgorithms.contains(sortingCriterion))
-        throw new AppException("UNDEFINED SORTING CRITERION OR ALREADY SORTED BY THIS ONE");
 
       switch (sortingCriterion) {
         case TITLE -> sortByTitle();
@@ -40,9 +37,9 @@ public class MovieSortingUtils {
         case RELEASE_DATE -> sortByReleaseDate();
         case PRICE -> sortByPrice();
       }
-      if (sortingAlgorithms.isEmpty() || !getString("DO YOU WANT TO ADD NEW SORTING CRITERION? Y/N").equalsIgnoreCase("Y"))
-        break;
-    }
+      hasNext = getString("DO YOU WANT TO ADD NEW SORTING CRITERION? Y/N").equalsIgnoreCase("Y");
+
+    } while (hasNext && !sortingAlgorithms.isEmpty());
     return builder.build();
   }
 

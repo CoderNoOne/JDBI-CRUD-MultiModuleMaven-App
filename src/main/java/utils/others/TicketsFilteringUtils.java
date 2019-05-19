@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static model.tickets_data_filtering.MovieFilteringCriterion.*;
+import static utils.others.SimulateTimeFlowUtils.getClock;
 import static utils.others.UserDataUtils.*;
 
 @Slf4j
@@ -35,7 +36,8 @@ public class TicketsFilteringUtils {
     builder = new MovieFilterCommand.FilterCommandBuilder();
     System.out.println(message);
 
-    while (true) {
+    boolean hasNext;
+    do {
 
       MovieFilteringCriterion filteringCriterion;
       do {
@@ -57,9 +59,9 @@ public class TicketsFilteringUtils {
           filteringCriteria.remove(GENRE);
         }
       }
-      if (filteringCriteria.isEmpty() || !getString("DO YOU WANT TO ADD NEW SORTING CRITERION? Y/N").equalsIgnoreCase("Y"))
-        break;
-    }
+      hasNext = getString("DO YOU WANT TO ADD NEW SORTING CRITERION? Y/N").equalsIgnoreCase("Y");
+
+    } while (hasNext && !filteringCriteria.isEmpty());
     return builder.build();
   }
 
@@ -78,7 +80,7 @@ public class TicketsFilteringUtils {
 
   private static void filterByReleaseDate() {
 
-    LocalDate minimumReleaseDate = LocalDate.now(), maximumReleaseDate = LocalDate.now();
+    LocalDate minimumReleaseDate = LocalDate.now(getClock()), maximumReleaseDate = LocalDate.now(getClock());
     boolean isValid = false;
 
     do {

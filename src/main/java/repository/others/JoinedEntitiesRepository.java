@@ -84,7 +84,6 @@ public class JoinedEntitiesRepository {
                             .build()).findFirst());
   }
 
-
   public List<CustomerWithLoyaltyCard> getAllCustomerWithLoyaltyCard() {
 
     final String sql = "select customers.id c_id, loyalty_cards.movies_number lc_mn, loyalty_cards.discount lc_discount, loyalty_cards.expiration_date lc_exp_date, loyalty_cards.id lc_id from customers join loyalty_cards on customers.loyalty_card_id = loyalty_cards.id";

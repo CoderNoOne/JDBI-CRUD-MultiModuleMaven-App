@@ -1,6 +1,7 @@
 package utils.others;
 
 import exceptions.AppException;
+import lombok.extern.slf4j.Slf4j;
 import model.entity.Movie;
 import model.others.CustomerWithMoviesAndSalesStand;
 import model.tickets_data_filtering.MovieFilteringCriterion;
@@ -15,7 +16,9 @@ import java.util.Map;
 import java.util.Properties;
 
 import static j2html.TagCreator.*;
+import static utils.others.UserDataUtils.printMessage;
 
+@Slf4j
 public class EmailUtils {
 
   private static final String emailAddress = "the.mountain.057@gmail.com";
@@ -91,7 +94,7 @@ public class EmailUtils {
   private static void sendAsHtml(String recipient, String subject, String htmlContent) {
 
     try {
-      System.out.println("Sending email to " + recipient + " ...");
+      printMessage("Sending email to " + recipient + " ...");
 
       Session session = createSession();
 
@@ -99,9 +102,9 @@ public class EmailUtils {
       prepareEmailMessage(mimeMessage, recipient, subject, htmlContent);
 
       Transport.send(mimeMessage);
-      System.out.println("Email has been sent!");
+      printMessage("Email has been sent!");
     } catch (Exception e) {
-      e.printStackTrace();
+//      log.error("eror", e.printStackTrace());
       throw new AppException("SEND AS HTML MESSAGE EXCEPTION");
     }
 

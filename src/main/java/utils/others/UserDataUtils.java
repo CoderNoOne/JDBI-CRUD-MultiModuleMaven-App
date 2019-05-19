@@ -20,7 +20,7 @@ public class UserDataUtils {
   private static Scanner sc = new Scanner(System.in);
 
   public static int getInt(String message) {
-    System.out.println(message);
+    printMessage(message);
 
     String text = sc.nextLine();
     if (!text.matches("[\\d]+")) {
@@ -49,7 +49,7 @@ public class UserDataUtils {
   }
 
   public static void printMessage(String message) {
-    System.out.println(message);
+    printMessage(message);
   }
 
   public static void close() {
@@ -60,7 +60,7 @@ public class UserDataUtils {
   }
 
   public static LocalDate getDate(String message) {
-    System.out.println(message);
+    printMessage(message);
 
     String date = sc.nextLine();
     LocalDate localDate;
@@ -74,14 +74,12 @@ public class UserDataUtils {
   }
 
   public static BigDecimal getBigDecimal(String inputMessage) {
-    System.out.println(inputMessage);
-
+    printMessage(inputMessage);
     return sc.nextBigDecimal();
-
   }
 
   public static LocalDateTime getLocalDateTime(String message) {
-    System.out.println(message);
+    printMessage(message);
 
     String date = sc.nextLine();
 
@@ -96,7 +94,7 @@ public class UserDataUtils {
   }
 
   public static LocalDate getLocalDate(String message) {
-    System.out.println(message);
+    printMessage(message);
 
     String date = sc.nextLine();
 
@@ -108,6 +106,4 @@ public class UserDataUtils {
     }
     return localDate;
   }
-
-
 }

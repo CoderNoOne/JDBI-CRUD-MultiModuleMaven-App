@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static utils.others.UserDataUtils.printMessage;
+
 public class LoyaltyCardValidator implements Validator<LoyaltyCard> {
 
   private Map<String, String> errors = new HashMap<>();
@@ -43,10 +45,10 @@ public class LoyaltyCardValidator implements Validator<LoyaltyCard> {
 
   @Override
   public boolean validateEntity(LoyaltyCard loyaltyCard) {
-    Map<String, String> errors = validate(loyaltyCard);
+    validate(loyaltyCard);
 
     if (hasErrors()) {
-      System.out.println(errors
+      printMessage(errors
               .entrySet()
               .stream()
               .map(e -> e.getKey() + " : " + e.getValue())
@@ -54,7 +56,6 @@ public class LoyaltyCardValidator implements Validator<LoyaltyCard> {
     }
     return !hasErrors();
   }
-
 
   private boolean isMovieNumberValid(LoyaltyCard loyaltyCard) {
     return loyaltyCard.getMoviesNumber() > 0;

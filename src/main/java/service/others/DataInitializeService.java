@@ -7,11 +7,14 @@ import repository.entity_repository.impl.CustomerRepository;
 import repository.entity_repository.impl.LoyaltyCardRepository;
 import repository.entity_repository.impl.MovieRepository;
 import repository.entity_repository.impl.SalesStandRepository;
+import utils.others.UserDataUtils;
 import validators.impl.CustomerValidator;
 import validators.impl.MovieValidator;
 
 
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static utils.others.UserDataUtils.printMessage;
 
 public class DataInitializeService {
 
@@ -44,7 +47,7 @@ public class DataInitializeService {
             .filter(movie -> {
 
               if (movieValidator.hasErrors()) {
-                System.out.println("MOVIE NO: " + atomicInteger.get());
+                printMessage("MOVIE NO: " + atomicInteger.get());
                 movieValidator.validateEntity(movie);
               }
               atomicInteger.incrementAndGet();
@@ -64,7 +67,7 @@ public class DataInitializeService {
             .stream()
             .filter(customer -> {
               if (customerValidator.hasErrors()) {
-                System.out.println("CUSTOMER NO: " + atomicInteger.get());
+                printMessage("CUSTOMER NO: " + atomicInteger.get());
                 customerValidator.validateEntity(customer);
               }
               atomicInteger.incrementAndGet();

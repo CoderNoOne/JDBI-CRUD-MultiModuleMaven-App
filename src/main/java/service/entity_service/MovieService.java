@@ -109,7 +109,7 @@ public class MovieService {
 
     //wykaz godzin potenjalnych seansow na nastpne 24 h od teraz
     return Stream.iterate(seedDateTime, date -> date.plusMinutes(30))
-            .limit(ChronoUnit.HOURS.between(seedDateTime, seedDateTime.plusHours(50)))
+            .limit(ChronoUnit.HOURS.between(seedDateTime, seedDateTime.plusHours(48)))
             .filter(date -> date.toLocalTime().compareTo(LocalTime.of(8, 0)) >= 0 && date.toLocalTime().compareTo(LocalTime.of(22, 30)) <= 0)
             .collect(Collectors.toList());
   }

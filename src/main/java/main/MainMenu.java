@@ -17,11 +17,8 @@ import service.entity_service.SalesStandService;
 import service.others.DataInitializeService;
 import service.others.JoinedEntitiesService;
 import utils.others.EmailUtils;
-import utils.others.SimulateTimeFlowUtils;
-import utils.others.UserDataUtils;
 
 import java.text.MessageFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;
@@ -151,7 +148,7 @@ class MainMenu {
     if (joinedEntitiesService.doCustomerPosesActiveLoyaltyCard(customer)) {
       loyaltyCardService.decreaseMoviesNumberByLoyaltyCardId(customerLoyaltyCardId.get().getLoyaltyCardId());
       movie.setPrice(movie.getPrice().subtract(loyaltyCardService.findLoyaltyCardById(customerLoyaltyCardId.get().getLoyaltyCardId()).get().getDiscount()));
-    } else if (joinedEntitiesService.numberOfMoviesBoughtByCustomer(customer) == loyaltyCardService.getLOYALTY_CARD_MIN_MOVIE_NUMBER()) {
+    } else if (joinedEntitiesService.numberOfMoviesBoughtByCustomer(customer) == loyaltyCardService.getLoyaltyMinMovieCard()) {
       option5Help(customer);
     }
 

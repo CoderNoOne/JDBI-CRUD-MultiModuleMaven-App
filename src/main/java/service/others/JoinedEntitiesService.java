@@ -9,10 +9,8 @@ import model.others.CustomerWithMoviesAndSalesStand;
 import model.others.MovieWithSalesStand;
 import model.tickets_data_filtering.MovieFilteringCriterion;
 import repository.others.JoinedEntitiesRepository;
-import utils.others.EmailUtils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -133,14 +131,6 @@ public class JoinedEntitiesService {
                     && customerWithMoviesAndSalesStand.getMovieDuration() <= Integer.parseInt(String.valueOf(cus.getValue().get(1)));
   }
 
-  public List<CustomerWithMoviesAndSalesStand> getMoviesDetailsByCustomerId(Integer id) {
-    return joinedEntitiesRepository.getAllTicketsByCustomerId(id);
-  }
-
-  public Integer ticketsNumberBoughtByCustomer(Customer customer) {
-    return joinedEntitiesRepository.getAllTicketsByCustomerId(customer.getId()).size();
-  }
-
   public List<CustomerWithLoyaltyCard> getCustomersWithLoyaltyCardWithActiveLoyaltyCard() {
     return joinedEntitiesRepository.getAllCustomerWithLoyaltyCard().stream()
             .filter(obj -> obj.getMoviesNumber() > 0 && obj.getLoyaltyCardExpirationDate().compareTo(LocalDate.now()) >= 0)
@@ -155,17 +145,12 @@ public class JoinedEntitiesService {
             customerWithLoyaltyCardOptional.get().getLoyaltyCardExpirationDate().compareTo(LocalDate.now()) > 0;
   }
 
-
-  private void sendMovieDetailsToCustomerEmail(String email, String subject, Movie movie, LocalDateTime startDateTime) {
-    EmailUtils.sendMoviePurchaseConfirmation(email, subject, movie, startDateTime);
-  }
-
   public Optional<CustomerWithLoyaltyCard> getCustomerWithLoyaltyCardByCustomer(Customer customer){
 
     return joinedEntitiesRepository.getCustomerWithLoyaltyCardInfoByCustomerId(customer.getId());
   }
 
-  public List<Movie> allMoviesBoughtBySpecifiedCustomer(Customer customer){
+  private List<Movie> allMoviesBoughtBySpecifiedCustomer(Customer customer){
     return joinedEntitiesRepository.getAllTicketsByCustomerId(customer.getId())
             .stream()
             .map(JoinedEntitiesService::convertCustomerWithMoviesAndSalesStandsToMovie)

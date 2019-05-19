@@ -95,12 +95,5 @@ public class SalesStandRepository implements CrudRepository<SalesStand> {
             .createUpdate("delete from sales_stands")
             .execute());
   }
-
-  public String getCustomerEmailByCustomerId(Integer id) {
-    return jdbi.withHandle(handle -> handle.createQuery("select customers.email from sales_stands join customers on sales_stands.customer_id = customers.id where sales_stands.customer_id = :customerId")
-            .bind("customerId", id)
-            .mapTo(String.class)
-            .findFirst().orElseThrow());
-  }
 }
 

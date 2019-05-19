@@ -13,22 +13,24 @@ import static utils.others.UserDataUtils.getString;
 public class CustomerSortingUtils {
 
   private static CustomerSort.CustomerSortBuilder builder;
-  private static List<CustomerField> sortedFields;
+  private static List<CustomerField> sortingAlgorithms;
 
   private CustomerSortingUtils() {
   }
 
   public static CustomerSort getCustomerSortingAlgorithm(String message) {
 
-    sortedFields = Arrays.asList(CustomerField.values());
+    sortingAlgorithms = Arrays.asList(CustomerField.values());
     builder = new CustomerSort.CustomerSortBuilder();
     System.out.println(message);
 
-    while (true) {
+    boolean hasNext;
+    do {
 
-      CustomerField sortingCriterion = CustomerField.valueOf(getString("CHOOSE FROM ABOVE: " + sortedFields).toUpperCase());
+      CustomerField sortingCriterion = CustomerField.valueOf(getString("CHOOSE FROM ABOVE: " + sortingAlgorithms).toUpperCase());
 
-      if (sortedFields.isEmpty() || !sortedFields.contains(sortingCriterion)) throw new AppException("UNDEFINED SORTING CRITERION OR ALREADY SORTED BY THIS ONE");
+      if (sortingAlgorithms.isEmpty() || !sortingAlgorithms.contains(sortingCriterion))
+        throw new AppException("UNDEFINED SORTING CRITERION OR ALREADY SORTED BY THIS ONE");
 
       switch (sortingCriterion) {
         case NAME -> sortByName();
@@ -36,29 +38,29 @@ public class CustomerSortingUtils {
         case AGE -> sortByAge();
         case EMAIL -> sortByEmail();
       }
-      if (!getString("DO YOU WANT TO ADD NEW SORTING CRITERION? Y/N").equalsIgnoreCase("Y")) break;
-    }
+      hasNext = getString("DO YOU WANT TO ADD NEW SORTING CRITERION? Y/N").equalsIgnoreCase("Y");
+    } while (hasNext && !sortingAlgorithms.isEmpty());
     return builder.build();
   }
 
   private static void sortByEmail() {
     builder = chooseOrdering().equals("ASC") ? builder.email(true) : builder.email(false);
-    sortedFields.remove(EMAIL);
+    sortingAlgorithms.remove(EMAIL);
   }
 
   private static void sortByAge() {
     builder = chooseOrdering().equals("ASC") ? builder.age(true) : builder.age(false);
-    sortedFields.remove(AGE);
+    sortingAlgorithms.remove(AGE);
   }
 
   private static void sortBySurname() {
     builder = chooseOrdering().equals("ASC") ? builder.surname(true) : builder.surname(false);
-    sortedFields.remove(SURNAME);
+    sortingAlgorithms.remove(SURNAME);
   }
 
   private static void sortByName() {
     builder = chooseOrdering().equals("ASC") ? builder.name(true) : builder.name(false);
-    sortedFields.remove(NAME);
+    sortingAlgorithms.remove(NAME);
   }
 
   private static String chooseOrdering() {
