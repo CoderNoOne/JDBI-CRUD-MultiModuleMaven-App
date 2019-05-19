@@ -15,18 +15,20 @@ import service.entity_service.MovieService;
 import service.entity_service.SalesStandService;
 import service.others.JoinedEntitiesService;
 
-import utils.UserDataUtils;
+import utils.others.UserDataUtils;
+import utils.update.UpdateMovieUtils;
 
 import java.text.MessageFormat;
 import java.util.*;
 
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
-import static utils.CustomerSortingUtils.getCustomerSortingAlgorithm;
-import static utils.MovieSortingUtils.getMovieSortingAlgorithm;
-import static utils.UserDataUtils.*;
+import static utils.sorting.CustomerSortingUtils.getCustomerSortingAlgorithm;
+import static utils.sorting.MovieSortingUtils.getMovieSortingAlgorithm;
+import static utils.update.UpdateCustomerUtils.*;
+import static utils.others.UserDataUtils.*;
+import static utils.update.UpdateMovieUtils.getUpdatedMovie;
 
 @Slf4j
 class CustomerAndMovieTableManagementMenu {
@@ -50,8 +52,11 @@ class CustomerAndMovieTableManagementMenu {
           case 5 -> option4_5();
           case 6 -> option4_6();
           case 7 -> option4_7();
-          case 8 -> menuOptions();
-          case 9 -> new MainMenu().mainMenu();
+          case 8 -> option4_12();
+          case 9 -> option4_11();
+//          case 10 ->
+          case 11 -> menuOptions();
+          case 12 -> new MainMenu().mainMenu();
           default -> throw new AppException("INPUT OPTION IS NOT DEFINED");
         }
       } catch (AppException e) {
@@ -102,18 +107,28 @@ class CustomerAndMovieTableManagementMenu {
     var customerId = getInt("Choose customer id you want to update");
 
     Optional<Customer> customerById = customerService.findCustomerById(customerId);
-    if(customerById.isEmpty()){
+    if (customerById.isEmpty()) {
       throw new AppException("There is no customer with such an id in our database!");
     }
-    printMessage("Choose customer property you want to change/update");
-
-    customerService.update();
+    printMessage(customerService.updateCustomer(getUpdatedCustomer(customerById.get())) ?
+            "Customer has been updated successfully" : "Some of new customer's field failed to pass the validation. Check the output");
 
   }
 
   //updatetowanie movie
   private void option4_11() {
-    printMessage("Choose customer property you want to change/update");
+
+    printCollectionWithNumeration(movieService.getAllMovies());
+
+    var movieId = getInt("Choose movie id you want to update");
+
+    Optional<Movie> movieById = movieService.findMovieById(movieId);
+    if (movieById.isEmpty()) {
+      throw new AppException("There is no movie with such an id in our database!");
+    }
+    printMessage(movieService.updateMovie(getUpdatedMovie(movieById.get())) ?
+            "Movie has been updated successfully" : "Some of new movie's field failed to pass the validation. Check the output");
+
   }
 
   private void option4_10() {
@@ -121,7 +136,7 @@ class CustomerAndMovieTableManagementMenu {
     var minMoviePrice = getBigDecimal("Input minimum movie price");
     var maxMoviePrice = getBigDecimal("Input maximum movie price");
 
-    if (minMoviePrice.compareTo(, maxMoviePrice) > 0) {
+    if (minMoviePrice.compareTo(maxMoviePrice) > 0) {
       throw new AppException("Minimum movie price cannot be greater than maximum one");
     }
 

@@ -13,8 +13,8 @@ import service.entity_service.MovieService;
 import service.entity_service.SalesStandService;
 import service.others.DataInitializeService;
 import service.others.JoinedEntitiesService;
-import utils.SimulateTimeFlowUtils;
-import utils.UserDataUtils;
+import utils.others.SimulateTimeFlowUtils;
+import utils.others.UserDataUtils;
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;

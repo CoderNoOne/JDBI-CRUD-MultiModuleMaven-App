@@ -1,21 +1,21 @@
-package utils;
+package utils.sorting;
 
 import exceptions.AppException;
 import model.sorting.sorting_comparator.MovieSort;
-import model.sorting.sorting_criterion.MovieSortingCriterion;
+import model.entities_fields.MovieField;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static model.sorting.sorting_criterion.MovieSortingCriterion.*;
-import static utils.UserDataUtils.getString;
-import static utils.UserDataUtils.printMessage;
+import static model.entities_fields.MovieField.*;
+import static utils.others.UserDataUtils.getString;
+import static utils.others.UserDataUtils.printMessage;
 
 public class MovieSortingUtils {
 
   private static MovieSort.MovieSortBuilder builder;
-  private static List<MovieSortingCriterion> sortingAlgorithms;
+  private static List<MovieField> sortingAlgorithms;
 
   private MovieSortingUtils() {
   }
@@ -23,12 +23,12 @@ public class MovieSortingUtils {
   public static MovieSort getMovieSortingAlgorithm(String message) {
 
     printMessage(message);
-    sortingAlgorithms = new ArrayList<>(Arrays.asList(MovieSortingCriterion.values()));
+    sortingAlgorithms = new ArrayList<>(Arrays.asList(MovieField.values()));
     builder = new MovieSort.MovieSortBuilder();
 
     while (true) {
 
-      var sortingCriterion = MovieSortingCriterion.valueOf(getString("CHOOSE FROM ABOVE: " + sortingAlgorithms).toUpperCase());
+      var sortingCriterion = MovieField.valueOf(getString("CHOOSE FROM ABOVE: " + sortingAlgorithms).toUpperCase());
 
       if (!sortingAlgorithms.contains(sortingCriterion))
         throw new AppException("UNDEFINED SORTING CRITERION OR ALREADY SORTED BY THIS ONE");

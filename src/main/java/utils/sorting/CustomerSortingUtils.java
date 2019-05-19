@@ -1,34 +1,34 @@
-package utils;
+package utils.sorting;
 
 import exceptions.AppException;
 import model.sorting.sorting_comparator.CustomerSort;
-import model.sorting.sorting_criterion.CustomerSortingCriterion;
+import model.entities_fields.CustomerField;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static model.sorting.sorting_criterion.CustomerSortingCriterion.*;
-import static utils.UserDataUtils.getString;
+import static model.entities_fields.CustomerField.*;
+import static utils.others.UserDataUtils.getString;
 
 public class CustomerSortingUtils {
 
   private static CustomerSort.CustomerSortBuilder builder;
-  private static List<CustomerSortingCriterion> sortingAlgorithms;
+  private static List<CustomerField> sortedFields;
 
   private CustomerSortingUtils() {
   }
 
   public static CustomerSort getCustomerSortingAlgorithm(String message) {
 
-    sortingAlgorithms = Arrays.asList(CustomerSortingCriterion.values());
+    sortedFields = Arrays.asList(CustomerField.values());
     builder = new CustomerSort.CustomerSortBuilder();
     System.out.println(message);
 
     while (true) {
 
-      CustomerSortingCriterion sortingCriterion = CustomerSortingCriterion.valueOf(getString("CHOOSE FROM ABOVE: " + sortingAlgorithms).toUpperCase());
+      CustomerField sortingCriterion = CustomerField.valueOf(getString("CHOOSE FROM ABOVE: " + sortedFields).toUpperCase());
 
-      if (sortingAlgorithms.isEmpty() || !sortingAlgorithms.contains(sortingCriterion)) throw new AppException("UNDEFINED SORTING CRITERION OR ALREADY SORTED BY THIS ONE");
+      if (sortedFields.isEmpty() || !sortedFields.contains(sortingCriterion)) throw new AppException("UNDEFINED SORTING CRITERION OR ALREADY SORTED BY THIS ONE");
 
       switch (sortingCriterion) {
         case NAME -> sortByName();
@@ -43,22 +43,22 @@ public class CustomerSortingUtils {
 
   private static void sortByEmail() {
     builder = chooseOrdering().equals("ASC") ? builder.email(true) : builder.email(false);
-    sortingAlgorithms.remove(EMAIL);
+    sortedFields.remove(EMAIL);
   }
 
   private static void sortByAge() {
     builder = chooseOrdering().equals("ASC") ? builder.age(true) : builder.age(false);
-    sortingAlgorithms.remove(AGE);
+    sortedFields.remove(AGE);
   }
 
   private static void sortBySurname() {
     builder = chooseOrdering().equals("ASC") ? builder.surname(true) : builder.surname(false);
-    sortingAlgorithms.remove(SURNAME);
+    sortedFields.remove(SURNAME);
   }
 
   private static void sortByName() {
     builder = chooseOrdering().equals("ASC") ? builder.name(true) : builder.name(false);
-    sortingAlgorithms.remove(NAME);
+    sortedFields.remove(NAME);
   }
 
   private static String chooseOrdering() {

@@ -1,4 +1,4 @@
-package utils;
+package utils.others;
 
 import exceptions.AppException;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static model.tickets_data_filtering.MovieFilteringCriterion.*;
-import static utils.UserDataUtils.*;
+import static utils.others.UserDataUtils.*;
 
 @Slf4j
 public class TicketsFilteringUtils {

@@ -2,14 +2,13 @@ package service.others;
 
 import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
-import model.entity.Customer;
 import model.entity.Movie;
 import model.others.CustomerWithLoyaltyCard;
 import model.others.CustomerWithMoviesAndSalesStand;
 import model.others.MovieWithSalesStand;
 import model.tickets_data_filtering.MovieFilteringCriterion;
 import repository.others.JoinedEntitiesRepository;
-import utils.EmailUtils;
+import utils.others.EmailUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

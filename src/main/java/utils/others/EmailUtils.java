@@ -1,4 +1,4 @@
-package utils;
+package utils.others;
 
 import exceptions.AppException;
 import model.entity.Movie;

@@ -5,7 +5,8 @@ import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
 import model.entity.Movie;
 import repository.entity_repository.impl.MovieRepository;
-import utils.UserDataUtils;
+import utils.others.UserDataUtils;
+import validators.impl.CustomerValidator;
 import validators.impl.MovieValidator;
 
 import java.math.BigDecimal;
@@ -53,8 +54,12 @@ public class MovieService {
     return movieRepository.findById(id);
   }
 
-  private void updateMovie(Movie movie) {
-    movieRepository.update(movie);
+  public boolean updateMovie(Movie movie) {
+    boolean isCorrect = new MovieValidator().validateEntity(movie);
+    if (isCorrect) {
+      movieRepository.update(movie);
+    }
+    return isCorrect;
   }
 
   public boolean updateMovieDetail(Integer id, String title, String genre, LocalDate releaseDate, Integer duration, BigDecimal price) {

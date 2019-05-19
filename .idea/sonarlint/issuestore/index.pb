@@ -35,10 +35,6 @@ U
 %src/main/java/model/entity/Movie.java,a\5\a5b130e5ce2a8aad153a679b0b1ab724e715b3d1
 Z
 *src/main/java/model/entity/SalesStand.java,1\f\1f2e14fae4353761a951fdce721f5ea0a716a9bb
-{
-Ksrc/main/java/model/sorting/sorting_criterion/CustomerSortingCriterion.java,c\c\cc340b562ca8063de47c586b8abc95340b8bfd9b
-x
-Hsrc/main/java/model/sorting/sorting_criterion/MovieSortingCriterion.java,f\a\faa303bc43840aa76ba41166d8f7ba7ff3805462
 i
 9src/main/java/service/entity_service/CustomerService.java,1\9\1956d0e1dcdb66b63c1950c34df0134e10a62301
 l
@@ -114,3 +110,11 @@ P
  src/main/java/main/MainMenu.java,f\1\f119f91fd4710ec35e22f32b0072cdf1f3e400eb
 S
 #src/main/resources/log4j.properties,7\5\755950bb690295904a49d36e60958901c54013b8
+c
+3src/main/java/model/entities_fields/MovieField.java,e\a\eaf59d642ad0e0780ce8c7ebaff9b118b583392b
+f
+6src/main/java/model/entities_fields/CustomerField.java,4\9\49ae02707ab7cfc3ebaa78957a60ca51aa8eb93e
+[
++src/main/java/model/update/UpdateMovie.java,0\8\084bc3e1db1a5104bb8c395cebadc25fb44d1e50
+^
+.src/main/java/model/update/UpdateCustomer.java,3\0\3068c82856981ddcd6eff2aca3ea5f168d718bd9

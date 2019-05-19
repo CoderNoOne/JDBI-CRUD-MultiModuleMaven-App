@@ -36,7 +36,6 @@ public class MovieFilterCommand {
       return this;
     }
 
-
     public MovieFilterCommand build() {
       return new MovieFilterCommand(this);
     }

@@ -12,7 +12,7 @@ import service.entity_service.LoyaltyCardService;
 import service.entity_service.MovieService;
 import service.entity_service.SalesStandService;
 import service.others.JoinedEntitiesService;
-import utils.UserDataUtils;
+import utils.others.UserDataUtils;
 
 import java.text.MessageFormat;
 import java.util.Arrays;

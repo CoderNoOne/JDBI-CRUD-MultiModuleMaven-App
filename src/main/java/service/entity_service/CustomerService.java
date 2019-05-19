@@ -4,7 +4,7 @@ import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
 import model.entity.Customer;
 import repository.entity_repository.impl.CustomerRepository;
-import utils.UserDataUtils;
+import utils.others.UserDataUtils;
 import validators.impl.CustomerValidator;
 
 import java.util.List;
@@ -47,12 +47,12 @@ public class CustomerService {
     return customerRepository.findById(id);
   }
 
-  private void updateCustomer(Customer customer) {
-
-    //walidacja ale w tym przypadku pola moga byc nullem
-
-
-    customerRepository.update(customer);
+  public boolean updateCustomer(Customer customer) {
+    boolean isCorrect = new CustomerValidator().validateEntity(customer);
+    if (isCorrect) {
+      customerRepository.update(customer);
+    }
+    return isCorrect;
   }
 
   public boolean updateCustomerDetail(Integer id, String name, String surname, Integer age, String email) {
