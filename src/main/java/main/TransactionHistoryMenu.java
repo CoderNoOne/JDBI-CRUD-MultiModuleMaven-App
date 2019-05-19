@@ -15,12 +15,14 @@ import service.entity_service.SalesStandService;
 import service.others.JoinedEntitiesService;
 import utils.others.EmailUtils;
 import utils.others.TicketsFilteringUtils;
-import utils.others.UserDataUtils;
 
 import java.text.MessageFormat;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+import static utils.others.UserDataUtils.*;
+import static utils.others.UserDataUtils.printCollectionWithNumeration;
+import static utils.others.UserDataUtils.printMessage;
 
 @Slf4j
 class TransactionHistoryMenu {
@@ -31,13 +33,12 @@ class TransactionHistoryMenu {
   private final SalesStandService salesStandService = new SalesStandService(new SalesStandRepository());
   private final JoinedEntitiesService joinedEntitiesService = new JoinedEntitiesService(new JoinedEntitiesRepository());
 
-  //historia
   void menu() {
 
     while (true) {
       menuOptions();
       try {
-        int option = UserDataUtils.getInt("\nINPUT YOUR OPTION: ");
+        int option = getInt("\nINPUT YOUR OPTION: ");
         switch (option) {
           case 1 -> option1();
           case 2 -> option2();
@@ -60,15 +61,16 @@ class TransactionHistoryMenu {
   private Map<Integer, Set<Movie>> option2Help() {
 
     var allCustomers = customerService.getAllCustomers();
+    printCollectionWithNumeration(allCustomers);
     int customerId;
 
     if (allCustomers.isEmpty()) {
-      System.out.println("There are no customers in database yet");
+      printMessage("There are no customers in database yet");
       return Collections.emptyMap();
     }
 
     do {
-      customerId = UserDataUtils.getInt("Choose proper customer id from above list");
+      customerId = getInt("Choose proper customer id from above list");
     } while (customerService.findCustomerById(customerId).isEmpty());
 
     var distinctMovies = joinedEntitiesService.allDistinctMoviesBoughtBySpecifiedCustomerSortedAlphabetically(customerId);
@@ -79,37 +81,28 @@ class TransactionHistoryMenu {
   private void option2() {
     var distinctMovies = option2Help().values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
     System.out.println("Selected customer bought " + distinctMovies.size() + " tickets for different movies\n");
-    optionPrint(distinctMovies);
-  }
-
-  private void optionPrint(Set<? extends Object> distinctMovies) {
-    AtomicInteger counter = new AtomicInteger(1);
-    distinctMovies.forEach((movie) -> System.out.println("No. " + counter.getAndIncrement() + ". " + movie));
+    printCollectionWithNumeration(distinctMovies);
   }
 
   private void option3() {
     var customerId = option2Help().keySet().iterator().next();
     var movieFilters = TicketsFilteringUtils.inputMovieFilters("Specify movie filters").getFilters();
     var filteredCustomerMovies = joinedEntitiesService.getCustomerMoviesByFilters(customerId, movieFilters);
+    printCollectionWithNumeration(filteredCustomerMovies);
     EmailUtils.sendSummaryTableByFilters(/*"firelight.code@gmail.com"*/customerService.findCustomerById(customerId).get().getEmail(), "From app", new ArrayList<>(filteredCustomerMovies), movieFilters);
-    optionPrint(filteredCustomerMovies);
   }
 
-  public void menuOptions() {
-    System.out.println(MessageFormat.format(
+  private void menuOptions() {
+    printMessage(MessageFormat.format(
             "\nOption no. 1 - {0}\n" +
                     "Option no. 2 - {1}\n" +
                     "Option no. 3 - {2}\n" +
-                    "Option no. 4 - {3}\n" +
-                    "Option no. 5 - {4}",
+                    "Option no. 4 - {3}",
 
             "All distinct movies bought by all customers",
             "All distinct movies bought by specified customer",
             "Filter tickets transaction history bought by specified customer",
-            "",
-            ""
+            "Back to main menu"
     ));
-
   }
-
 }

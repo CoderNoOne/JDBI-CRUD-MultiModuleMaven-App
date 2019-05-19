@@ -30,9 +30,9 @@ public class MovieValidator implements Validator<Movie> {
       errors.put("Movie Price", "Movie Price should be greater than 0");
     }
 
-//    if (!isReleaseDateValid(movie)) {
-//      errors.put("Movie Release Date", "Movie release date takes place in the future");
-//    }
+    if (!isReleaseDateValid(movie)) {
+      errors.put("Movie Release Date", "Movie release date takes place in the future");
+    }
 
     return errors;
   }

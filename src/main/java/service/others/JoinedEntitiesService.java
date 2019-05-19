@@ -2,6 +2,7 @@ package service.others;
 
 import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
+import model.entity.Customer;
 import model.entity.Movie;
 import model.others.CustomerWithLoyaltyCard;
 import model.others.CustomerWithMoviesAndSalesStand;
@@ -81,14 +82,6 @@ public class JoinedEntitiesService {
             .build();
   }
 
-/*  public List<CustomerWithMoviesAndSalesStand> allTicketsTransactionHistory(Integer id) {
-
-    var allTicketsByCustomerId = joinedEntitiesRepository.getAllTicketsByCustomerId(id);
-
-    EmailUtils.sendAllSummaryTable(joinedEntitiesRepository.getCustomerEmailByCustomerId(id), "Movie summary", allTicketsByCustomerId);
-    return allTicketsByCustomerId;
-  }*/
-
   public Set<CustomerWithMoviesAndSalesStand> getCustomerMoviesByFilters(Integer customerId, Map<MovieFilteringCriterion, List<? extends Object>> movieFilters) {
 
     return joinedEntitiesRepository.getAllTicketsByCustomerId(customerId)
@@ -96,7 +89,6 @@ public class JoinedEntitiesService {
             .filter(customerWithMoviesAndSalesStand -> getMovieFilterPredicate(movieFilters).test(customerWithMoviesAndSalesStand))
             .collect(Collectors.toSet());
   }
-//    EmailUtils.sendSummaryTableByFilters("firelight.code@gmail.com"/*salesStandRepository.getCustomerEmailByCustomerId(id)*/, "From app", allFilteredTickets, filters);
 
 
   private static Predicate<CustomerWithMoviesAndSalesStand> getMovieFilterPredicate
@@ -145,8 +137,8 @@ public class JoinedEntitiesService {
     return joinedEntitiesRepository.getAllTicketsByCustomerId(id);
   }
 
-  public Integer ticketsNumberBoughtByCustomerId(Integer customerId) {
-    return joinedEntitiesRepository.getAllTicketsByCustomerId(customerId).size();
+  public Integer ticketsNumberBoughtByCustomer(Customer customer) {
+    return joinedEntitiesRepository.getAllTicketsByCustomerId(customer.getId()).size();
   }
 
   public List<CustomerWithLoyaltyCard> getCustomersWithLoyaltyCardWithActiveLoyaltyCard() {
@@ -155,46 +147,32 @@ public class JoinedEntitiesService {
             .collect(Collectors.toList());
   }
 
-  private boolean doCustomerPosesActiveLoyaltyCardByCustomerId(Integer customerId) {
-    var customerWithLoyaltyCardOptional = joinedEntitiesRepository.getCustomerWithLoyaltyCardInfoByCustomerId(customerId);
+  public boolean doCustomerPosesActiveLoyaltyCard(Customer customer) {
+    var customerWithLoyaltyCardOptional = joinedEntitiesRepository.getCustomerWithLoyaltyCardInfoByCustomerId(customer.getId());
 
     return customerWithLoyaltyCardOptional.isPresent() &&
             customerWithLoyaltyCardOptional.get().getMoviesNumber() > 0 &&
             customerWithLoyaltyCardOptional.get().getLoyaltyCardExpirationDate().compareTo(LocalDate.now()) > 0;
   }
 
-//    public void manageLoyaltyCard(Customer customer, Integer ticketsNumber, Movie movie, LocalDateTime movieStartTime) {
-//
-//    if (!doCustomerPosesActiveLoyaltyCardByCustomerId(customer.getId())) {
-//      verifyIfCustomerCanGetLoyaltyCard(ticketsNumber, customer);//dorobic to aby  resetowac ilosc ticketow po założeniu loyaltyCard tak aby przy następnym założeniu była brana aktualna liczba ticketow
-//    } else {
-//      var loyaltyCardId = joinedEntitiesRepository.getCustomerWithLoyaltyCardInfoByCustomerId(customer.getId()).get().getLoyaltyCardId();
-//      decreaseMoviesNumberByLoyaltyCardId(loyaltyCardId);
-//      movie.setPrice(movie.getPrice().subtract(joinedEntitiesRepository.findById(loyaltyCardId).get().getDiscount()));
-//    }
-//
-//    sendMovieDetailsToCustomerEmail(customer.getEmail(), "Movie Ticket purchase detail", movie, movieStartTime);
-//  }
-//
-//  private void verifyIfCustomerCanGetLoyaltyCard(Integer ticketsNumber, Customer customer) {
-//
-//    /*odczyt z pliku jesli nie ma id customera !=-1 to wez ticketsNumber z argumentu metody, w przeciwnym razie wez ticketsNumber - wartosc odczytana z pliku*/
-//    ticketsNumber = readTicketsNumberFromFileByCustomerId(customer) == -1 ? ticketsNumber : ticketsNumber - readTicketsNumberFromFileByCustomerId(customer);
-//
-//    if (ticketsNumber >= LOYALTY_CARD_MIN_MOVIE_NUMBER) {
-//      switch (UserDataUtils.getString("Do you want to add a loyalty card? (y/n)").toLowerCase()) {
-//        case "y" -> {
-//          addLoyaltyCardForCustomer(customer);
-//          //zapis do pliku aktualnej wartosci ticketsNumber dla klienta
-//          addOrUpdateTicketsNumberToFileBoughtByCustomer(ticketsNumber, customer);
-//        }
-//        case "n" -> System.out.println("TOO BAD. MAYBE NEXT TIME!");
-//        default -> verifyIfCustomerCanGetLoyaltyCard(ticketsNumber, customer);/*throw new AppException("ACTION NOT DEFINED");*/
-//      }
-//    }
-//  }
 
   private void sendMovieDetailsToCustomerEmail(String email, String subject, Movie movie, LocalDateTime startDateTime) {
     EmailUtils.sendMoviePurchaseConfirmation(email, subject, movie, startDateTime);
+  }
+
+  public Optional<CustomerWithLoyaltyCard> getCustomerWithLoyaltyCardByCustomer(Customer customer){
+
+    return joinedEntitiesRepository.getCustomerWithLoyaltyCardInfoByCustomerId(customer.getId());
+  }
+
+  public List<Movie> allMoviesBoughtBySpecifiedCustomer(Customer customer){
+    return joinedEntitiesRepository.getAllTicketsByCustomerId(customer.getId())
+            .stream()
+            .map(JoinedEntitiesService::convertCustomerWithMoviesAndSalesStandsToMovie)
+            .collect(Collectors.toList());
+  }
+
+  public Integer numberOfMoviesBoughtByCustomer(Customer customer) {
+    return allMoviesBoughtBySpecifiedCustomer(customer).size();
   }
 }

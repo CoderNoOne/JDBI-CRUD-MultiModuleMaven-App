@@ -20,6 +20,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static utils.others.UserDataUtils.*;
+import static utils.others.UserDataUtils.printCollectionWithNumeration;
+import static utils.others.UserDataUtils.printMessage;
+
 
 @RequiredArgsConstructor
 public class MovieService {
@@ -33,8 +37,8 @@ public class MovieService {
             .orElseThrow(() -> new AppException("FILE " + jsonfileName + " is empty"));
   }
 
-  public boolean addMovie(final String jsonfileName) {
-    Movie movie = createMovie(jsonfileName);
+  public boolean addMovie(final String jsonFileName) {
+    Movie movie = createMovie(jsonFileName);
     boolean isValid = new MovieValidator().validateEntity(movie);
     if (isValid) {
       movieRepository.add(movie);
@@ -76,10 +80,10 @@ public class MovieService {
 
   private Movie chooseMovieById() {
 
-    System.out.println("AVAILABLE MOVIES");
-    getAllMovies();
+    printMessage("AVAILABLE MOVIES");
+    printCollectionWithNumeration(getAllMovies());
 
-    Integer movieId = UserDataUtils.getInt("Input movie id");
+    Integer movieId = getInt("Input movie id");
 
     return movieRepository.findById(movieId).orElseGet(this::getMovieAgain);
   }
@@ -87,15 +91,11 @@ public class MovieService {
   public Map<String, Object> chooseMovieStartTime() {
 
     var movie = chooseMovieById();
-    var localDateTimes = possibleShowTimes(movie);
-
-    localDateTimes.forEach(System.out::println);
+    printMessage("Possible movie show times in the next 24 hours");
+    printCollectionWithNumeration(possibleShowTimes(movie));
     LocalDateTime movieStartTime;
 
-    do {
-      movieStartTime = UserDataUtils.getLocalDateTime("Input proper movie start time in format 'year-month-day HH:mm'");
-    } while (!localDateTimes.contains(movieStartTime));
-
+    movieStartTime = getLocalDateTime("Input movie start time in format 'year-month-day HH:mm'");
 
     return Map.of("movie", movie, "movieStartTime", movieStartTime);
   }
@@ -116,7 +116,7 @@ public class MovieService {
 
 
   private Movie getMovieAgain() {
-    System.out.println("That film isn't in our database. Check again");
+    printMessage("That film isn't in our database. Check again");
     return chooseMovieById();
   }
 }

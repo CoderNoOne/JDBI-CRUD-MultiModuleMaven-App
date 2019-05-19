@@ -19,9 +19,8 @@ public class UpdateCustomerUtils {
 
     List<CustomerField> customerFields = Arrays.stream(CustomerField.values()).collect(Collectors.toList());
 
-    boolean hasNext = false;
-    while (hasNext && !customerFields.isEmpty()) {
-
+    boolean hasNext;
+    do {
       printCollectionWithNumeration(customerFields);
       CustomerField customerProperty = CustomerField.valueOf(getString("Choose what customer property you want to update. Not case sensitive").toUpperCase());
 
@@ -48,10 +47,9 @@ public class UpdateCustomerUtils {
         }
         default -> throw new AppException("Not valid customer property");
       }
-
       hasNext = getString("Do you want to update other customer property? (Y/N)").equalsIgnoreCase("Y");
+    } while (hasNext && !customerFields.isEmpty());
 
-    }
     return customer;
   }
 }

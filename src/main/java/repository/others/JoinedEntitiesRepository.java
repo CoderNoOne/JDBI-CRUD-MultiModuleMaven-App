@@ -99,6 +99,5 @@ public class JoinedEntitiesRepository {
                             .discount(rs.getBigDecimal("lc_discount"))
                             .build()).list());
   }
-
 }
 

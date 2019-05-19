@@ -3,7 +3,6 @@ package repository.entity_repository.impl;
 import connection.DbConnection;
 import exceptions.AppException;
 import model.entity.LoyaltyCard;
-import model.others.CustomerWithLoyaltyCard;
 import org.jdbi.v3.core.Jdbi;
 import repository.entity_repository.CrudRepository;
 
@@ -45,13 +44,12 @@ public class LoyaltyCardRepository implements CrudRepository<LoyaltyCard> {
             .mapToBean(LoyaltyCard.class)
             .findFirst())
             .ifPresent(loyaltyCardFromDb -> jdbi.withHandle(handle -> handle
-                    .createUpdate("update loyalty_cards set expiration_date = :expirationDate, discount = :discount, movies_number = :moviesNumber where id = :id ?")
+                    .createUpdate("update loyalty_cards set expiration_date = :expirationDate, discount = :discount, movies_number = :moviesNumber where id = :id")
                     .bind("expirationDate", loyaltyCard.getExpirationDate() == null ? loyaltyCardFromDb.getExpirationDate() : loyaltyCard.getExpirationDate())
                     .bind("discount", loyaltyCard.getDiscount() == null ? loyaltyCardFromDb.getDiscount() : loyaltyCard.getDiscount())
                     .bind("moviesNumber", loyaltyCard.getMoviesNumber())
                     .bind("id", loyaltyCard.getId())
                     .execute()));
-
   }
 
   @Override
@@ -95,23 +93,4 @@ public class LoyaltyCardRepository implements CrudRepository<LoyaltyCard> {
             .createUpdate("delete from loyalty_cards")
             .execute());
   }
-
-//  public Optional<CustomerWithLoyaltyCard> getCustomerWithLoyaltyCardInfoByCustomerId(Integer customerId) {
-//
-//    final String sql = String.join(" ", "select customers.id c_id, loyalty_cards.movies_number lc_movie_numbers,"
-//            , "loyalty_cards.discount lc_discount, loyalty_cards.expiration_date lc_exp_date, loyalty_cards.id lc_id"
-//            , "from customers join loyalty_cards on customers.loyalty_card_id = loyalty_cards.id where customers.id =:customerId");
-//
-//    return jdbi.withHandle(handle ->
-//            handle
-//                    .createQuery(sql)
-//                    .bind("customerId", customerId)
-//                    .map((rs, ctx) -> CustomerWithLoyaltyCard.builder()
-//                            .customerId(rs.getInt("c_id"))
-//                            .discount(rs.getBigDecimal("lc_discount"))
-//                            .moviesNumber(rs.getInt("lc_movie_numbers"))
-//                            .loyaltyCardExpirationDate(rs.getDate("lc_exp_date").toLocalDate())
-//                            .loyaltyCardId(rs.getInt("lc_id"))
-//                            .build()).findFirst());
-//  }
 }

@@ -2,6 +2,9 @@ package main;
 
 import exceptions.AppException;
 import lombok.extern.slf4j.Slf4j;
+import model.entity.Customer;
+import model.entity.Movie;
+import model.others.CustomerWithLoyaltyCard;
 import repository.entity_repository.impl.CustomerRepository;
 import repository.entity_repository.impl.LoyaltyCardRepository;
 import repository.entity_repository.impl.MovieRepository;
@@ -13,12 +16,19 @@ import service.entity_service.MovieService;
 import service.entity_service.SalesStandService;
 import service.others.DataInitializeService;
 import service.others.JoinedEntitiesService;
+import utils.others.EmailUtils;
 import utils.others.SimulateTimeFlowUtils;
 import utils.others.UserDataUtils;
 
 import java.text.MessageFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Optional;
+
+import static utils.others.SimulateTimeFlowUtils.*;
+import static utils.others.UserDataUtils.*;
+import static utils.others.UserDataUtils.printMessage;
 
 @Slf4j
 class MainMenu {
@@ -33,7 +43,7 @@ class MainMenu {
     while (true) {
       mainMenuOptions();
       try {
-        int option = UserDataUtils.getInt("INPUT YOUR OPTION: ");
+        int option = getInt("INPUT YOUR OPTION: ");
         switch (option) {
           case 1 -> option1();
           case 2 -> option2();
@@ -42,13 +52,13 @@ class MainMenu {
           case 5 -> option5();
           case 6 -> option6();
           case 7 -> option7();
-          case 8 -> mainMenuOptions();
-          case 9 -> {
-            UserDataUtils.close();
+          case 8 -> option8();
+          case 9 -> mainMenuOptions();
+          case 10 -> {
+            close();
             return;
           }
-          case 10 -> option10();
-          case 11 -> option11();
+
           default -> throw new AppException("INPUT OPTION IS NOT DEFINED");
         }
       } catch (AppException e) {
@@ -58,9 +68,6 @@ class MainMenu {
     }
   }
 
-  private void option5() {
-
-  }
 
   private void mainMenuOptions() {
 
@@ -74,8 +81,8 @@ class MainMenu {
                     "Option no. 7 - {6}\n" +
                     "Option no. 8 - {7}\n" +
                     "Option no. 9 - {8}\n" +
-                    "Option no. 10 - {9}\n" +
-                    "Option no. 11 - {10}",
+                    "Option no. 10 - {9}",
+
 
             "Add new Customer",
             "Add new movie from json file",
@@ -84,37 +91,31 @@ class MainMenu {
             "Buy a ticket",
             "History - summary",
             "Some statistics",
+            "Move in time forwardly",
             "Show menu options",
             "Exit the program"
 
     ));
   }
 
-  private void option7() {
-    new StatisticsMenu().menu();
-  }
-
-  private void option6() {
-    new TransactionHistoryMenu().menu();
-  }
-
 
   private void option1() {
 
-    String name = UserDataUtils.getString("Input customer name");
-    String surname = UserDataUtils.getString("Input customer surname");
-    int age = UserDataUtils.getInt("Input customer age");
-    String email = UserDataUtils.getString("Input customer email");
+    String name = getString("Input customer name");
+    String surname = getString("Input customer surname");
+    int age = getInt("Input customer age");
+    String email = getString("Input customer email");
 
     boolean isAdded = customerService.addCustomer(name, surname, age, email);
     if (!isAdded) {
       throw new AppException("Specified customer object couldn't have been added to db");
     }
+    printMessage("Customer successfully added to db!");
   }
 
   private void option2() {
 
-    String jsonFilename = UserDataUtils.getString("Input json filename");
+    String jsonFilename = getString("Input json filename");
 
     if (jsonFilename == null || !jsonFilename.matches(".+\\.json$")) {
       throw new AppException("Wrong json file format");
@@ -136,29 +137,49 @@ class MainMenu {
     new CustomerAndMovieTableManagementMenu().menu();
   }
 
-  //zakup biletu - dodac sprawdzenie czy jest znizka i aktualziwowac loyaltyCard movie numbers dla klienta ale nie moze zmeniejsza poniezej 0
-//  private void option5() {
-//
-//    var customer = customerService.getCustomerFromUserInput();
-//    var ticketDetails = movieService.chooseMovieStartTime();
-//
-//    if (salesStandService.isTransactionDone((Movie) ticketDetails.get("movie"), customer, (LocalDateTime) ticketDetails.get("movieStartTime"))) {
-//      Integer ticketsNumber = joinedEntitiesService.ticketsNumberBoughtByCustomerId(customer.getId());
-//      loyaltyCardService.manageLoyaltyCard(customer, ticketsNumber, (Movie) ticketDetails.get("movie"), (LocalDateTime) ticketDetails.get("movieStartTime"));
-//      customerService.update(customer);
-//    } else {
-//      throw new AppException("Movie start date time is not valid");
-//    }
-//
-//  }
+  //zakup biletu - nie ma rollbacku?
+  private void option5() {
 
-  private void option11() {
-    System.out.println(LocalDateTime.now(SimulateTimeFlowUtils.getClock()));
+    var customer = customerService.getCustomerFromUserInput();
+    var ticketDetails = movieService.chooseMovieStartTime();
+    Movie movie = (Movie) ticketDetails.get("movie");
+    LocalDateTime movieStartTime = (LocalDateTime) ticketDetails.get("movieStartTime");
+
+    Optional<CustomerWithLoyaltyCard> customerLoyaltyCardId = joinedEntitiesService.getCustomerWithLoyaltyCardByCustomer(customer)/*.get().getLoyaltyCardId()*/;
+    salesStandService.addNewSale(movie, customer, movieStartTime);
+
+    if (joinedEntitiesService.doCustomerPosesActiveLoyaltyCard(customer)) {
+      loyaltyCardService.decreaseMoviesNumberByLoyaltyCardId(customerLoyaltyCardId.get().getLoyaltyCardId());
+      movie.setPrice(movie.getPrice().subtract(loyaltyCardService.findLoyaltyCardById(customerLoyaltyCardId.get().getLoyaltyCardId()).get().getDiscount()));
+    } else if (joinedEntitiesService.numberOfMoviesBoughtByCustomer(customer) == loyaltyCardService.getLOYALTY_CARD_MIN_MOVIE_NUMBER()) {
+      option5Help(customer);
+    }
+
+    customerService.update(customer);
+    EmailUtils.sendMoviePurchaseConfirmation(customer.getEmail(), "aa", movie, movieStartTime);
   }
 
-  private void option10() {
-    var noOfDays = UserDataUtils.getInt("How many days do you want to move in time forwardly?");
+  private void option5Help(Customer customer) {
+    if (getString("Do you want to add a loyalty card? (y/n)").toUpperCase().equalsIgnoreCase("y")) {
+      loyaltyCardService.addLoyaltyCardForCustomer(customer);
+      printMessage("Loyalty card successfully added to you account!");
+    } else {
+      printMessage("Too bad. Maybe next time");
+    }
 
-    SimulateTimeFlowUtils.moveDateTimeForwardByDaysNumber(noOfDays);
+  }
+
+  private void option6() {
+    new TransactionHistoryMenu().menu();
+  }
+
+  private void option7() {
+    new StatisticsMenu().menu();
+  }
+
+  private void option8() {
+    var noOfDays = getInt("How many days do you want to move in time forwardly?");
+    moveDateTimeForwardByDaysNumber(noOfDays);
+    printMessage("Present time: " + LocalDateTime.now(getClock()));
   }
 }

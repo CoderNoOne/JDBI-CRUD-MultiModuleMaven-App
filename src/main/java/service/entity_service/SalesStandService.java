@@ -34,12 +34,13 @@ public class SalesStandService {
     return isValid;
   }
 
-  public boolean isTransactionDone(Movie movie, Customer customer, LocalDateTime startDateTime) {
+  public boolean addNewSale(Movie movie, Customer customer, LocalDateTime startDateTime) {
     if (!addSalesStand(movie, customer, startDateTime)) {
       throw new AppException("Movie start date time is not valid");
     }
     return true;
   }
+
 
 }
 
