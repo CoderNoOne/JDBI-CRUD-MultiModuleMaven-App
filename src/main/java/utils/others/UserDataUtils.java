@@ -1,6 +1,7 @@
 package utils.others;
 
 import exceptions.AppException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.util.Collection;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Slf4j
 public class UserDataUtils {
 
   private UserDataUtils() {
@@ -49,7 +51,7 @@ public class UserDataUtils {
   }
 
   public static void printMessage(String message) {
-    printMessage(message);
+    System.out.println(message);
   }
 
   public static void close() {
@@ -67,7 +69,7 @@ public class UserDataUtils {
     try {
       localDate = LocalDate.parse(date);
     } catch (DateTimeParseException e) {
-      System.err.println(Arrays.toString(e.getStackTrace()));
+      log.error(e.getStackTrace().toString(), e);
       throw new AppException("DATE FORMAT NOT SUPPORTED");
     }
     return localDate;
@@ -79,18 +81,19 @@ public class UserDataUtils {
   }
 
   public static LocalDateTime getLocalDateTime(String message) {
-    printMessage(message);
 
-    String date = sc.nextLine();
+    if (message == null) {
+      throw new AppException("GET LOCAL DATE TIME - MESSAGE IS NULL");
+    }
 
-    LocalDateTime localDateTime;
     try {
-      localDateTime = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+      printMessage(message);
+      String date = sc.nextLine();
+      return LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     } catch (DateTimeParseException e) {
       System.err.println(Arrays.toString(e.getStackTrace()));
       throw new AppException("DATE FORMAT NOT SUPPORTED");
     }
-    return localDateTime;
   }
 
   public static LocalDate getLocalDate(String message) {

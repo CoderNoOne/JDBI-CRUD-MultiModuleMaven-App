@@ -134,7 +134,7 @@ class MainMenu {
     new CustomerAndMovieTableManagementMenu().menu();
   }
 
-  //zakup biletu - nie ma rollbacku?
+  //zakup biletu
   private void option5() {
 
     var customer = customerService.getCustomerFromUserInput();

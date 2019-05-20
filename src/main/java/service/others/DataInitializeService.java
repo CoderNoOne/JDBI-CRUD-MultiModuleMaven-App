@@ -18,15 +18,15 @@ import static utils.others.UserDataUtils.printMessage;
 
 public class DataInitializeService {
 
-  private static final MovieRepository MOVIE_REPOSITORY = new MovieRepository();
-  private static final CustomerRepository CUSTOMER_REPOSITORY = new CustomerRepository();
-  private static final LoyaltyCardRepository LOYALTY_CARD_REPOSITORY = new LoyaltyCardRepository();
-  private static final SalesStandRepository SALES_STAND_REPOSITORY = new SalesStandRepository();
+  private final MovieRepository MOVIE_REPOSITORY = new MovieRepository();
+  private final CustomerRepository CUSTOMER_REPOSITORY = new CustomerRepository();
+  private final LoyaltyCardRepository LOYALTY_CARD_REPOSITORY = new LoyaltyCardRepository();
+  private final SalesStandRepository SALES_STAND_REPOSITORY = new SalesStandRepository();
 
   private DataInitializeService() {
   }
 
-  public static void init() {
+  public  void init() {
     deleteSalesStands();
     deleteCustomers();
     deleteLoyaltyCards();
@@ -35,7 +35,7 @@ public class DataInitializeService {
     initCustomers("exampleCustomers.json");
   }
 
-  private static void initMovies(final String moviesJsonFilename) {
+  private  void initMovies(final String moviesJsonFilename) {
 
     var movieValidator = new MovieValidator();
     AtomicInteger atomicInteger = new AtomicInteger(1);

@@ -1,14 +1,13 @@
 package utils.sorting;
 
-import exceptions.AppException;
 import model.sorting.sorting_comparator.MovieSort;
-import model.entities_fields.MovieField;
+import model.enums.MovieField;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static model.entities_fields.MovieField.*;
+import static model.enums.MovieField.*;
 import static utils.others.UserDataUtils.getString;
 import static utils.others.UserDataUtils.printMessage;
 

@@ -30,6 +30,7 @@ public class EmailUtils {
   // do zakupu biletu
   public static void sendMoviePurchaseConfirmation(String recipient, String subject, Movie movie, LocalDateTime startDateTime) {
 
+    // REFACTOR ZA DUZO th MASZ JUZ W JEDNEJ METODZIE
     var htmlContent = tbody(
             tr().with(
                     th("Movie title"),
@@ -49,17 +50,17 @@ public class EmailUtils {
     sendAsHtml(recipient, subject, htmlContent);
   }
 
+  //do wysyłania maila z filtrowanymi filmami
   public static void sendSummaryTableByFilters(String recipient, String subject, List<CustomerWithMoviesAndSalesStand> allFilteredTickets, Map<MovieFilteringCriterion, List<?>> filters) {
 
     String htmlContent = String.join(
             h1("YOUR SUMMARY HISTORY FILTERED BY:").render(),
             tbody(tr().with(
                     th("Filter type"),
-                    th("Filter values")),
-                    tr().with(
+                    th("Filter values"),
                             each(filters, i ->
                                     tr(i.getKey().name()).with(td(
-                                            i.getValue().toString()))))).with(br()).render(),
+                                            i.getValue().toString()))))).render(),
             createHtmlTable(allFilteredTickets));
 
     sendAsHtml(recipient, subject, htmlContent);

@@ -2,12 +2,12 @@ package utils.sorting;
 
 import exceptions.AppException;
 import model.sorting.sorting_comparator.CustomerSort;
-import model.entities_fields.CustomerField;
+import model.enums.CustomerField;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static model.entities_fields.CustomerField.*;
+import static model.enums.CustomerField.*;
 import static utils.others.UserDataUtils.getString;
 
 public class CustomerSortingUtils {

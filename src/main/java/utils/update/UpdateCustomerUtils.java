@@ -1,7 +1,7 @@
 package utils.update;
 
 import exceptions.AppException;
-import model.entities_fields.CustomerField;
+import model.enums.CustomerField;
 import model.entity.Customer;
 
 import java.util.Arrays;

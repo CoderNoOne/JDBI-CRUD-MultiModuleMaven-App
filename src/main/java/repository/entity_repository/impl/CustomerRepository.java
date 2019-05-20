@@ -4,6 +4,7 @@ import connection.DbConnection;
 import exceptions.AppException;
 import model.entity.Customer;
 import org.jdbi.v3.core.Jdbi;
+import repository.entity_repository.AbstractCrudRepository;
 import repository.entity_repository.CrudRepository;
 
 
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class CustomerRepository implements CrudRepository<Customer> {
+public class CustomerRepository /*extends AbstractCrudRepository<Customer>*/ implements CrudRepository<Customer> {
 
   private Jdbi jdbi = DbConnection.getInstance().getJdbi();
 

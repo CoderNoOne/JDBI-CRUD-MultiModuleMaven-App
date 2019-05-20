@@ -2,7 +2,9 @@ package main;
 
 import exceptions.AppException;
 import lombok.extern.slf4j.Slf4j;
+import model.entity.Customer;
 import model.entity.Movie;
+import model.others.CustomerWithMoviesAndSalesStand;
 import repository.entity_repository.impl.CustomerRepository;
 import repository.entity_repository.impl.LoyaltyCardRepository;
 import repository.entity_repository.impl.MovieRepository;
@@ -43,6 +45,8 @@ class TransactionHistoryMenu {
           case 1 -> option1();
           case 2 -> option2();
           case 3 -> option3();
+          case 4 -> option4();
+          case 5 -> new MainMenu().mainMenu();
 
           default -> throw new AppException("INPUT OPTION IS NOT DEFINED");
         }
@@ -53,9 +57,8 @@ class TransactionHistoryMenu {
     }
   }
 
-
   private void option1() {
-    joinedEntitiesService.allMoviesBoughtSortedAlphabetically().forEach(System.out::println);
+    joinedEntitiesService.allDistinctMoviesBoughtSortedAlphabetically().forEach(System.out::println);
   }
 
   private Map<Integer, Set<Movie>> option2Help() {
@@ -92,6 +95,15 @@ class TransactionHistoryMenu {
     EmailUtils.sendSummaryTableByFilters(/*"firelight.code@gmail.com"*/customerService.findCustomerById(customerId).get().getEmail(), "From app", new ArrayList<>(filteredCustomerMovies), movieFilters);
   }
 
+  private void option4() {
+    var customerId = option2Help().keySet().iterator().next();
+    List<CustomerWithMoviesAndSalesStand> movies = joinedEntitiesService.allMoviesBoughtByCustomer(customerId);
+    Customer customer = customerService.findCustomerById(customerId).get();
+    printMessage("All movies bought by customer: " + customer);
+    printCollectionWithNumeration(movies);
+    EmailUtils.sendAllSummaryTable(customer.getEmail(),"All bought movies", movies);
+  }
+
   private void menuOptions() {
     printMessage(MessageFormat.format(
             "\nOption no. 1 - {0}\n" +
@@ -102,6 +114,7 @@ class TransactionHistoryMenu {
             "All distinct movies bought by all customers",
             "All distinct movies bought by specified customer",
             "Filter tickets transaction history bought by specified customer",
+            "All movies bought by specified customer",
             "Back to main menu"
     ));
   }

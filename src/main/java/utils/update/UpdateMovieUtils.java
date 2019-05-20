@@ -1,7 +1,7 @@
 package utils.update;
 
 import exceptions.AppException;
-import model.entities_fields.MovieField;
+import model.enums.MovieField;
 import model.entity.Movie;
 
 import java.math.BigDecimal;

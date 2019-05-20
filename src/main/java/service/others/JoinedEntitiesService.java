@@ -28,11 +28,15 @@ public class JoinedEntitiesService {
             .collect(Collectors.groupingBy(JoinedEntitiesService::convertMovieWithSalesStandToMovie, Collectors.summingInt(e -> 1)));
   }
 
-  public Set<Movie> allMoviesBoughtSortedAlphabetically() {
+  public Set<Movie> allDistinctMoviesBoughtSortedAlphabetically() {
     return joinedEntitiesRepository.getMovieWithSalesStand()
             .stream().map(JoinedEntitiesService::convertMovieWithSalesStandToMovie)
             .sorted(Comparator.comparing(Movie::getTitle))
             .collect(Collectors.toCollection(LinkedHashSet::new));
+  }
+
+  public List<CustomerWithMoviesAndSalesStand> allMoviesBoughtByCustomer(Integer customerId) {
+    return new ArrayList<>(joinedEntitiesRepository.getAllTicketsByCustomerId(customerId));
   }
 
   public Set<Movie> allDistinctMoviesBoughtBySpecifiedCustomerSortedAlphabetically(Integer customerId) {
@@ -145,12 +149,12 @@ public class JoinedEntitiesService {
             customerWithLoyaltyCardOptional.get().getLoyaltyCardExpirationDate().compareTo(LocalDate.now()) > 0;
   }
 
-  public Optional<CustomerWithLoyaltyCard> getCustomerWithLoyaltyCardByCustomer(Customer customer){
+  public Optional<CustomerWithLoyaltyCard> getCustomerWithLoyaltyCardByCustomer(Customer customer) {
 
     return joinedEntitiesRepository.getCustomerWithLoyaltyCardInfoByCustomerId(customer.getId());
   }
 
-  private List<Movie> allMoviesBoughtBySpecifiedCustomer(Customer customer){
+  private List<Movie> allMoviesBoughtBySpecifiedCustomer(Customer customer) {
     return joinedEntitiesRepository.getAllTicketsByCustomerId(customer.getId())
             .stream()
             .map(JoinedEntitiesService::convertCustomerWithMoviesAndSalesStandsToMovie)

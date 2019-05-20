@@ -30,7 +30,7 @@ public class CustomerService {
     return isValid && customerEmailUnique;
   }
 
-  public void addCustomerToDb(Customer customer) {
+  private void addCustomerToDb(Customer customer) {
     customerRepository.add(customer);
   }
 
@@ -40,7 +40,6 @@ public class CustomerService {
 
   public List<Customer> getAllCustomers() {
     return customerRepository.findAll();
-//    allCustomers.forEach(System.out::println);
   }
 
   public Optional<Customer> findCustomerById(final Integer id) {

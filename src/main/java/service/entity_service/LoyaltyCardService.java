@@ -40,6 +40,7 @@ public class LoyaltyCardService {
       loyaltyCardRepository.add(loyaltyCard);
     }
     return isValid;
+
   }
 
   public void addLoyaltyCardForCustomer(Customer customer) {

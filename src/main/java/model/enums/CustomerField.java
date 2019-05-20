@@ -1,4 +1,4 @@
-package model.entities_fields;
+package model.enums;
 
 public enum CustomerField {
   NAME,
