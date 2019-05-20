@@ -16,6 +16,11 @@ import java.time.LocalDateTime;
 public class CustomerWithMoviesAndSalesStand {
 
   private Integer customerId;
+  private String customerName;
+  private String customerSurname;
+  private Integer customerAge;
+  private String customerEmail;
+  private Integer customerLoyaltyCardId;
   private String movieTitle;
   private String movieGenre;
   private BigDecimal ticketPrice;

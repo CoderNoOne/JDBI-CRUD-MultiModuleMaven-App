@@ -4,6 +4,7 @@ import converters.impl.MovieJsonConverter;
 import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
 import model.entity.Movie;
+import org.eclipse.collections.impl.collector.Collectors2;
 import repository.entity_repository.impl.MovieRepository;
 import utils.others.UserDataUtils;
 import validators.impl.CustomerValidator;
@@ -14,9 +15,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -104,5 +108,32 @@ public class MovieService {
   private Movie getMovieAgain() {
     printMessage("That film isn't in our database. Check again");
     return chooseMovieById();
+  }
+
+  public Map<String, Double> averageMovieDurationForMovieCategory() {
+
+    return movieRepository.findAll()
+            .stream()
+            .collect(Collectors.groupingBy(Movie::getGenre, Collectors.averagingInt(Movie::getDuration)));
+  }
+
+  public Map<String, List<Movie>> mostExpensiveMoviesForEachGenre() {
+
+    return movieRepository.findAll()
+            .stream()
+            .collect(Collectors.groupingBy(Movie::getGenre, Collectors.maxBy(Comparator.comparing(Movie::getPrice, BigDecimal::compareTo))))
+            .entrySet().stream().collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    e -> movieRepository.findAll().stream().filter(movie -> movie.getGenre().equals(e.getKey()) && movie.getPrice().compareTo(e.getValue().get().getPrice()) == 0).collect(Collectors.toList())));
+  }
+
+  public Map<String, List<Movie>> cheapestMoviesForEachGenre() {
+
+    return movieRepository.findAll()
+            .stream()
+            .collect(Collectors.groupingBy(Movie::getGenre, Collectors.minBy(Comparator.comparing(Movie::getPrice, BigDecimal::compareTo))))
+            .entrySet().stream().collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    e -> movieRepository.findAll().stream().filter(movie -> movie.getGenre().equals(e.getKey()) && movie.getPrice().compareTo(e.getValue().get().getPrice()) == 0).collect(Collectors.toList())));
   }
 }

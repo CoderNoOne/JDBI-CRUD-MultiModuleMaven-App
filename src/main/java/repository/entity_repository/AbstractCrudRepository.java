@@ -44,9 +44,9 @@ public abstract class AbstractCrudRepository<T> implements CrudRepository<T> {
   @Override
   public List<T> findAll() {
     return jdbi.withHandle(handle -> handle
-            .createQuery("select * from " + getTableName(type.getSimpleName())))
+            .createQuery("select * from " + getTableName(type.getSimpleName()))
             .mapToBean(type)
-            .list();
+            .list());
   }
 
   @Override

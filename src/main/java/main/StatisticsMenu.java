@@ -17,7 +17,7 @@ import utils.others.UserDataUtils;
 import java.text.MessageFormat;
 import java.util.Arrays;
 
-import static utils.others.UserDataUtils.printMessage;
+import static utils.others.UserDataUtils.*;
 
 @Slf4j
 class StatisticsMenu {
@@ -69,6 +69,8 @@ class StatisticsMenu {
             "Movies grouped by the most popular ones",
             "The most popular movie genre grouped by each customer ",
             "Map<Category, List<Customer> customer in the age <a,b>",
+            "Average movie duration grouped by movie genre",
+            "Most expensive movie for each genre",
             "Back to main menu"
     ));
   }
@@ -76,7 +78,10 @@ class StatisticsMenu {
 
   /*1. Wykonac zestawienie, w ktorym pokazesz kategorie filmu oraz zestawienie klientow, ktorzy zakupili film w tej kategorii i maja ciagle aktywna karte lojanosciowa
 2. Wykonac zestawienie w ktorym pokazesz kategorie filmu oraz klientow ktorzy kupili filmy tej kategorii i sa w wieku <,a b>
-3. Wykonac zestawienie, w ktorym poekazesz kategorie filmu oraz zestawienie tych klientow, ktorych karta traci wartosc przed rozpoczeciem ktoregokolwiek z zakupionych seansow w tej kategorii*/
+3. Zestawienie w którym pokazane zostaną kategorie filmy i średnie wartości długości trwania filmu w tej kategorii
+4. Zestawienie w którym pokazane zostaną kategori filmu i najdłuższe oraz nakrótsze długości trwania filmu w tej kategorii
+5. Kategoria filmu i najwcześniejsza data premiery filmy w tej kategorii
+4. Wykonac zestawienie, w ktorym poekazesz kategorie filmu oraz zestawienie tych klientow, ktorych karta traci wartosc przed rozpoczeciem ktoregokolwiek z zakupionych seansow w tej kategorii*/
   private void option7_1() {
     joinedEntitiesService.movieGroupedByPopularity().forEach((movie, number) -> System.out.println("Movie: " + movie.getTitle()
             + " - > " + number));
@@ -91,23 +96,52 @@ class StatisticsMenu {
   }
 
   private void option7_3() {
+    int customerMinAge = getInt("Type customer minimum age");
+    int customerMaxAge = getInt("Type customer maximum age");
 
+    if (customerMaxAge < customerMinAge) {
+      throw new AppException("Min age cannot be greater than max age!");
+    }
+    joinedEntitiesService.customersWhoBoughtMoviesWithCategoryAndWithAgeWithinRange(customerMinAge, customerMaxAge)
+            .forEach((category, customerList) -> {
+              printMessage("Category: " + category + "\n");
+              if (customerList.isEmpty()) {
+                printMessage("No movies with that category was bought by customers within age " + customerMinAge + " and " + customerMaxAge + "\n");
+              } else {
+                printCollectionWithNumeration(customerList);
+                printMessage("\n");
+              }
+            });
   }
 
+  //Zestawienie w którym pokazane zostaną kategorie filmy i średnie wartości długości trwania filmu w tej kategorii
   private void option7_4() {
-
+    movieService.averageMovieDurationForMovieCategory().forEach((category, averageDuration) -> {
+      printMessage("Category: " + category + " -> " + String.format("%.2f", averageDuration));
+    });
   }
 
+  //zestawienie w ktorym pokazane w którym pokazane zostaną kategori filmu i najdroższe filmy w tej kategorii
   private void option7_5() {
-
+    movieService.mostExpensiveMoviesForEachGenre().forEach((category, mostExpensiveMovies) -> {
+      printMessage("Category: " + category);
+      printCollectionWithNumeration(mostExpensiveMovies);
+    });
   }
 
+  //zestawienie w ktorym pokazane zostaną kategorie filmu i najtańse filmy w tej kategorii
   private void option7_6() {
-
+    movieService.cheapestMoviesForEachGenre().forEach((category, cheapestMovies) -> {
+      printMessage("Category: " + category);
+      printCollectionWithNumeration(cheapestMovies);
+    });
   }
 
+  //Kategoria filmu i najwcześniejsza data premiery filmy w tej kategorii
   private void option7_7() {
-
+    movieService
   }
 
+
+  //sredni wiek osob ktore kupiły filmy w danej kategorii
 }

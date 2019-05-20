@@ -1,6 +1,7 @@
 package repository.others;
 
 import connection.DbConnection;
+import exceptions.AppException;
 import model.others.CustomerWithLoyaltyCard;
 import model.others.CustomerWithMoviesAndSalesStand;
 import model.others.MovieWithSalesStand;
@@ -13,7 +14,7 @@ public class JoinedEntitiesRepository {
 
   private Jdbi jdbi = DbConnection.getInstance().getJdbi();
 
-  public List<MovieWithSalesStand> getMovieWithSalesStand() {
+  public List<MovieWithSalesStand> getAllMovieWithSalesStand() {
 
     final String sql = "select movies.id m_id, movies.title m_title, movies.genre m_genre, movies.price m_price, movies.duration m_duration, movies.release_date m_release_date from movies join sales_stands on movies.id = sales_stands.movie_id";
 
@@ -31,21 +32,33 @@ public class JoinedEntitiesRepository {
                     .list());
   }
 
-  public List<CustomerWithMoviesAndSalesStand> getCustomerWithMoviesAndSalesStand() {
+  public List<CustomerWithMoviesAndSalesStand> getAllCustomerWithMoviesAndSalesStand() {
 
-    final String sql = "select movies.genre m_genre, customers.id c_id from movies join sales_stands on movies.id = sales_stands.movie_id join customers on customers.id = sales_stands.customer_id";
+    final String sql = "select customers.id c_id, customers.name c_name, customers.surname c_surname, customers.age c_age, customers.email c_email, customers.loyalty_card_id c_loyalty_card_id, movies.genre m_genre, movies.duration m_duration, movies.title m_title, movies.price m_price, movies.release_date m_release_date from movies join sales_stands on movies.id = sales_stands.movie_id join customers on customers.id = sales_stands.customer_id";
 
     return jdbi.withHandle(handle ->
             handle
                     .createQuery(sql)
                     .map((rs, ctx) -> CustomerWithMoviesAndSalesStand.builder()
                             .customerId(rs.getInt("c_id"))
+                            .customerName(rs.getString("c_name"))
+                            .customerSurname(rs.getString("c_surname"))
+                            .customerAge(rs.getInt("c_age"))
+                            .customerEmail(rs.getString("c_email"))
+                            .customerLoyaltyCardId(rs.getInt("c_loyalty_card_id"))
+                            .movieDuration(rs.getInt("m_price"))
                             .movieGenre(rs.getString("m_genre"))
+                            .movieTitle(rs.getString("m_title"))
+                            .movieReleaseDate(rs.getDate("m_release_date").toLocalDate())
                             .build())
                     .list());
   }
 
   public List<CustomerWithMoviesAndSalesStand> getAllTicketsByCustomerId(Integer id) {
+
+    if(id == null){
+      throw new AppException("Id is null");
+    }
 
     final String sql = "select movies.title m_title, movies.genre m_genre, movies.price m_price, movies.duration m_duration, movies.release_date m_releaseDate," +
             " sales_stands.start_date_time as s_startTime from sales_stands join customers on sales_stands.customer_id = customers.id join movies on movies.id = sales_stands.movie_id where sales_stands.customer_id = :customerId";
@@ -67,6 +80,9 @@ public class JoinedEntitiesRepository {
 
   public Optional<CustomerWithLoyaltyCard> getCustomerWithLoyaltyCardInfoByCustomerId(Integer customerId) {
 
+    if(customerId == null){
+      throw new AppException("Id is null");
+    }
     final String sql = String.join(" ", "select customers.id c_id, loyalty_cards.movies_number lc_movie_numbers,"
             , "loyalty_cards.discount lc_discount, loyalty_cards.expiration_date lc_exp_date, loyalty_cards.id lc_id"
             , "from customers join loyalty_cards on customers.loyalty_card_id = loyalty_cards.id where customers.id =:customerId");
