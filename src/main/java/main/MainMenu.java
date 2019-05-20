@@ -95,7 +95,6 @@ class MainMenu {
     ));
   }
 
-
   private void option1() {
 
     String name = getString("Input customer name");
@@ -126,7 +125,7 @@ class MainMenu {
   }
 
   private void option3() {
-    DataInitializeService.init();
+    new DataInitializeService().init();
   }
 
   private void option4TableManagementMenu() {
@@ -134,7 +133,6 @@ class MainMenu {
     new CustomerAndMovieTableManagementMenu().menu();
   }
 
-  //zakup biletu
   private void option5() {
 
     var customer = customerService.getCustomerFromUserInput();

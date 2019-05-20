@@ -4,12 +4,9 @@ import connection.DbConnection;
 import exceptions.AppException;
 import model.entity.SalesStand;
 import org.jdbi.v3.core.Jdbi;
-import repository.entity_repository.CrudRepository;
+import repository.entity_repository.AbstractCrudRepository;
 
-import java.util.List;
-import java.util.Optional;
-
-public class SalesStandRepository implements CrudRepository<SalesStand> {
+public class SalesStandRepository extends AbstractCrudRepository<SalesStand> {
 
   private Jdbi jdbi = DbConnection.getInstance().getJdbi();
 
@@ -54,46 +51,5 @@ public class SalesStandRepository implements CrudRepository<SalesStand> {
 
   }
 
-  @Override
-  public void delete(Integer id) {
-
-    if (id == null) {
-      throw new AppException("id is null");
-    }
-
-    jdbi.withHandle(handle -> handle
-            .createUpdate("delete from sales_stands where id = :id")
-            .bind("id", id)
-            .execute());
-  }
-
-  @Override
-  public Optional<SalesStand> findById(Integer id) {
-
-    if (id == null) {
-      throw new AppException("id is null");
-    }
-
-    return jdbi.withHandle(handle -> handle
-            .createQuery("select * from sales_stands where id = :id")
-            .bind("id", id)
-            .mapToBean(SalesStand.class)
-            .findFirst());
-  }
-
-  @Override
-  public List<SalesStand> findAll() {
-    return jdbi.withHandle(handle -> handle
-            .createQuery("select * from sales_stand")
-            .mapToBean(SalesStand.class)
-            .list());
-  }
-
-  @Override
-  public void deleteAll() {
-    jdbi.withHandle(handle -> handle
-            .createUpdate("delete from sales_stands")
-            .execute());
-  }
 }
 

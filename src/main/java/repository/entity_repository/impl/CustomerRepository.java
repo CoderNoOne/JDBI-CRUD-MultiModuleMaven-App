@@ -5,14 +5,13 @@ import exceptions.AppException;
 import model.entity.Customer;
 import org.jdbi.v3.core.Jdbi;
 import repository.entity_repository.AbstractCrudRepository;
-import repository.entity_repository.CrudRepository;
 
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class CustomerRepository /*extends AbstractCrudRepository<Customer>*/ implements CrudRepository<Customer> {
+public class CustomerRepository extends AbstractCrudRepository<Customer> /*implements CrudRepository<Customer> */ {
 
   private Jdbi jdbi = DbConnection.getInstance().getJdbi();
 
@@ -57,49 +56,6 @@ public class CustomerRepository /*extends AbstractCrudRepository<Customer>*/ imp
                     .bind("loyaltyCardId", customer.getLoyaltyCardId() == null ? customerFromDb.getLoyaltyCardId() : customer.getLoyaltyCardId())
                     .bind("id", customer.getId())
                     .execute()));
-
-  }
-
-  @Override
-  public void delete(Integer id) {
-
-    if (id == null) {
-      throw new AppException("id is null");
-    }
-
-    jdbi.withHandle(handle -> handle
-            .createUpdate("delete from customers where id = :id")
-            .bind("id", id)
-            .execute());
-  }
-
-  @Override
-  public Optional<Customer> findById(Integer id) {
-
-    if (id == null) {
-      throw new AppException("id is null");
-    }
-
-    return jdbi.withHandle(handle -> handle
-            .createQuery("select * from customers where id = :id")
-            .bind("id", id)
-            .mapToBean(Customer.class)
-            .findFirst());
-  }
-
-  @Override
-  public List<Customer> findAll() {
-    return jdbi.withHandle(handle -> handle
-            .createQuery("select * from customers")
-            .mapToBean(Customer.class)
-            .list());
-  }
-
-  @Override
-  public void deleteAll() {
-    jdbi.withHandle(handle -> handle
-            .createUpdate("delete from customers")
-            .execute());
   }
 
   public Optional<Customer> findByNameSurnameAndEmail(String name, String surname, String email) {

@@ -89,7 +89,6 @@ public class EmailUtils {
                                     td(i.getTicketPrice().toString())).with(
                                     td(i.getMovieReleaseDate().toString())).with(
                                     td(i.getStartDateTime().toString())))))).renderFormatted();
-
   }
 
   private static void sendAsHtml(String recipient, String subject, String htmlContent) {
@@ -105,10 +104,9 @@ public class EmailUtils {
       Transport.send(mimeMessage);
       printMessage("Email has been sent!");
     } catch (Exception e) {
-//      log.error("eror", e.printStackTrace());
+      log.error(e.getMessage(), e);
       throw new AppException("SEND AS HTML MESSAGE EXCEPTION");
     }
-
   }
 
   private static void prepareEmailMessage(MimeMessage mimeMessage, String recipient, String subject, String htmlContent) {

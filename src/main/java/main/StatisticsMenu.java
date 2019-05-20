@@ -53,7 +53,7 @@ class StatisticsMenu {
     }
   }
 
-  public static void menuOptions() {
+  private void menuOptions() {
 
     printMessage(MessageFormat.format(
             "\nOption no. 1 - {0}\n" +
@@ -68,17 +68,15 @@ class StatisticsMenu {
 
             "Movies grouped by the most popular ones",
             "The most popular movie genre grouped by each customer ",
-            "The most expensive ticket bought by each customer",
-            "The cheapest ticket bought by each customer",
-            "Average ticket price grouped by month",
-            "Total monthly expenses on tickets grouped by month for each customer",
-            "Total amount of tickets bought with discount grouped by movie category and for each customer",
-            "Total amount of tickets bought without discount by grouped by movie category and for each customer",
+            "Map<Category, List<Customer> customer in the age <a,b>",
             "Back to main menu"
     ));
   }
 
-  //filmy pogrupowane wg najchętnie kupowanych
+
+  /*1. Wykonac zestawienie, w ktorym pokazesz kategorie filmu oraz zestawienie klientow, ktorzy zakupili film w tej kategorii i maja ciagle aktywna karte lojanosciowa
+2. Wykonac zestawienie w ktorym pokazesz kategorie filmu oraz klientow ktorzy kupili filmy tej kategorii i sa w wieku <,a b>
+3. Wykonac zestawienie, w ktorym poekazesz kategorie filmu oraz zestawienie tych klientow, ktorych karta traci wartosc przed rozpoczeciem ktoregokolwiek z zakupionych seansow w tej kategorii*/
   private void option7_1() {
     joinedEntitiesService.movieGroupedByPopularity().forEach((movie, number) -> System.out.println("Movie: " + movie.getTitle()
             + " - > " + number));

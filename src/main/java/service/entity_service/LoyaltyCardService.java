@@ -1,11 +1,9 @@
 package service.entity_service;
 
-import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
 import model.entity.Customer;
 import model.entity.LoyaltyCard;
 import repository.entity_repository.impl.LoyaltyCardRepository;
-import utils.others.SimulateTimeFlowUtils;
 import validators.impl.LoyaltyCardValidator;
 
 import java.math.BigDecimal;
@@ -19,10 +17,6 @@ public class LoyaltyCardService {
 
   private final int LOYALTY_CARD_MIN_MOVIE_NUMBER = 3;
   private final LoyaltyCardRepository loyaltyCardRepository;
-
-  public int getLoyaltyMinMovieCard() {
-    return LOYALTY_CARD_MIN_MOVIE_NUMBER;
-  }
 
   private LoyaltyCard createLoyaltyCard(BigDecimal discount, LocalDate expirationDate, Integer moviesNumber) {
     return LoyaltyCard.builder()
@@ -66,7 +60,12 @@ public class LoyaltyCardService {
       loyaltyCardRepository.update(loyaltyCard);
     }
   }
+
   public Optional<LoyaltyCard> findLoyaltyCardById(Integer id) {
     return loyaltyCardRepository.findById(id);
+  }
+
+  public int getLoyaltyMinMovieCard() {
+    return LOYALTY_CARD_MIN_MOVIE_NUMBER;
   }
 }

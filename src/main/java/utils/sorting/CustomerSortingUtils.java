@@ -25,8 +25,8 @@ public class CustomerSortingUtils {
     System.out.println(message);
 
     boolean hasNext;
-    do {
 
+    do {
       CustomerField sortingCriterion = CustomerField.valueOf(getString("CHOOSE FROM ABOVE: " + sortingAlgorithms).toUpperCase());
 
       if (sortingAlgorithms.isEmpty() || !sortingAlgorithms.contains(sortingCriterion))

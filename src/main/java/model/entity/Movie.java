@@ -23,8 +23,6 @@ public class Movie implements Comparable<Movie>{
   private Integer duration;
   private LocalDate releaseDate;
 
-
-
   @Override
   public int compareTo(Movie o) {
     return this.getTitle().compareTo(o.getTitle());

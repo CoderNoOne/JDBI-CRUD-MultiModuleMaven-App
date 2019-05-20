@@ -3,11 +3,11 @@ package service.others;
 import converters.impl.CustomerListJsonConverter;
 import converters.impl.MovieListJsonConverter;
 import exceptions.AppException;
+import lombok.RequiredArgsConstructor;
 import repository.entity_repository.impl.CustomerRepository;
 import repository.entity_repository.impl.LoyaltyCardRepository;
 import repository.entity_repository.impl.MovieRepository;
 import repository.entity_repository.impl.SalesStandRepository;
-import utils.others.UserDataUtils;
 import validators.impl.CustomerValidator;
 import validators.impl.MovieValidator;
 
@@ -16,17 +16,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static utils.others.UserDataUtils.printMessage;
 
+@RequiredArgsConstructor
 public class DataInitializeService {
 
-  private final MovieRepository MOVIE_REPOSITORY = new MovieRepository();
-  private final CustomerRepository CUSTOMER_REPOSITORY = new CustomerRepository();
-  private final LoyaltyCardRepository LOYALTY_CARD_REPOSITORY = new LoyaltyCardRepository();
-  private final SalesStandRepository SALES_STAND_REPOSITORY = new SalesStandRepository();
+  private final MovieRepository movieRepository = new MovieRepository();
+  private final CustomerRepository customerRepository = new CustomerRepository();
+  private final LoyaltyCardRepository loyaltyCardRepository = new LoyaltyCardRepository();
+  private final SalesStandRepository salesStandRepository = new SalesStandRepository();
 
-  private DataInitializeService() {
-  }
-
-  public  void init() {
+  public void init() {
     deleteSalesStands();
     deleteCustomers();
     deleteLoyaltyCards();
@@ -35,11 +33,11 @@ public class DataInitializeService {
     initCustomers("exampleCustomers.json");
   }
 
-  private  void initMovies(final String moviesJsonFilename) {
+  private void initMovies(final String moviesJsonFilename) {
 
     var movieValidator = new MovieValidator();
     AtomicInteger atomicInteger = new AtomicInteger(1);
-    MOVIE_REPOSITORY.deleteAll();
+    movieRepository.deleteAll();
     new MovieListJsonConverter(moviesJsonFilename)
             .fromJson()
             .orElseThrow(() -> new AppException("FILE " + moviesJsonFilename + " is empty"))
@@ -52,18 +50,18 @@ public class DataInitializeService {
               }
               atomicInteger.incrementAndGet();
               return !movieValidator.hasErrors();
-            }).forEach(MOVIE_REPOSITORY::add);
+            }).forEach(movieRepository::add);
   }
 
-  private static void initCustomers(final String customersJsonFilenam) {
-    CUSTOMER_REPOSITORY.deleteAll();
+  private void initCustomers(final String customersJsonFilename) {
+    customerRepository.deleteAll();
 
     var customerValidator = new CustomerValidator();
     AtomicInteger atomicInteger = new AtomicInteger(1);
-    CUSTOMER_REPOSITORY.deleteAll();
-    new CustomerListJsonConverter(customersJsonFilenam)
+    customerRepository.deleteAll();
+    new CustomerListJsonConverter(customersJsonFilename)
             .fromJson()
-            .orElseThrow(() -> new AppException("FILE " + customersJsonFilenam + " is empty"))
+            .orElseThrow(() -> new AppException("FILE " + customersJsonFilename + " is empty"))
             .stream()
             .filter(customer -> {
               if (customerValidator.hasErrors()) {
@@ -72,23 +70,23 @@ public class DataInitializeService {
               }
               atomicInteger.incrementAndGet();
               return !customerValidator.hasErrors();
-            }).forEach(CUSTOMER_REPOSITORY::add);
+            }).forEach(customerRepository::add);
   }
 
 
-  private static void deleteLoyaltyCards() {
-    LOYALTY_CARD_REPOSITORY.deleteAll();
+  private void deleteLoyaltyCards() {
+    loyaltyCardRepository.deleteAll();
   }
 
-  private static void deleteSalesStands() {
-    SALES_STAND_REPOSITORY.deleteAll();
+  private void deleteSalesStands() {
+    salesStandRepository.deleteAll();
   }
 
-  private static void deleteCustomers() {
-    CUSTOMER_REPOSITORY.deleteAll();
+  private void deleteCustomers() {
+    customerRepository.deleteAll();
   }
 
-  private static void deleteMovies() {
-    MOVIE_REPOSITORY.deleteAll();
+  private void deleteMovies() {
+    movieRepository.deleteAll();
   }
 }

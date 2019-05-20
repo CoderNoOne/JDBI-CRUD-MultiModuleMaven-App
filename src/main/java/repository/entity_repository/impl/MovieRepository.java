@@ -4,12 +4,9 @@ import connection.DbConnection;
 import exceptions.AppException;
 import model.entity.Movie;
 import org.jdbi.v3.core.Jdbi;
-import repository.entity_repository.CrudRepository;
+import repository.entity_repository.AbstractCrudRepository;
 
-import java.util.List;
-import java.util.Optional;
-
-public class MovieRepository implements CrudRepository<Movie> {
+public class MovieRepository extends AbstractCrudRepository<Movie> {
 
   private Jdbi jdbi = DbConnection.getInstance().getJdbi();
 
@@ -57,47 +54,4 @@ public class MovieRepository implements CrudRepository<Movie> {
                     .execute()));
 
   }
-
-  @Override
-  public void delete(Integer id) {
-
-    if (id == null) {
-      throw new AppException("id is null");
-    }
-
-    jdbi.withHandle(handle -> handle
-            .createUpdate("delete from movies where id = :id")
-            .bind("id", id)
-            .execute());
-  }
-
-  @Override
-  public Optional<Movie> findById(Integer id) {
-
-    if (id == null) {
-      throw new AppException("id is null");
-    }
-
-    return jdbi.withHandle(handle -> handle
-            .createQuery("select * from movies where id = :id")
-            .bind("id", id)
-            .mapToBean(Movie.class)
-            .findFirst());
-  }
-
-  @Override
-  public List<Movie> findAll() {
-    return jdbi.withHandle(handle -> handle
-            .createQuery("select * from movies")
-            .mapToBean(Movie.class)
-            .list());
-  }
-
-  @Override
-  public void deleteAll() {
-    jdbi.withHandle(handle -> handle
-            .createUpdate("delete from movies")
-            .execute());
-  }
-
 }

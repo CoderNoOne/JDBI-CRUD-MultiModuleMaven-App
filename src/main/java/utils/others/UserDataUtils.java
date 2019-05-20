@@ -10,38 +10,43 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class UserDataUtils {
 
+  private static Scanner sc = new Scanner(System.in);
+
   private UserDataUtils() {
   }
 
-  private static Scanner sc = new Scanner(System.in);
-
   public static int getInt(String message) {
+
+    if (message == null) {
+      throw new AppException("GET INT - MESSAGE IS NULL");
+    }
     printMessage(message);
 
     String text = sc.nextLine();
     if (!text.matches("[\\d]+")) {
       throw new AppException(("INT VALUE IS NOT CORRECT: " + text));
     }
-
     return Integer.parseInt(text);
   }
 
   public static String getString(String inputMessage) {
+    if (Objects.isNull(inputMessage)) {
+      throw new AppException("GET STRING - MESSAGE IS NULL");
+    }
 
     printMessage(inputMessage);
-
     String input = sc.nextLine();
 
     if (input.length() == 0) {
       throw new AppException("YOU DIDN'T INPUT ANY VALUE");
     }
-
     return input;
   }
 
@@ -62,20 +67,27 @@ public class UserDataUtils {
   }
 
   public static LocalDate getDate(String message) {
-    printMessage(message);
 
-    String date = sc.nextLine();
-    LocalDate localDate;
+    if (message == null) {
+      throw new AppException("GET LOCAL DATE - MESSAGE IS NULL");
+    }
+
     try {
-      localDate = LocalDate.parse(date);
+      printMessage(message);
+      String date = sc.nextLine();
+      return LocalDate.parse(date);
     } catch (DateTimeParseException e) {
-      log.error(e.getStackTrace().toString(), e);
+      log.error(Arrays.toString(e.getStackTrace()), e);
       throw new AppException("DATE FORMAT NOT SUPPORTED");
     }
-    return localDate;
   }
 
   public static BigDecimal getBigDecimal(String inputMessage) {
+
+    if (inputMessage == null) {
+      throw new AppException("GET LOCAL DATE TIME - MESSAGE IS NULL");
+    }
+
     printMessage(inputMessage);
     return sc.nextBigDecimal();
   }
@@ -91,22 +103,23 @@ public class UserDataUtils {
       String date = sc.nextLine();
       return LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     } catch (DateTimeParseException e) {
-      System.err.println(Arrays.toString(e.getStackTrace()));
+      log.error(Arrays.toString(e.getStackTrace()), e);
       throw new AppException("DATE FORMAT NOT SUPPORTED");
     }
   }
 
   public static LocalDate getLocalDate(String message) {
-    printMessage(message);
 
-    String date = sc.nextLine();
+    if (message == null) {
+      throw new AppException("GET LOCAL DATE - MESSAGE IS NULL");
+    }
 
-    LocalDate localDate;
     try {
-      localDate = LocalDate.parse(date);
+      printMessage(message);
+      String date = sc.nextLine();
+      return LocalDate.parse(date);
     } catch (DateTimeParseException e) {
       throw new AppException("DATE FORMAT NOT SUPPORTED");
     }
-    return localDate;
   }
 }

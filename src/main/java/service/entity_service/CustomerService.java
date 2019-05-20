@@ -54,18 +54,6 @@ public class CustomerService {
     return isCorrect;
   }
 
-  public boolean updateCustomerDetail(Integer id, String name, String surname, Integer age, String email) {
-
-    Customer customer = Customer.builder().id(id).name(name).surname(surname).age(age).email(email).build();
-
-    boolean isValid = new CustomerValidator().validateEntity(customer);
-
-    if (isValid) {
-      updateCustomer(customer);
-    }
-    return isValid;
-  }
-
   public Customer getCustomerFromUserInput() {
     getAllCustomers();
 
@@ -84,7 +72,7 @@ public class CustomerService {
     customerRepository.update(customer);
   }
 
-  public boolean isCustomerEmailUnique(String email) {
+  private boolean isCustomerEmailUnique(String email) {
     return customerRepository.findCustomerByEmail(email).isEmpty();
   }
 }

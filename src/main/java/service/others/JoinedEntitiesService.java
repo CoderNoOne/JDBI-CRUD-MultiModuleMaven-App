@@ -72,6 +72,13 @@ public class JoinedEntitiesService {
                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
   }
 
+  public Map<String, List<Integer>> customersWhoBoughtMoviesWithCategoryAndWithAgeWithinRange(int minAge, int maxAge) {
+
+    return joinedEntitiesRepository.getCustomerWithMoviesAndSalesStand()
+            .stream()
+            .collect(Collectors.groupingBy(CustomerWithMoviesAndSalesStand::getMovieGenre,
+                    Collectors.mapping(CustomerWithMoviesAndSalesStand::getCustomerId, Collectors.filtering(,Collectors.toList()))));
+  }
 
   private static Movie convertMovieWithSalesStandToMovie(MovieWithSalesStand movieWithSalesStand) {
     return Movie.builder()
@@ -102,8 +109,7 @@ public class JoinedEntitiesService {
             .reduce(Predicate::and).orElseThrow(() -> new AppException(""));
   }
 
-  private static Predicate<CustomerWithMoviesAndSalesStand> getPredicate
-          (Map.Entry<MovieFilteringCriterion, List<?>> cus) {
+  private static Predicate<CustomerWithMoviesAndSalesStand> getPredicate(Map.Entry<MovieFilteringCriterion, List<?>> cus) {
     Predicate<CustomerWithMoviesAndSalesStand> predicate;
     switch (cus.getKey()) {
       case DURATION -> predicate = filterByMovieDurationPredicate(cus);
