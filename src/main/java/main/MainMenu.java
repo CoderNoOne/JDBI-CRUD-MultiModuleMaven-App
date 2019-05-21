@@ -2,7 +2,6 @@ package main;
 
 import exceptions.AppException;
 import lombok.extern.slf4j.Slf4j;
-import model.entity.Customer;
 import model.entity.Movie;
 import model.others.CustomerWithLoyaltyCard;
 import repository.entity_repository.impl.CustomerRepository;
@@ -118,7 +117,7 @@ class MainMenu {
     if (!isAdded) {
       throw new AppException("Movie raw data couldn't be added to db");
     }
-
+    printMessage("Movie successfully added to db!");
   }
 
   private void generateExampleData() {
@@ -137,27 +136,18 @@ class MainMenu {
     Movie movie = (Movie) ticketDetails.get("movie");
     LocalDateTime movieStartTime = (LocalDateTime) ticketDetails.get("movieStartTime");
 
-    Optional<CustomerWithLoyaltyCard> customerLoyaltyCardId = joinedEntitiesService.getCustomerWithLoyaltyCardByCustomer(customer)/*.get().getLoyaltyCardId()*/;
+    Optional<CustomerWithLoyaltyCard> customerLoyaltyCardId = joinedEntitiesService.getCustomerWithLoyaltyCardByCustomer(customer);
     salesStandService.addNewSale(movie, customer, movieStartTime);
 
     if (joinedEntitiesService.doCustomerPosesActiveLoyaltyCard(customer)) {
       loyaltyCardService.decreaseMoviesNumberByLoyaltyCardId(customerLoyaltyCardId.get().getLoyaltyCardId());
       movie.setPrice(movie.getPrice().subtract(loyaltyCardService.findLoyaltyCardById(customerLoyaltyCardId.get().getLoyaltyCardId()).get().getDiscount()));
     } else if (joinedEntitiesService.numberOfMoviesBoughtByCustomer(customer) == loyaltyCardService.getLoyaltyMinMovieCard()) {
-      askForLoyaltyCard(customer);
+      loyaltyCardService.askForLoyaltyCard(customer);
     }
 
     customerService.update(customer);
-    EmailUtils.sendMoviePurchaseConfirmation(customer.getEmail(), "aa", movie, movieStartTime);
-  }
-
-  private void askForLoyaltyCard(Customer customer) {
-    if (getString("Do you want to add a loyalty card? (y/n)").toUpperCase().equalsIgnoreCase("y")) {
-      loyaltyCardService.addLoyaltyCardForCustomer(customer);
-      printMessage("Loyalty card successfully added to you account!");
-    } else {
-      printMessage("Too bad. Maybe next time");
-    }
+    EmailUtils.sendMoviePurchaseConfirmation(customer.getEmail(), "MOVIE PURCHASE DETAILS FROM APP", movie, movieStartTime);
   }
 
   private void showTransactionHistoryMenu() {

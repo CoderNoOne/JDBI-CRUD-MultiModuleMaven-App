@@ -5,12 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import model.entity.Movie;
 import model.others.CustomerWithMoviesAndSalesStand;
 import model.tickets_data_filtering.MovieFilteringCriterion;
+import utils.entity.JoinedEntitiesUtils;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -21,36 +22,20 @@ import static utils.others.UserDataUtils.printMessage;
 @Slf4j
 public class EmailUtils {
 
-  private static final String emailAddress = "the.mountain.057@gmail.com";
-  private static final String emailPassword = "tatry321";
+  private static final String emailAddress = "";
+  private static final String emailPassword = "";
 
   private EmailUtils() {
   }
 
-  // do zakupu biletu
   public static void sendMoviePurchaseConfirmation(String recipient, String subject, Movie movie, LocalDateTime startDateTime) {
 
-    // REFACTOR ZA DUZO th MASZ JUZ W JEDNEJ METODZIE
-    var htmlContent = tbody(
-            tr().with(
-                    th("Movie title"),
-                    th("Movie genre"),
-                    th("Movie duration"),
-                    th("Movie price"),
-                    th("Movie release date"),
-                    th("Movie start date time"),
-                    tr().with(
-                            td(movie.getTitle()),
-                            td(movie.getGenre()),
-                            td(movie.getDuration().toString()),
-                            td(movie.getPrice().toString()),
-                            td(movie.getReleaseDate().toString()),
-                            td(startDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))))).renderFormatted();
-
-    sendAsHtml(recipient, subject, htmlContent);
+    var customerWithMoviesAndSalesStand = JoinedEntitiesUtils.convertMovieToCustomerWithMoviesAndSalesStands(movie, startDateTime);
+    var htmlTable = createHtmlTable(Collections.singletonList(customerWithMoviesAndSalesStand));
+    sendAsHtml(recipient, subject, htmlTable);
   }
 
-  //do wysyłania maila z filtrowanymi filmami
+
   public static void sendSummaryTableByFilters(String recipient, String subject, List<CustomerWithMoviesAndSalesStand> allFilteredTickets, Map<MovieFilteringCriterion, List<?>> filters) {
 
     String htmlContent = String.join(
@@ -58,13 +43,12 @@ public class EmailUtils {
             tbody(tr().with(
                     th("Filter type"),
                     th("Filter values"),
-                            each(filters, i ->
-                                    tr(i.getKey().name()).with(td(
-                                            i.getValue().toString()))))).render(),
+                    each(filters, i ->
+                            tr(i.getKey().name()).with(td(
+                                    i.getValue().toString()))))).render(),
             createHtmlTable(allFilteredTickets));
 
     sendAsHtml(recipient, subject, htmlContent);
-
   }
 
   public static void sendAllSummaryTable(String recipient, String subject, List<CustomerWithMoviesAndSalesStand> customerWithMoviesAndSalesStandsList) {

@@ -65,12 +65,16 @@ public class MovieService {
 
   private Movie chooseMovieById() {
 
-    printMessage("AVAILABLE MOVIES");
-    printCollectionWithNumeration(getAllMovies());
+    Optional<Movie> movieOptional;
+    Integer movieId;
+    do {
+      printMessage("AVAILABLE MOVIES");
+      printCollectionWithNumeration(getAllMovies());
+      movieId = getInt("Input proper movie id");
+      movieOptional = movieRepository.findById(movieId);
+    } while (movieOptional.isEmpty());
 
-    Integer movieId = getInt("Input movie id");
-
-    return movieRepository.findById(movieId).orElseGet(this::getMovieAgain);
+    return movieOptional.get();
   }
 
   public Map<String, Object> chooseMovieStartTime() {
@@ -96,11 +100,6 @@ public class MovieService {
             .limit(ChronoUnit.HOURS.between(seedDateTime, seedDateTime.plusHours(48)))
             .filter(date -> date.toLocalTime().compareTo(LocalTime.of(8, 0)) >= 0 && date.toLocalTime().compareTo(LocalTime.of(22, 30)) <= 0)
             .collect(Collectors.toList());
-  }
-
-  private Movie getMovieAgain() {
-    printMessage("That film isn't in our database. Check again");
-    return chooseMovieById();
   }
 
   public Map<String, Double> getAverageMovieDurationForMovieCategory() {

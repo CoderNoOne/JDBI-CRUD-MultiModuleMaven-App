@@ -81,7 +81,7 @@ class TransactionHistoryMenu {
     var movieFilters = TicketsFilteringUtils.inputMovieFilters("Specify movie filters").getFilters();
     var filteredCustomerMovies = joinedEntitiesService.getCustomerMoviesByFilters(customerId, movieFilters);
     printCollectionWithNumeration(filteredCustomerMovies);
-    EmailUtils.sendSummaryTableByFilters(/*"firelight.code@gmail.com"*/customerService.findCustomerById(customerId).get().getEmail(), "From app", new ArrayList<>(filteredCustomerMovies), movieFilters);
+    EmailUtils.sendSummaryTableByFilters(customerService.findCustomerById(customerId).get().getEmail(), "From app", new ArrayList<>(filteredCustomerMovies), movieFilters);
   }
 
   private void showAllMoviesBoughtByCustomer() {

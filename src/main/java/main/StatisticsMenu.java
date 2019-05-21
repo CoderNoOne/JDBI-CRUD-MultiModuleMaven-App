@@ -41,7 +41,7 @@ class StatisticsMenu {
           default -> throw new AppException("INPUT OPTION IS NOT DEFINED");
         }
       } catch (AppException e) {
-        log.info(e.getExceptionMessage());
+        log.error(e.getExceptionMessage());
         log.error(Arrays.toString(e.getStackTrace()));
       }
     }

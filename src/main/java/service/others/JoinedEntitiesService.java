@@ -6,14 +6,13 @@ import model.entity.Customer;
 import model.entity.Movie;
 import model.others.CustomerWithLoyaltyCard;
 import model.others.CustomerWithMoviesAndSalesStand;
-import model.others.MovieWithSalesStand;
 import model.tickets_data_filtering.MovieFilteringCriterion;
 import repository.others.JoinedEntitiesRepository;
+import utils.entity.JoinedEntitiesUtils;
 
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -25,12 +24,12 @@ public class JoinedEntitiesService {
 
     return joinedEntitiesRepository.getAllMovieWithSalesStand()
             .stream()
-            .collect(Collectors.groupingBy(JoinedEntitiesService::convertMovieWithSalesStandToMovie, Collectors.summingInt(e -> 1)));
+            .collect(Collectors.groupingBy(JoinedEntitiesUtils::convertMovieWithSalesStandToMovie, Collectors.summingInt(e -> 1)));
   }
 
   public Set<Movie> allDistinctMoviesBoughtSortedAlphabetically() {
     return joinedEntitiesRepository.getAllMovieWithSalesStand()
-            .stream().map(JoinedEntitiesService::convertMovieWithSalesStandToMovie)
+            .stream().map(JoinedEntitiesUtils::convertMovieWithSalesStandToMovie)
             .sorted(Comparator.comparing(Movie::getTitle))
             .collect(Collectors.toCollection(LinkedHashSet::new));
   }
@@ -42,18 +41,8 @@ public class JoinedEntitiesService {
   public Set<Movie> allDistinctMoviesBoughtBySpecifiedCustomerSortedAlphabetically(Integer customerId) {
     return joinedEntitiesRepository.getAllTicketsByCustomerId(customerId)
             .stream()
-            .map(JoinedEntitiesService::convertCustomerWithMoviesAndSalesStandsToMovie)
+            .map(JoinedEntitiesUtils::convertCustomerWithMoviesAndSalesStandsToMovie)
             .collect(Collectors.toCollection(TreeSet::new));
-  }
-
-  private static Movie convertCustomerWithMoviesAndSalesStandsToMovie(CustomerWithMoviesAndSalesStand customerWithMoviesAndSalesStand) {
-    return Movie.builder()
-            .title(customerWithMoviesAndSalesStand.getMovieTitle())
-            .genre(customerWithMoviesAndSalesStand.getMovieGenre())
-            .price(customerWithMoviesAndSalesStand.getTicketPrice())
-            .duration(customerWithMoviesAndSalesStand.getMovieDuration())
-            .releaseDate(customerWithMoviesAndSalesStand.getMovieReleaseDate())
-            .build();
   }
 
   public Map<Integer, Map<String, Integer>> mostPopularMovieGenreForEachCustomer() {
@@ -77,80 +66,16 @@ public class JoinedEntitiesService {
     return joinedEntitiesRepository.getAllCustomerWithMoviesAndSalesStand()
             .stream()
             .collect(Collectors.groupingBy(CustomerWithMoviesAndSalesStand::getMovieGenre,
-                    Collectors.mapping(JoinedEntitiesService::convertCustomerWithMoviesAndSalesStandsToCustomer,
+                    Collectors.mapping(JoinedEntitiesUtils::convertCustomerWithMoviesAndSalesStandsToCustomer,
                             Collectors.filtering(customer -> customer.getAge() >= minAge && customer.getAge() <= maxAge, Collectors.toList()))));
-  }
-
-  private static Customer convertCustomerWithMoviesAndSalesStandsToCustomer(CustomerWithMoviesAndSalesStand customerWithMoviesAndSalesStand) {
-    return Customer.builder()
-            .id(customerWithMoviesAndSalesStand.getCustomerId())
-            .name(customerWithMoviesAndSalesStand.getCustomerName())
-            .surname(customerWithMoviesAndSalesStand.getCustomerSurname())
-            .age(customerWithMoviesAndSalesStand.getCustomerAge())
-            .email(customerWithMoviesAndSalesStand.getCustomerEmail())
-            .loyaltyCardId(customerWithMoviesAndSalesStand.getCustomerLoyaltyCardId())
-            .build();
-  }
-
-  private static Movie convertMovieWithSalesStandToMovie(MovieWithSalesStand movieWithSalesStand) {
-    return Movie.builder()
-            .id(movieWithSalesStand.getMovieId())
-            .title(movieWithSalesStand.getMovieTitle())
-            .genre(movieWithSalesStand.getMovieGenre())
-            .price(movieWithSalesStand.getMoviePrice())
-            .duration(movieWithSalesStand.getMovieDuration())
-            .releaseDate(movieWithSalesStand.getMovieReleaseDate())
-            .build();
   }
 
   public Set<CustomerWithMoviesAndSalesStand> getCustomerMoviesByFilters(Integer customerId, Map<MovieFilteringCriterion, List<? extends Object>> movieFilters) {
 
     return joinedEntitiesRepository.getAllTicketsByCustomerId(customerId)
             .stream()
-            .filter(customerWithMoviesAndSalesStand -> getMovieFilterPredicate(movieFilters).test(customerWithMoviesAndSalesStand))
+            .filter(customerWithMoviesAndSalesStand -> JoinedEntitiesUtils.getMovieFilterPredicate(movieFilters).test(customerWithMoviesAndSalesStand))
             .collect(Collectors.toSet());
-  }
-
-
-  private static Predicate<CustomerWithMoviesAndSalesStand> getMovieFilterPredicate
-          (Map<MovieFilteringCriterion, List<?>> filters) {
-    return filters
-            .entrySet()
-            .stream()
-            .map(JoinedEntitiesService::getPredicate)
-            .reduce(Predicate::and).orElseThrow(() -> new AppException(""));
-  }
-
-  private static Predicate<CustomerWithMoviesAndSalesStand> getPredicate(Map.Entry<MovieFilteringCriterion, List<?>> cus) {
-    Predicate<CustomerWithMoviesAndSalesStand> predicate;
-    switch (cus.getKey()) {
-      case DURATION -> predicate = filterByMovieDurationPredicate(cus);
-      case RELEASE_DATE -> predicate = filterByMovieReleaseDate(cus);
-      case GENRE -> predicate = filterByMoviesGenre(cus);
-      default -> throw new AppException("");
-    }
-    return predicate;
-  }
-
-  private static Predicate<CustomerWithMoviesAndSalesStand> filterByMoviesGenre(Map.Entry<MovieFilteringCriterion, List<?>> cus) {
-    return customerWithMoviesAndSalesStand -> cus.getValue().stream().map(String::valueOf).
-            anyMatch(genre -> customerWithMoviesAndSalesStand.getMovieGenre().equalsIgnoreCase(genre));
-  }
-
-  private static Predicate<CustomerWithMoviesAndSalesStand> filterByMovieReleaseDate(Map.Entry<MovieFilteringCriterion, List<?>> cus) {
-
-    var minLocalDate = LocalDate.parse(String.valueOf(cus.getValue().get(0)));
-    var maxLocalDate = LocalDate.parse(String.valueOf(cus.getValue().get(1)));
-    return customerWithMoviesAndSalesStand ->
-            customerWithMoviesAndSalesStand.getMovieReleaseDate().compareTo(minLocalDate) >= 0 &&
-                    customerWithMoviesAndSalesStand.getMovieReleaseDate().compareTo(maxLocalDate) <= 0;
-  }
-
-  private static Predicate<CustomerWithMoviesAndSalesStand> filterByMovieDurationPredicate(Map.Entry<MovieFilteringCriterion, List<?>> cus) {
-
-    return customerWithMoviesAndSalesStand ->
-            customerWithMoviesAndSalesStand.getMovieDuration() >= Integer.parseInt(String.valueOf(cus.getValue().get(0)))
-                    && customerWithMoviesAndSalesStand.getMovieDuration() <= Integer.parseInt(String.valueOf(cus.getValue().get(1)));
   }
 
   public List<CustomerWithLoyaltyCard> getCustomersWithActiveLoyaltyCard() {
@@ -172,10 +97,10 @@ public class JoinedEntitiesService {
     return joinedEntitiesRepository.getCustomerWithLoyaltyCardInfoByCustomerId(customer.getId());
   }
 
-  private List<Movie> allMoviesBoughtBySpecifiedCustomer(Customer customer) {
+  public List<Movie> allMoviesBoughtBySpecifiedCustomer(Customer customer) {
     return joinedEntitiesRepository.getAllTicketsByCustomerId(customer.getId())
             .stream()
-            .map(JoinedEntitiesService::convertCustomerWithMoviesAndSalesStandsToMovie)
+            .map(JoinedEntitiesUtils::convertCustomerWithMoviesAndSalesStandsToMovie)
             .collect(Collectors.toList());
   }
 
@@ -192,11 +117,10 @@ public class JoinedEntitiesService {
 
     return joinedEntitiesRepository.getAllCustomerWithMoviesAndSalesStand()
             .stream()
-            .collect(Collectors.groupingBy(obj -> convertCustomerWithMoviesAndSalesStandsToMovie(obj).getGenre(),
-                    Collectors.groupingBy(JoinedEntitiesService::convertCustomerWithMoviesAndSalesStandsToCustomer, Collectors.counting())))
+            .collect(Collectors.groupingBy(obj -> JoinedEntitiesUtils.convertCustomerWithMoviesAndSalesStandsToMovie(obj).getGenre(),
+                    Collectors.groupingBy(JoinedEntitiesUtils::convertCustomerWithMoviesAndSalesStandsToCustomer, Collectors.counting())))
             .entrySet().stream().collect(Collectors.toMap(
                     Map.Entry::getKey,
                     e -> e.getValue().entrySet().stream().filter(innerEntry -> innerEntry.getValue() >= minMovieNumber).collect(Collectors.averagingInt(innerEntry -> innerEntry.getKey().getAge()))));
-
   }
 }

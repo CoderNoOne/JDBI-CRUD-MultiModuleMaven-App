@@ -11,6 +11,8 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static utils.others.SimulateTimeFlowUtils.getClock;
+import static utils.others.UserDataUtils.getString;
+import static utils.others.UserDataUtils.printMessage;
 
 @RequiredArgsConstructor
 public class LoyaltyCardService {
@@ -19,11 +21,7 @@ public class LoyaltyCardService {
   private final LoyaltyCardRepository loyaltyCardRepository;
 
   private LoyaltyCard createLoyaltyCard(BigDecimal discount, LocalDate expirationDate, Integer moviesNumber) {
-    return LoyaltyCard.builder()
-            .discount(discount)
-            .expirationDate(expirationDate)
-            .moviesNumber(moviesNumber)
-            .build();
+    return LoyaltyCard.builder().discount(discount).expirationDate(expirationDate).moviesNumber(moviesNumber).build();
   }
 
   private boolean addLoyaltyCard(BigDecimal discount, LocalDate expirationDate, Integer moviesNumber) {
@@ -37,7 +35,7 @@ public class LoyaltyCardService {
 
   }
 
-  public void addLoyaltyCardForCustomer(Customer customer) {
+  private void addLoyaltyCardForCustomer(Customer customer) {
     if (addNewLoyaltyCard()) {
       customer.setLoyaltyCardId(getNewlyCreatedLoyaltyCardId());
     }
@@ -58,6 +56,15 @@ public class LoyaltyCardService {
       var loyaltyCard = loyaltyCardOptional.get();
       loyaltyCard.setMoviesNumber(loyaltyCard.getMoviesNumber() - 1);
       loyaltyCardRepository.update(loyaltyCard);
+    }
+  }
+
+  public void askForLoyaltyCard(Customer customer) {
+    if (getString("Do you want to add a loyalty card? (y/n)").toUpperCase().equalsIgnoreCase("y")) {
+      addLoyaltyCardForCustomer(customer);
+      printMessage("Loyalty card successfully added to you account!");
+    } else {
+      printMessage("Too bad. Maybe next time");
     }
   }
 
