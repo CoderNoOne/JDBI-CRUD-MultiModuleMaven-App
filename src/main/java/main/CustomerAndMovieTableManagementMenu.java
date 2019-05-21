@@ -5,29 +5,22 @@ import lombok.extern.slf4j.Slf4j;
 import model.entity.Customer;
 import model.entity.Movie;
 import repository.entity_repository.impl.CustomerRepository;
-import repository.entity_repository.impl.LoyaltyCardRepository;
 import repository.entity_repository.impl.MovieRepository;
-import repository.entity_repository.impl.SalesStandRepository;
 import repository.others.JoinedEntitiesRepository;
 import service.entity_service.CustomerService;
-import service.entity_service.LoyaltyCardService;
 import service.entity_service.MovieService;
-import service.entity_service.SalesStandService;
 import service.others.JoinedEntitiesService;
 
-import utils.others.UserDataUtils;
-import utils.update.UpdateMovieUtils;
-
 import java.text.MessageFormat;
-import java.util.*;
-
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-
+import static utils.others.UserDataUtils.*;
 import static utils.sorting.CustomerSortingUtils.getCustomerSortingAlgorithm;
 import static utils.sorting.MovieSortingUtils.getMovieSortingAlgorithm;
-import static utils.update.UpdateCustomerUtils.*;
-import static utils.others.UserDataUtils.*;
+import static utils.update.UpdateCustomerUtils.getUpdatedCustomer;
 import static utils.update.UpdateMovieUtils.getUpdatedMovie;
 
 @Slf4j
@@ -35,28 +28,28 @@ class CustomerAndMovieTableManagementMenu {
 
   private final CustomerService customerService = new CustomerService(new CustomerRepository());
   private final MovieService movieService = new MovieService(new MovieRepository());
-  private final LoyaltyCardService loyaltyCardService = new LoyaltyCardService(new LoyaltyCardRepository());
-  private final SalesStandService salesStandService = new SalesStandService(new SalesStandRepository());
   private final JoinedEntitiesService joinedEntitiesService = new JoinedEntitiesService(new JoinedEntitiesRepository());
 
-  void menu() {
-    menuOptions();
+  void showTableManagementMenu() {
+    showMenuOptions();
     while (true) {
       try {
-        int option = UserDataUtils.getInt("INPUT YOUR OPTION: ");
+        int option = getInt("INPUT YOUR OPTION: ");
         switch (option) {
-          case 1 -> option4_1();
-          case 2 -> option4_2();
-          case 3 -> option4_3();
-          case 4 -> option4_4();
-          case 5 -> option4_5();
-          case 6 -> option4_6();
-          case 7 -> option4_7();
-          case 8 -> option4_12();
-          case 9 -> option4_11();
-//          case 10 ->
-          case 11 -> menuOptions();
-          case 12 -> new MainMenu().mainMenu();
+          case 1 -> deleteCustomerById();
+          case 2 -> deleteMovieById();
+          case 3 -> showCustomerById();
+          case 4 -> showMovieById();
+          case 5 -> showAllCustomers();
+          case 6 -> showAllMovies();
+          case 7 -> showMoviesWithDurationBetween();
+          case 8 -> showMoviesWithPriceBetween();
+          case 9 -> showCustomersWithActiveLoyaltyCard();
+          case 10 -> showCustomersWithAgeBetween();
+          case 11 -> updateCustomer();
+          case 12 -> updateMovie();
+          case 13 -> showMenuOptions();
+          case 14 -> new MainMenu().showMainMenu();
           default -> throw new AppException("INPUT OPTION IS NOT DEFINED");
         }
       } catch (AppException e) {
@@ -66,7 +59,7 @@ class CustomerAndMovieTableManagementMenu {
     }
   }
 
-  private void menuOptions() {
+  private void showMenuOptions() {
     System.out.println(MessageFormat.format(
             "\nOption no. 1 - {0}\n" +
                     "Option no. 2 - {1}\n" +
@@ -76,18 +69,26 @@ class CustomerAndMovieTableManagementMenu {
                     "Option no. 6 - {5}\n" +
                     "Option no. 7 - {6}\n" +
                     "Option no. 8 - {7}\n" +
-                    "Option no. 9 - {8}",
+                    "Option no. 9 - {8}\n" +
+                    "Option no. 10 - {9}\n" +
+                    "Option no. 11 - {10}\n" +
+                    "Option no. 12 - {11}\n" +
+                    "Option no. 13 - {12}\n" +
+                    "Option no. 14 - {13}",
 
             "Delete customer",
             "Delete movie",
-            "Show all customers", /*czy sortowac*/
-            "Shows all movies", /*czy sortowac*/
-            "Show movies with duration in the specified time range", /*czy sortowac*/
-            "Show customer detail by his email",
+            "Show customer by id",
+            "Show movie by id",
+            "Show all customers",
+            "Shows all movies",
+            "Show movies with duration in the specified time range",
+            "Show movies with price between",
             "Show customers with active loyalty card",
-            "Show customers with age with specified range", /*czy sortowac*/
-            "Update customer", /*wyswietlenie wszystkich customerow + co chcesz updetowac*/
-            "Update movie", /*wyswietlenei wszystkich filmow  + co chcesz updatetowac */
+            "Show customers with age with specified range",
+            "Update customer",
+            "Update movie",
+            "Show menu options",
             "Back to main menu"
     ));
   }
@@ -100,8 +101,8 @@ class CustomerAndMovieTableManagementMenu {
     return getCustomerSortingAlgorithm("Input your customer sorting algorithms").getComparator();
   }
 
-  //updatetowanie customera
-  private void option4_12() {
+
+  private void updateCustomer() {
     printCollectionWithNumeration(customerService.getAllCustomers());
 
     var customerId = getInt("Choose customer id you want to update");
@@ -112,11 +113,10 @@ class CustomerAndMovieTableManagementMenu {
     }
     printMessage(customerService.updateCustomer(getUpdatedCustomer(customerById.get())) ?
             "Customer has been updated successfully" : "Some of new customer's field failed to pass the validation. Check the output");
-
   }
 
-  //updatetowanie movie
-  private void option4_11() {
+
+  private void updateMovie() {
 
     printCollectionWithNumeration(movieService.getAllMovies());
 
@@ -131,7 +131,7 @@ class CustomerAndMovieTableManagementMenu {
 
   }
 
-  private void option4_10() {
+  private void showMoviesWithPriceBetween() {
 
     var minMoviePrice = getBigDecimal("Input minimum movie price");
     var maxMoviePrice = getBigDecimal("Input maximum movie price");
@@ -140,7 +140,8 @@ class CustomerAndMovieTableManagementMenu {
       throw new AppException("Minimum movie price cannot be greater than maximum one");
     }
 
-    var moviesWithPriceWithinRange = movieService.getAllMovies().stream().filter(movie -> movie.getPrice().compareTo(minMoviePrice) >= 0 && movie.getPrice().compareTo(maxMoviePrice) <= 0)
+    var moviesWithPriceWithinRange = movieService.getAllMovies().stream()
+            .filter(movie -> movie.getPrice().compareTo(minMoviePrice) >= 0 && movie.getPrice().compareTo(maxMoviePrice) <= 0)
             .collect(Collectors.toList());
 
     var choice = getString("Do you want to sort movies with price between specified time interval (Y/N").equalsIgnoreCase("Y");
@@ -149,12 +150,13 @@ class CustomerAndMovieTableManagementMenu {
       moviesWithPriceWithinRange.sort(getMovieComparators());
     }
 
-    printMessage(choice ? "Sorted movies with price between " + minMoviePrice + " and " + maxMoviePrice + "\n" : "Unsorted movies with duration between " + minMoviePrice + " and " + maxMoviePrice + "\n");
+    printMessage(choice ? "Sorted movies with price between " + minMoviePrice + " and " + maxMoviePrice
+            + "\n" : "Unsorted movies with duration between " + minMoviePrice + " and " + maxMoviePrice + "\n");
 
     printCollectionWithNumeration(moviesWithPriceWithinRange);
   }
 
-  private void option4_9() {
+  private void showMoviesWithDurationBetween() {
 
     var minMovieDuration = getInt("Input minimum movie duration");
     var maxMovieDuration = getInt("Input maximum movie duration");
@@ -162,24 +164,27 @@ class CustomerAndMovieTableManagementMenu {
       throw new AppException("Minimum movie duration cannot be greater than maximum one");
     }
 
-    var moviesWithDurationWithinRange = movieService.getAllMovies().stream().filter(movie -> movie.getDuration() >= minMovieDuration && movie.getDuration() <= maxMovieDuration)
+    var moviesWithDurationWithinRange = movieService.getAllMovies().stream()
+            .filter(movie -> movie.getDuration() >= minMovieDuration && movie.getDuration() <= maxMovieDuration)
             .collect(Collectors.toList());
 
-    var choice = getString("Do you want to sort customers with active loyalty card (Y/N").equalsIgnoreCase("Y");
+    var choice = getString("Do you want to sort movies (Y/N").equalsIgnoreCase("Y");
 
     if (choice) {
       moviesWithDurationWithinRange.sort(getMovieComparators());
     }
 
-    printMessage(choice ? "Sorted movies with duration between " + minMovieDuration + " and " + maxMovieDuration + "\n" : "Unsorted movies with duration between " + minMovieDuration + " and " + maxMovieDuration + "\n");
+    printMessage(choice ? "Sorted movies with duration between " + minMovieDuration + " and " + maxMovieDuration +
+            "\n" : "Unsorted movies with duration between " + minMovieDuration + " and " + maxMovieDuration + "\n");
     printCollectionWithNumeration(moviesWithDurationWithinRange);
   }
 
-  private void option4_8() {
+  private void showCustomersWithActiveLoyaltyCard() {
 
     var choice = getString("Do you want to sort customers with active loyalty card (Y/N").equalsIgnoreCase("Y");
 
-    var customersWithActiveLoyaltyCard = joinedEntitiesService.getCustomersWithLoyaltyCardWithActiveLoyaltyCard().stream().map(obj -> customerService.findCustomerById(obj.getCustomerId()).get())
+    var customersWithActiveLoyaltyCard = joinedEntitiesService.getCustomersWithActiveLoyaltyCard()
+            .stream().map(obj -> customerService.findCustomerById(obj.getCustomerId()).get())
             .collect(Collectors.toList());
     if (choice) {
       customersWithActiveLoyaltyCard.sort(getCustomerComparator());
@@ -189,7 +194,7 @@ class CustomerAndMovieTableManagementMenu {
     printCollectionWithNumeration(customersWithActiveLoyaltyCard);
   }
 
-  private void option4_7() {
+  private void showAllMovies() {
     var choice = getString("Do you want to sort all movies bought by all customers (Y/N").equalsIgnoreCase("Y");
 
     var allMovies = movieService.getAllMovies();
@@ -201,17 +206,17 @@ class CustomerAndMovieTableManagementMenu {
     printCollectionWithNumeration(allMovies);
   }
 
-  private void option4_6() {
-    int movieId = UserDataUtils.getInt("Input movie id");
+  private void showMovieById() {
+    int movieId = getInt("Input movie id");
     movieService.findMovieById(movieId).ifPresent(System.out::println);
   }
 
-  private void option4_5() {
-    int customerId = UserDataUtils.getInt("Input customer id");
-    movieService.findMovieById(customerId).ifPresent(System.out::println);
+  private void showCustomerById() {
+    int customerId = getInt("Input customer id");
+    customerService.findCustomerById(customerId).ifPresent(System.out::println);
   }
 
-  private void option4_4() {
+  private void showCustomersWithAgeBetween() {
     var minCustomerAge = getInt("Input minimum customer age");
     var maxCustomerAge = getInt("Input maximum customer age");
     if (maxCustomerAge < minCustomerAge) {
@@ -222,7 +227,7 @@ class CustomerAndMovieTableManagementMenu {
             .collect(Collectors.toList()));
   }
 
-  private void option4_3() {
+  private void showAllCustomers() {
     customerService.getAllCustomers();
     var choice = getString("Do you want to sort all customers (Y/N").equalsIgnoreCase("Y");
 
@@ -235,13 +240,13 @@ class CustomerAndMovieTableManagementMenu {
     printCollectionWithNumeration(allCustomers);
   }
 
-  private void option4_2() {
-    Integer integer = UserDataUtils.getInt("Input movie id you want to delete from database");
+  private void deleteMovieById() {
+    Integer integer = getInt("Input movie id you want to delete from database");
     movieService.deleteMovie(integer);
   }
 
-  private void option4_1() {
-    Integer integer = UserDataUtils.getInt("Input customer id you want to delete from database");
+  private void deleteCustomerById() {
+    Integer integer = getInt("Input customer id you want to delete from database");
     customerService.deleteCustomer(integer);
   }
 }

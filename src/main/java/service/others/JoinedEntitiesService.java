@@ -81,7 +81,7 @@ public class JoinedEntitiesService {
                             Collectors.filtering(customer -> customer.getAge() >= minAge && customer.getAge() <= maxAge, Collectors.toList()))));
   }
 
-  private static Customer convertCustomerWithMoviesAndSalesStandsToCustomer(CustomerWithMoviesAndSalesStand customerWithMoviesAndSalesStand){
+  private static Customer convertCustomerWithMoviesAndSalesStandsToCustomer(CustomerWithMoviesAndSalesStand customerWithMoviesAndSalesStand) {
     return Customer.builder()
             .id(customerWithMoviesAndSalesStand.getCustomerId())
             .name(customerWithMoviesAndSalesStand.getCustomerName())
@@ -153,7 +153,7 @@ public class JoinedEntitiesService {
                     && customerWithMoviesAndSalesStand.getMovieDuration() <= Integer.parseInt(String.valueOf(cus.getValue().get(1)));
   }
 
-  public List<CustomerWithLoyaltyCard> getCustomersWithLoyaltyCardWithActiveLoyaltyCard() {
+  public List<CustomerWithLoyaltyCard> getCustomersWithActiveLoyaltyCard() {
     return joinedEntitiesRepository.getAllCustomerWithLoyaltyCard().stream()
             .filter(obj -> obj.getMoviesNumber() > 0 && obj.getLoyaltyCardExpirationDate().compareTo(LocalDate.now()) >= 0)
             .collect(Collectors.toList());
@@ -181,5 +181,22 @@ public class JoinedEntitiesService {
 
   public Integer numberOfMoviesBoughtByCustomer(Customer customer) {
     return allMoviesBoughtBySpecifiedCustomer(customer).size();
+  }
+
+
+  public Map<String, Double> getAverageCustomerAgeWhichBoughtAtLeastSpecifiedNumberOfTicketGroupedForEachMovieGenre(int minMovieNumber) {
+
+    if (minMovieNumber <= 0) {
+      throw new AppException("Movie number should be greater than 0!");
+    }
+
+    return joinedEntitiesRepository.getAllCustomerWithMoviesAndSalesStand()
+            .stream()
+            .collect(Collectors.groupingBy(obj -> convertCustomerWithMoviesAndSalesStandsToMovie(obj).getGenre(),
+                    Collectors.groupingBy(JoinedEntitiesService::convertCustomerWithMoviesAndSalesStandsToCustomer, Collectors.counting())))
+            .entrySet().stream().collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    e -> e.getValue().entrySet().stream().filter(innerEntry -> innerEntry.getValue() >= minMovieNumber).collect(Collectors.averagingInt(innerEntry -> innerEntry.getKey().getAge()))));
+
   }
 }

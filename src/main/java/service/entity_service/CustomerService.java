@@ -64,10 +64,6 @@ public class CustomerService {
     return customerRepository.findByNameSurnameAndEmail(name, surname, email).orElseThrow(() -> new AppException(""));
   }
 
-  public Integer findLoyaltyCardIdByCustomerId(Integer customerId) {
-    return customerRepository.getLoyaltyCardIdByCustomerId(customerId).orElse(-1);
-  }
-
   public void update(Customer customer) {
     customerRepository.update(customer);
   }

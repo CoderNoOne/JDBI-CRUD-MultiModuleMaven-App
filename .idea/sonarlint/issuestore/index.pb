@@ -59,8 +59,6 @@ o
 ?src/main/java/model/others/CustomerWithMoviesAndSalesStand.java,2\e\2e572d928efce7578af08bd38486d724b54d857f
 k
 ;src/main/java/service/entity_service/SalesStandService.java,a\b\abd72252ade54fe9dec4dfbf75d066eb589fd1d8
-e
-5src/main/java/service/entity_service/TestService.java,0\a\0aab1195bf318177727c9bb5364e46fa6433dd6b
 L
 src/main/java/main/Main.java,7\f\7f08be4e9c62f2e5f8f02242af89b918cb9a135f
 g
@@ -95,10 +93,6 @@ P
 S
 #src/main/resources/log4j.properties,7\5\755950bb690295904a49d36e60958901c54013b8
 c
-3src/main/java/model/entities_fields/MovieField.java,e\a\eaf59d642ad0e0780ce8c7ebaff9b118b583392b
-f
-6src/main/java/model/entities_fields/CustomerField.java,4\9\49ae02707ab7cfc3ebaa78957a60ca51aa8eb93e
-c
 3src/main/java/utils/update/UpdateCustomerUtils.java,8\7\870cc0cb7d645a26e7770a303b0d51c58f28ba0e
 `
 0src/main/java/utils/update/UpdateMovieUtils.java,6\4\64613f352394792add77e15c719631955a99af69
@@ -111,3 +105,9 @@ e
 5src/main/java/utils/others/SimulateTimeFlowUtils.java,4\e\4e391ae714812e7c4fc41d3bc891823826f7fae6
 ]
 -src/main/java/utils/others/UserDataUtils.java,5\5\55e09e52a69a7ec5470b74a8cb9a64508eb8d21c
+\
+,src/main/java/model/enums/CustomerField.java,6\9\692fe4758afead898619bdcdf857fbe1cc62b747
+Y
+)src/main/java/model/enums/MovieField.java,8\9\89b3761b9b7c8b783b398101b8525aaecc7eff62
+v
+Fsrc/main/java/repository/entity_repository/AbstractCrudRepository.java,d\0\d03b87e4dae2a97794116a0bf242c5a3fad64602

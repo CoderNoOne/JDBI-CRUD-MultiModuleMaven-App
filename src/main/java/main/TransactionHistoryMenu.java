@@ -6,14 +6,8 @@ import model.entity.Customer;
 import model.entity.Movie;
 import model.others.CustomerWithMoviesAndSalesStand;
 import repository.entity_repository.impl.CustomerRepository;
-import repository.entity_repository.impl.LoyaltyCardRepository;
-import repository.entity_repository.impl.MovieRepository;
-import repository.entity_repository.impl.SalesStandRepository;
 import repository.others.JoinedEntitiesRepository;
 import service.entity_service.CustomerService;
-import service.entity_service.LoyaltyCardService;
-import service.entity_service.MovieService;
-import service.entity_service.SalesStandService;
 import service.others.JoinedEntitiesService;
 import utils.others.EmailUtils;
 import utils.others.TicketsFilteringUtils;
@@ -23,31 +17,26 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static utils.others.UserDataUtils.*;
-import static utils.others.UserDataUtils.printCollectionWithNumeration;
-import static utils.others.UserDataUtils.printMessage;
 
 @Slf4j
 class TransactionHistoryMenu {
 
   private final CustomerService customerService = new CustomerService(new CustomerRepository());
-  private final MovieService movieService = new MovieService(new MovieRepository());
-  private final LoyaltyCardService loyaltyCardService = new LoyaltyCardService(new LoyaltyCardRepository());
-  private final SalesStandService salesStandService = new SalesStandService(new SalesStandRepository());
   private final JoinedEntitiesService joinedEntitiesService = new JoinedEntitiesService(new JoinedEntitiesRepository());
 
   void menu() {
 
     while (true) {
-      menuOptions();
+      showMenuOptions();
       try {
         int option = getInt("\nINPUT YOUR OPTION: ");
         switch (option) {
-          case 1 -> option1();
-          case 2 -> option2();
-          case 3 -> option3();
-          case 4 -> option4();
-          case 5 -> new MainMenu().mainMenu();
-
+          case 1 -> showDistinctMoviesBoughtByAllCustomers();
+          case 2 -> showDistinctMoviesBoughtByCustomer();
+          case 3 -> showFilteredTicketsTransaction();
+          case 4 -> showAllMoviesBoughtByCustomer();
+          case 5 -> showMenuOptions();
+          case 6 -> new MainMenu().showMainMenu();
           default -> throw new AppException("INPUT OPTION IS NOT DEFINED");
         }
       } catch (AppException e) {
@@ -57,7 +46,7 @@ class TransactionHistoryMenu {
     }
   }
 
-  private void option1() {
+  private void showDistinctMoviesBoughtByAllCustomers() {
     joinedEntitiesService.allDistinctMoviesBoughtSortedAlphabetically().forEach(System.out::println);
   }
 
@@ -81,13 +70,13 @@ class TransactionHistoryMenu {
     return Collections.singletonMap(customerId, distinctMovies);
   }
 
-  private void option2() {
+  private void showDistinctMoviesBoughtByCustomer() {
     var distinctMovies = option2Help().values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
     System.out.println("Selected customer bought " + distinctMovies.size() + " tickets for different movies\n");
     printCollectionWithNumeration(distinctMovies);
   }
 
-  private void option3() {
+  private void showFilteredTicketsTransaction() {
     var customerId = option2Help().keySet().iterator().next();
     var movieFilters = TicketsFilteringUtils.inputMovieFilters("Specify movie filters").getFilters();
     var filteredCustomerMovies = joinedEntitiesService.getCustomerMoviesByFilters(customerId, movieFilters);
@@ -95,16 +84,16 @@ class TransactionHistoryMenu {
     EmailUtils.sendSummaryTableByFilters(/*"firelight.code@gmail.com"*/customerService.findCustomerById(customerId).get().getEmail(), "From app", new ArrayList<>(filteredCustomerMovies), movieFilters);
   }
 
-  private void option4() {
+  private void showAllMoviesBoughtByCustomer() {
     var customerId = option2Help().keySet().iterator().next();
     List<CustomerWithMoviesAndSalesStand> movies = joinedEntitiesService.allMoviesBoughtByCustomer(customerId);
     Customer customer = customerService.findCustomerById(customerId).get();
     printMessage("All movies bought by customer: " + customer);
     printCollectionWithNumeration(movies);
-    EmailUtils.sendAllSummaryTable(customer.getEmail(),"All bought movies", movies);
+    EmailUtils.sendAllSummaryTable(customer.getEmail(), "All bought movies", movies);
   }
 
-  private void menuOptions() {
+  private void showMenuOptions() {
     printMessage(MessageFormat.format(
             "\nOption no. 1 - {0}\n" +
                     "Option no. 2 - {1}\n" +
@@ -115,6 +104,7 @@ class TransactionHistoryMenu {
             "All distinct movies bought by specified customer",
             "Filter tickets transaction history bought by specified customer",
             "All movies bought by specified customer",
+            "Show menu options",
             "Back to main menu"
     ));
   }

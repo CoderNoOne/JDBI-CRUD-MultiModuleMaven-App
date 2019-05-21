@@ -6,15 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.text.MessageFormat;
 import java.time.LocalDate;
-import java.util.Objects;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Movie implements Comparable<Movie>{
+public class Movie {
 
   private Integer id;
   private String title;
@@ -23,8 +21,4 @@ public class Movie implements Comparable<Movie>{
   private Integer duration;
   private LocalDate releaseDate;
 
-  @Override
-  public int compareTo(Movie o) {
-    return this.getTitle().compareTo(o.getTitle());
-  }
 }

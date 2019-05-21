@@ -6,9 +6,6 @@ import model.entity.Customer;
 import org.jdbi.v3.core.Jdbi;
 import repository.entity_repository.AbstractCrudRepository;
 
-
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 public class CustomerRepository extends AbstractCrudRepository<Customer> /*implements CrudRepository<Customer> */ {
@@ -60,15 +57,15 @@ public class CustomerRepository extends AbstractCrudRepository<Customer> /*imple
 
   public Optional<Customer> findByNameSurnameAndEmail(String name, String surname, String email) {
 
-    if (Objects.isNull(name)) {
+    if (name == null) {
       throw new AppException("customer name is null");
     }
 
-    if (Objects.isNull(surname)) {
+    if (surname == null) {
       throw new AppException("customer surname is null");
     }
 
-    if (Objects.isNull(email)) {
+    if (email == null) {
       throw new AppException("customer email is null");
     }
     return jdbi.withHandle(handle -> handle

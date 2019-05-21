@@ -48,8 +48,6 @@ public class SalesStandRepository extends AbstractCrudRepository<SalesStand> {
                     .bind("startDateTime", salesStand.getStartDateTime() == null ? saleStandFromDb.getStartDateTime() : salesStand.getStartDateTime())
                     .bind("id", salesStand.getId())
                     .execute()));
-
   }
-
 }
 

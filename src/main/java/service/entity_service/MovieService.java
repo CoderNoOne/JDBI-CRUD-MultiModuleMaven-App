@@ -4,10 +4,7 @@ import converters.impl.MovieJsonConverter;
 import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
 import model.entity.Movie;
-import org.eclipse.collections.impl.collector.Collectors2;
 import repository.entity_repository.impl.MovieRepository;
-import utils.others.UserDataUtils;
-import validators.impl.CustomerValidator;
 import validators.impl.MovieValidator;
 
 import java.math.BigDecimal;
@@ -19,14 +16,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static utils.others.UserDataUtils.*;
-import static utils.others.UserDataUtils.printCollectionWithNumeration;
-import static utils.others.UserDataUtils.printMessage;
 
 
 @RequiredArgsConstructor
@@ -110,7 +103,7 @@ public class MovieService {
     return chooseMovieById();
   }
 
-  public Map<String, Double> averageMovieDurationForMovieCategory() {
+  public Map<String, Double> getAverageMovieDurationForMovieCategory() {
 
     return movieRepository.findAll()
             .stream()
@@ -135,5 +128,14 @@ public class MovieService {
             .entrySet().stream().collect(Collectors.toMap(
                     Map.Entry::getKey,
                     e -> movieRepository.findAll().stream().filter(movie -> movie.getGenre().equals(e.getKey()) && movie.getPrice().compareTo(e.getValue().get().getPrice()) == 0).collect(Collectors.toList())));
+  }
+
+  public Map<String, Map<LocalDate, List<Movie>>> theEarliestPremierInMovieGenre() {
+
+    return movieRepository.findAll()
+            .stream().collect(Collectors.groupingBy(Movie::getGenre, Collectors.minBy(Comparator.comparing(Movie::getReleaseDate, LocalDate::compareTo))))
+            .entrySet().stream().collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    e -> movieRepository.findAll().stream().filter(movie -> movie.getGenre().equals(e.getKey()) && movie.getReleaseDate().compareTo(e.getValue().get().getReleaseDate()) == 0).collect(Collectors.groupingBy(Movie::getReleaseDate))));
   }
 }

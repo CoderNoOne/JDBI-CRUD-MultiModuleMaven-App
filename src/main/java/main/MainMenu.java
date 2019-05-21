@@ -25,7 +25,6 @@ import java.util.Optional;
 
 import static utils.others.SimulateTimeFlowUtils.*;
 import static utils.others.UserDataUtils.*;
-import static utils.others.UserDataUtils.printMessage;
 
 @Slf4j
 class MainMenu {
@@ -36,26 +35,26 @@ class MainMenu {
   private final SalesStandService salesStandService = new SalesStandService(new SalesStandRepository());
   private final JoinedEntitiesService joinedEntitiesService = new JoinedEntitiesService(new JoinedEntitiesRepository());
 
-  void mainMenu() {
+  void showMainMenu() {
     while (true) {
-      mainMenuOptions();
+      showMainMenuOptions();
       try {
         int option = getInt("INPUT YOUR OPTION: ");
         switch (option) {
-          case 1 -> option1();
-          case 2 -> option2();
-          case 3 -> option3();
-          case 4 -> option4TableManagementMenu();
-          case 5 -> option5();
-          case 6 -> option6();
-          case 7 -> option7();
-          case 8 -> option8();
-          case 9 -> mainMenuOptions();
-          case 10 -> {
+          case 1 -> addCustomer();
+          case 2 -> addMovieFromJsonFile();
+          case 3 -> generateExampleData();
+          case 4 -> showCustomerAndMovieTableManagementMenu();
+          case 5 -> buyTicket();
+          case 6 -> showTransactionHistoryMenu();
+          case 7 -> showStatisticsMenu();
+          case 8 -> moveForwardInTime();
+          case 9 -> moveBackwardInTime();
+          case 10 -> showMainMenuOptions();
+          case 11 -> {
             close();
             return;
           }
-
           default -> throw new AppException("INPUT OPTION IS NOT DEFINED");
         }
       } catch (AppException e) {
@@ -65,10 +64,9 @@ class MainMenu {
     }
   }
 
+  private void showMainMenuOptions() {
 
-  private void mainMenuOptions() {
-
-    System.out.println(MessageFormat.format(
+    printMessage(MessageFormat.format(
             "\nOption no. 1 - {0}\n" +
                     "Option no. 2 - {1}\n" +
                     "Option no. 3 - {2}\n" +
@@ -80,7 +78,6 @@ class MainMenu {
                     "Option no. 9 - {8}\n" +
                     "Option no. 10 - {9}",
 
-
             "Add new Customer",
             "Add new movie from json file",
             "Generate example data for table movies and customers",
@@ -89,13 +86,13 @@ class MainMenu {
             "History - summary",
             "Some statistics",
             "Move in time forwardly",
-            "Show menu options",
+            "Move in time backwardly",
+            "Show showTableManagementMenu options",
             "Exit the program"
-
     ));
   }
 
-  private void option1() {
+  private void addCustomer() {
 
     String name = getString("Input customer name");
     String surname = getString("Input customer surname");
@@ -109,7 +106,7 @@ class MainMenu {
     printMessage("Customer successfully added to db!");
   }
 
-  private void option2() {
+  private void addMovieFromJsonFile() {
 
     String jsonFilename = getString("Input json filename");
 
@@ -124,16 +121,16 @@ class MainMenu {
 
   }
 
-  private void option3() {
+  private void generateExampleData() {
     new DataInitializeService().init();
   }
 
-  private void option4TableManagementMenu() {
+  private void showCustomerAndMovieTableManagementMenu() {
 
-    new CustomerAndMovieTableManagementMenu().menu();
+    new CustomerAndMovieTableManagementMenu().showTableManagementMenu();
   }
 
-  private void option5() {
+  private void buyTicket() {
 
     var customer = customerService.getCustomerFromUserInput();
     var ticketDetails = movieService.chooseMovieStartTime();
@@ -147,34 +144,39 @@ class MainMenu {
       loyaltyCardService.decreaseMoviesNumberByLoyaltyCardId(customerLoyaltyCardId.get().getLoyaltyCardId());
       movie.setPrice(movie.getPrice().subtract(loyaltyCardService.findLoyaltyCardById(customerLoyaltyCardId.get().getLoyaltyCardId()).get().getDiscount()));
     } else if (joinedEntitiesService.numberOfMoviesBoughtByCustomer(customer) == loyaltyCardService.getLoyaltyMinMovieCard()) {
-      option5Help(customer);
+      askForLoyaltyCard(customer);
     }
 
     customerService.update(customer);
     EmailUtils.sendMoviePurchaseConfirmation(customer.getEmail(), "aa", movie, movieStartTime);
   }
 
-  private void option5Help(Customer customer) {
+  private void askForLoyaltyCard(Customer customer) {
     if (getString("Do you want to add a loyalty card? (y/n)").toUpperCase().equalsIgnoreCase("y")) {
       loyaltyCardService.addLoyaltyCardForCustomer(customer);
       printMessage("Loyalty card successfully added to you account!");
     } else {
       printMessage("Too bad. Maybe next time");
     }
-
   }
 
-  private void option6() {
+  private void showTransactionHistoryMenu() {
     new TransactionHistoryMenu().menu();
   }
 
-  private void option7() {
+  private void showStatisticsMenu() {
     new StatisticsMenu().menu();
   }
 
-  private void option8() {
+  private void moveForwardInTime() {
     var noOfDays = getInt("How many days do you want to move in time forwardly?");
     moveDateTimeForwardByDaysNumber(noOfDays);
     printMessage("Present time: " + LocalDateTime.now(getClock()));
+  }
+
+  private void moveBackwardInTime() {
+    var noOfDays = getInt("How many days do you want to move backward in time?");
+    moveDateTimeBackwardByDaysNumber(noOfDays);
+    printMessage("The present time is: " + LocalDateTime.now(getClock()));
   }
 }
