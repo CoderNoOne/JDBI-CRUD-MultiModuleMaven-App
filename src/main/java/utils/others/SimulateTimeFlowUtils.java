@@ -1,6 +1,9 @@
 package utils.others;
 
-import java.time.*;
+import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
 
 public class SimulateTimeFlowUtils {
 
@@ -23,6 +26,5 @@ public class SimulateTimeFlowUtils {
   public static Clock getClock() {
     clock = Clock.offset(Clock.fixed(Instant.now(), ZoneId.systemDefault()), Duration.ofDays(days));
     return clock;
-
   }
 }

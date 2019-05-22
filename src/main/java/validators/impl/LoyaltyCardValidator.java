@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static utils.others.SimulateTimeFlowUtils.getClock;
 import static utils.others.UserDataUtils.printMessage;
 
 public class LoyaltyCardValidator implements Validator<LoyaltyCard> {
@@ -66,6 +67,6 @@ public class LoyaltyCardValidator implements Validator<LoyaltyCard> {
   }
 
   private boolean isExpirationDateValid(LoyaltyCard loyaltyCard) {
-    return loyaltyCard.getExpirationDate().compareTo(LocalDate.now()) > 0;
+    return loyaltyCard.getExpirationDate().compareTo(LocalDate.now(getClock())) > 0;
   }
 }

@@ -1,7 +1,6 @@
 package validators.impl;
 
 import model.entity.Movie;
-import utils.others.UserDataUtils;
 import validators.Validator;
 
 import java.math.BigDecimal;

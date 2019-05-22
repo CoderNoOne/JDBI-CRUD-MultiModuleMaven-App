@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static utils.others.SimulateTimeFlowUtils.getClock;
 import static utils.others.UserDataUtils.*;
 
 
@@ -91,7 +92,7 @@ public class MovieService {
 
   private List<LocalDateTime> possibleShowTimes(Movie movie) {
 
-    var presentDateTime = LocalDateTime.now();
+    var presentDateTime = LocalDateTime.now(getClock());
 
     var localDateTimeToClosesHourOrHalfAnHour = presentDateTime.getMinute() < 30 ? presentDateTime.truncatedTo(ChronoUnit.HOURS).plusMinutes(30) : presentDateTime.plusHours(1).truncatedTo(ChronoUnit.HOURS);
     var seedDateTime = movie.getReleaseDate().compareTo(presentDateTime.toLocalDate()) < 0 ? localDateTimeToClosesHourOrHalfAnHour : movie.getReleaseDate().atTime(8, 0);

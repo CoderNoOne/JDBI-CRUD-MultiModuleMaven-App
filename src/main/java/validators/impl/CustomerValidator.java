@@ -71,8 +71,6 @@ public class CustomerValidator implements Validator<Customer> {
   }
 
   private boolean isEmailValid(Customer customer) {
-
-    return new MailValidator(false).isValid(customer.getEmail());
-
+    return customer.getEmail().matches("^[\\w.+\\-]+@gmail\\.com$");
   }
 }
