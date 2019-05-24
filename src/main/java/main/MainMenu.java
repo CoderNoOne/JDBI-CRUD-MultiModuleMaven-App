@@ -1,7 +1,7 @@
 package main;
 
 import exceptions.AppException;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j;
 import model.entity.Movie;
 import model.others.CustomerWithLoyaltyCard;
 import repository.entity_repository.impl.CustomerRepository;
@@ -25,7 +25,8 @@ import java.util.Optional;
 import static utils.others.SimulateTimeFlowUtils.*;
 import static utils.others.UserDataUtils.*;
 
-@Slf4j
+
+@Log4j
 class MainMenu {
 
   private final CustomerService customerService = new CustomerService(new CustomerRepository());

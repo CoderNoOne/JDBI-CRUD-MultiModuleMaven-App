@@ -61,7 +61,7 @@ public class CustomerService {
     var surname = UserDataUtils.getString("Input your surname");
     var email = UserDataUtils.getString("Input your email");
 
-    return customerRepository.findByNameSurnameAndEmail(name, surname, email).orElseThrow(() -> new AppException(""));
+    return customerRepository.findByNameSurnameAndEmail(name, surname, email).orElseThrow(() -> new AppException("You are not registered in a db"));
   }
 
   public void update(Customer customer) {

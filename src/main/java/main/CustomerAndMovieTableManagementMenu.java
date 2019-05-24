@@ -1,7 +1,7 @@
 package main;
 
 import exceptions.AppException;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j;
 import model.entity.Customer;
 import model.entity.Movie;
 import repository.entity_repository.impl.CustomerRepository;
@@ -23,7 +23,7 @@ import static utils.sorting.MovieSortingUtils.getMovieSortingAlgorithm;
 import static utils.update.UpdateCustomerUtils.getUpdatedCustomer;
 import static utils.update.UpdateMovieUtils.getUpdatedMovie;
 
-@Slf4j
+@Log4j
 class CustomerAndMovieTableManagementMenu {
 
   private final CustomerService customerService = new CustomerService(new CustomerRepository());

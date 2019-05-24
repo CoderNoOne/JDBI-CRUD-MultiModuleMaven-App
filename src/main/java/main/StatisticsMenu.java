@@ -1,7 +1,7 @@
 package main;
 
 import exceptions.AppException;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j;
 import repository.entity_repository.impl.CustomerRepository;
 import repository.entity_repository.impl.MovieRepository;
 import repository.others.JoinedEntitiesRepository;
@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 import static utils.others.UserDataUtils.*;
 
-@Slf4j
+@Log4j
 class StatisticsMenu {
 
   private final CustomerService customerService = new CustomerService(new CustomerRepository());

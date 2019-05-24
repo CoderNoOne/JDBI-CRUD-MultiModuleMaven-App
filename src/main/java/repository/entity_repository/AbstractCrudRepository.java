@@ -52,11 +52,11 @@ public abstract class AbstractCrudRepository<T> implements CrudRepository<T> {
   @Override
   public void deleteAll() {
     jdbi.withHandle(handle -> handle
-            .createUpdate("delete from " + type.getSimpleName().toLowerCase())
+            .createUpdate("delete from " + getTableName(type.getSimpleName()))
             .execute());
   }
 
-  private static String getTableName(String className) {
+  private String getTableName(String className) {
     return className.chars().skip(1).mapToObj(x -> String.valueOf((char) x))
             .map(x -> Character.isUpperCase(x.charAt(0)) ? x = "_" + x.toLowerCase() : x)
             .collect(Collectors.joining("", className.substring(0, 1).toLowerCase(), "s"));

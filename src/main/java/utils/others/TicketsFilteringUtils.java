@@ -1,7 +1,7 @@
 package utils.others;
 
 import exceptions.AppException;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j;
 import model.tickets_data_filtering.MovieFilterCommand;
 import model.tickets_data_filtering.MovieFilteringCriterion;
 
@@ -10,11 +10,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static model.tickets_data_filtering.MovieFilteringCriterion.valueOf;
 import static model.tickets_data_filtering.MovieFilteringCriterion.values;
 import static utils.others.SimulateTimeFlowUtils.getClock;
 import static utils.others.UserDataUtils.*;
 
-@Slf4j
+@Log4j
 public final class TicketsFilteringUtils {
 
   private static MovieFilterCommand.FilterCommandBuilder builder;
@@ -36,7 +37,7 @@ public final class TicketsFilteringUtils {
         filteringCriterion = getString("CHOOSE PROPER FILTERING CRITERION FROM ABOVE: (NOT CASE SENSITIVE) \n ").toUpperCase();
       } while (!filteringCriteria.contains(filteringCriterion));
 
-      switch (MovieFilteringCriterion.valueOf(filteringCriterion)) {
+      switch (valueOf(filteringCriterion)) {
         case DURATION -> {
           filterByMovieDuration();
           filteringCriteria.remove(DURATION.name());

@@ -1,7 +1,7 @@
 package main;
 
 import exceptions.AppException;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j;
 import model.entity.Customer;
 import model.entity.Movie;
 import model.others.CustomerWithMoviesAndSalesStand;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 import static utils.others.UserDataUtils.*;
 
-@Slf4j
+@Log4j
 class TransactionHistoryMenu {
 
   private final CustomerService customerService = new CustomerService(new CustomerRepository());
