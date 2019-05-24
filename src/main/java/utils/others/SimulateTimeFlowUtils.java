@@ -5,7 +5,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 
-public class SimulateTimeFlowUtils {
+public final class SimulateTimeFlowUtils {
 
   private static Clock clock;
   private static int days;

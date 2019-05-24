@@ -42,7 +42,7 @@ public class JoinedEntitiesService {
     return joinedEntitiesRepository.getAllTicketsByCustomerId(customerId)
             .stream()
             .map(JoinedEntitiesUtils::convertCustomerWithMoviesAndSalesStandsToMovie)
-            .collect(Collectors.toCollection(TreeSet::new));
+            .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Movie::getTitle))));
   }
 
   public Map<Integer, Map<String, Integer>> mostPopularMovieGenreForEachCustomer() {

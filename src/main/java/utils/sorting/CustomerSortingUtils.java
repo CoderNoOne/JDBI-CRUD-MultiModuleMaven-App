@@ -1,8 +1,8 @@
 package utils.sorting;
 
 import exceptions.AppException;
-import model.sorting.sorting_comparator.CustomerSort;
 import model.enums.CustomerField;
+import model.sorting.sorting_comparator.CustomerSort;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 import static model.enums.CustomerField.*;
 import static utils.others.UserDataUtils.getString;
 
-public class CustomerSortingUtils {
+public final class CustomerSortingUtils {
 
   private static CustomerSort.CustomerSortBuilder builder;
   private static List<CustomerField> sortingAlgorithms;

@@ -22,7 +22,6 @@ class StatisticsMenu {
   private final JoinedEntitiesService joinedEntitiesService = new JoinedEntitiesService(new JoinedEntitiesRepository());
 
   void menu() {
-
     menuOptions();
     while (true) {
       try {
@@ -41,7 +40,7 @@ class StatisticsMenu {
           default -> throw new AppException("INPUT OPTION IS NOT DEFINED");
         }
       } catch (AppException e) {
-        log.error(e.getExceptionMessage());
+        log.info(e.getExceptionMessage());
         log.error(Arrays.toString(e.getStackTrace()));
       }
     }
@@ -58,7 +57,8 @@ class StatisticsMenu {
                     "Option no. 6 - {5}\n" +
                     "Option no. 7 - {6}\n" +
                     "Option no. 8 - {7}\n" +
-                    "Option no. 9 - {8}",
+                    "Option no. 9 - {8}\n" +
+                    "Option no. 10 - {9}",
 
             "Movies grouped by popularity",
             "The most popular movie genre grouped by each customer ",
@@ -69,7 +69,7 @@ class StatisticsMenu {
             "Show the earliest release date for each movie genre and show corresponding movies",
             "Show the average age of customers which bought at least specified number of tickets for movies grouped by movie genre",
             "Show the menu options",
-            "Back to main showTableManagementMenu"
+            "Back to main menu"
     ));
   }
 

@@ -15,7 +15,7 @@ import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
-public class UserDataUtils {
+public final class UserDataUtils {
 
   private static Scanner sc = new Scanner(System.in);
 
@@ -66,22 +66,6 @@ public class UserDataUtils {
     }
   }
 
-  public static LocalDate getDate(String message) {
-
-    if (message == null) {
-      throw new AppException("GET LOCAL DATE - MESSAGE IS NULL");
-    }
-
-    try {
-      printMessage(message);
-      String date = sc.nextLine();
-      return LocalDate.parse(date);
-    } catch (DateTimeParseException e) {
-      log.error(Arrays.toString(e.getStackTrace()), e);
-      throw new AppException("DATE FORMAT NOT SUPPORTED");
-    }
-  }
-
   public static BigDecimal getBigDecimal(String inputMessage) {
 
     if (inputMessage == null) {
@@ -103,6 +87,7 @@ public class UserDataUtils {
       String date = sc.nextLine();
       return LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     } catch (DateTimeParseException e) {
+      log.info(e.getMessage());
       log.error(Arrays.toString(e.getStackTrace()), e);
       throw new AppException("DATE FORMAT NOT SUPPORTED");
     }
@@ -119,6 +104,8 @@ public class UserDataUtils {
       String date = sc.nextLine();
       return LocalDate.parse(date);
     } catch (DateTimeParseException e) {
+      log.info(e.getMessage());
+      log.error(Arrays.toString(e.getStackTrace()), e);
       throw new AppException("DATE FORMAT NOT SUPPORTED");
     }
   }

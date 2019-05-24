@@ -35,8 +35,8 @@ class MainMenu {
   private final JoinedEntitiesService joinedEntitiesService = new JoinedEntitiesService(new JoinedEntitiesRepository());
 
   void showMainMenu() {
+    showMainMenuOptions();
     while (true) {
-      showMainMenuOptions();
       try {
         int option = getInt("INPUT YOUR OPTION: ");
         switch (option) {
@@ -57,7 +57,7 @@ class MainMenu {
           default -> throw new AppException("INPUT OPTION IS NOT DEFINED");
         }
       } catch (AppException e) {
-        log.error(e.getExceptionMessage());
+        log.info(e.getExceptionMessage());
         log.error(Arrays.toString(e.getStackTrace()));
       }
     }
@@ -75,7 +75,8 @@ class MainMenu {
                     "Option no. 7 - {6}\n" +
                     "Option no. 8 - {7}\n" +
                     "Option no. 9 - {8}\n" +
-                    "Option no. 10 - {9}",
+                    "Option no. 10 - {9}\n" +
+                    "Option no. 11 - {10}",
 
             "Add new Customer",
             "Add new movie from json file",
@@ -86,7 +87,7 @@ class MainMenu {
             "Some statistics",
             "Move in time forwardly",
             "Move in time backwardly",
-            "Show showTableManagementMenu options",
+            "Show main menu options",
             "Exit the program"
     ));
   }

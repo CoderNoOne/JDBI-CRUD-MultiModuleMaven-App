@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import exceptions.AppException;
 import lombok.extern.slf4j.Slf4j;
 
-
 import java.io.FileReader;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -28,7 +27,7 @@ public abstract class JsonConverter<T> {
     try (FileReader fileReader = new FileReader(jsonFilename)) {
       return Optional.of(gson.fromJson(fileReader, type));
     } catch (Exception e) {
-      log.error(e.getMessage());
+      log.info(e.getMessage());
       log.error(Arrays.toString(e.getStackTrace()));
       throw new AppException("FROM JSON CONVERSION EXCEPTION");
     }

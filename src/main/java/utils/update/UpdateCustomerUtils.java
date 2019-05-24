@@ -1,8 +1,8 @@
 package utils.update;
 
 import exceptions.AppException;
-import model.enums.CustomerField;
 import model.entity.Customer;
+import model.enums.CustomerField;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import static utils.others.UserDataUtils.*;
 
-public class UpdateCustomerUtils {
+public final class UpdateCustomerUtils {
 
   private UpdateCustomerUtils() {
   }

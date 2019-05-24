@@ -1,8 +1,8 @@
 package utils.update;
 
 import exceptions.AppException;
-import model.enums.MovieField;
 import model.entity.Movie;
+import model.enums.MovieField;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 import static utils.others.UserDataUtils.*;
 
-public class UpdateMovieUtils {
+public final class UpdateMovieUtils {
 
   private UpdateMovieUtils() {
   }

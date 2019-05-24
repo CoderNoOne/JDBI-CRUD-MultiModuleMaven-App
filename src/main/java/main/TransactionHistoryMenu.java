@@ -9,6 +9,7 @@ import repository.entity_repository.impl.CustomerRepository;
 import repository.others.JoinedEntitiesRepository;
 import service.entity_service.CustomerService;
 import service.others.JoinedEntitiesService;
+import utils.entity.JoinedEntitiesUtils;
 import utils.others.EmailUtils;
 import utils.others.TicketsFilteringUtils;
 
@@ -25,9 +26,8 @@ class TransactionHistoryMenu {
   private final JoinedEntitiesService joinedEntitiesService = new JoinedEntitiesService(new JoinedEntitiesRepository());
 
   void menu() {
-
+    showMenuOptions();
     while (true) {
-      showMenuOptions();
       try {
         int option = getInt("\nINPUT YOUR OPTION: ");
         switch (option) {
@@ -40,7 +40,7 @@ class TransactionHistoryMenu {
           default -> throw new AppException("INPUT OPTION IS NOT DEFINED");
         }
       } catch (AppException e) {
-        log.error(e.getExceptionMessage());
+        log.info(e.getExceptionMessage());
         log.error(Arrays.toString(e.getStackTrace()));
       }
     }
@@ -80,7 +80,7 @@ class TransactionHistoryMenu {
     var customerId = option2Help().keySet().iterator().next();
     var movieFilters = TicketsFilteringUtils.inputMovieFilters("Specify movie filters").getFilters();
     var filteredCustomerMovies = joinedEntitiesService.getCustomerMoviesByFilters(customerId, movieFilters);
-    printCollectionWithNumeration(filteredCustomerMovies);
+    printCollectionWithNumeration(filteredCustomerMovies.stream().map(JoinedEntitiesUtils::convertCustomerWithMoviesAndSalesStandsToMovie).collect(Collectors.toSet()));
     EmailUtils.sendSummaryTableByFilters(customerService.findCustomerById(customerId).get().getEmail(), "From app", new ArrayList<>(filteredCustomerMovies), movieFilters);
   }
 
@@ -98,7 +98,9 @@ class TransactionHistoryMenu {
             "\nOption no. 1 - {0}\n" +
                     "Option no. 2 - {1}\n" +
                     "Option no. 3 - {2}\n" +
-                    "Option no. 4 - {3}",
+                    "Option no. 4 - {3}\n" +
+                    "Option no. 5 - {4}\n" +
+                    "Option no. 6 - {5}",
 
             "All distinct movies bought by all customers",
             "All distinct movies bought by specified customer",

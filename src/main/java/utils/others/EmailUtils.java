@@ -20,10 +20,10 @@ import static j2html.TagCreator.*;
 import static utils.others.UserDataUtils.printMessage;
 
 @Slf4j
-public class EmailUtils {
+public final class EmailUtils {
 
-  private static final String emailAddress = "";
-  private static final String emailPassword = "";
+  private static final String emailAddress = "the.mountain.057@gmail.com";
+  private static final String emailPassword = "imlegendary94";
 
   private EmailUtils() {
   }
@@ -38,15 +38,15 @@ public class EmailUtils {
 
   public static void sendSummaryTableByFilters(String recipient, String subject, List<CustomerWithMoviesAndSalesStand> allFilteredTickets, Map<MovieFilteringCriterion, List<?>> filters) {
 
-    String htmlContent = String.join(
-            h1("YOUR SUMMARY HISTORY FILTERED BY:").render(),
-            tbody(tr().with(
+    var htmlContent = h3("Filtered by:").render() +
+            tbody().with(
                     th("Filter type"),
-                    th("Filter values"),
-                    each(filters, i ->
-                            tr(i.getKey().name()).with(td(
-                                    i.getValue().toString()))))).render(),
-            createHtmlTable(allFilteredTickets));
+                    th("Filter values").with(
+                            each(filters, i -> tr(
+                                    td(i.getKey().name()),
+                                    td(i.getValue().toString()))))).render() +
+            h3("The results are:").render() +
+            createHtmlTable(allFilteredTickets);
 
     sendAsHtml(recipient, subject, htmlContent);
   }
@@ -58,21 +58,20 @@ public class EmailUtils {
 
   private static String createHtmlTable(List<CustomerWithMoviesAndSalesStand> customerWithMoviesAndSalesStandsList) {
 
-    return tbody(
-            tr().with(
-                    th("Movie title"),
+    return
+            tbody().with(th("Movie title"),
                     th("Movie genre"),
                     th("Movie duration"),
                     th("Movie price"),
                     th("Movie release date"),
-                    th("Movie start date time"),
-                    each(customerWithMoviesAndSalesStandsList, i -> tr(
-                            td(i.getMovieTitle()).with(
-                                    td(i.getMovieGenre())).with(
-                                    td(i.getMovieDuration().toString())).with(
-                                    td(i.getTicketPrice().toString())).with(
-                                    td(i.getMovieReleaseDate().toString())).with(
-                                    td(i.getStartDateTime().toString())))))).renderFormatted();
+                    th("Movie start date time").with(
+                            each(customerWithMoviesAndSalesStandsList, i -> tr(
+                                    td(i.getMovieTitle()),
+                                    td(i.getMovieGenre()),
+                                    td(i.getMovieDuration().toString()),
+                                    td(i.getTicketPrice().toString()),
+                                    td(i.getMovieReleaseDate().toString()),
+                                    td(i.getStartDateTime().toString()))))).renderFormatted();
   }
 
   private static void sendAsHtml(String recipient, String subject, String htmlContent) {

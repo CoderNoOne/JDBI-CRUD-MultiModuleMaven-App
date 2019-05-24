@@ -1,7 +1,7 @@
 package utils.sorting;
 
-import model.sorting.sorting_comparator.MovieSort;
 import model.enums.MovieField;
+import model.sorting.sorting_comparator.MovieSort;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +11,7 @@ import static model.enums.MovieField.*;
 import static utils.others.UserDataUtils.getString;
 import static utils.others.UserDataUtils.printMessage;
 
-public class MovieSortingUtils {
+public final class MovieSortingUtils {
 
   private static MovieSort.MovieSortBuilder builder;
   private static List<MovieField> sortingAlgorithms;

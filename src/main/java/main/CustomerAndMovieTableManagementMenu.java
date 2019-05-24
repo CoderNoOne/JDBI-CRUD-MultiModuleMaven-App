@@ -53,7 +53,7 @@ class CustomerAndMovieTableManagementMenu {
           default -> throw new AppException("INPUT OPTION IS NOT DEFINED");
         }
       } catch (AppException e) {
-        log.error(e.getExceptionMessage());
+        log.info(e.getExceptionMessage());
         log.error(Arrays.toString(e.getStackTrace()));
       }
     }

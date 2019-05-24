@@ -9,54 +9,45 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import static model.tickets_data_filtering.MovieFilteringCriterion.*;
+import static model.tickets_data_filtering.MovieFilteringCriterion.values;
 import static utils.others.SimulateTimeFlowUtils.getClock;
 import static utils.others.UserDataUtils.*;
 
 @Slf4j
-public class TicketsFilteringUtils {
+public final class TicketsFilteringUtils {
 
   private static MovieFilterCommand.FilterCommandBuilder builder;
-  private static List<MovieFilteringCriterion> filteringCriteria;
 
   private TicketsFilteringUtils() {
   }
 
-  private static void printCriteria(List<MovieFilteringCriterion> movieFilters) {
-    AtomicInteger counter = new AtomicInteger(1);
-    filteringCriteria.forEach(criterion -> {
-      System.out.println("Criterion no. " + counter.getAndIncrement() + " - > " + criterion);
-    });
-  }
-
   public static MovieFilterCommand inputMovieFilters(String message) {
-    filteringCriteria = new ArrayList<>(Arrays.asList(values()));
+    List<String> filteringCriteria = new ArrayList<>(Arrays.asList(Arrays.stream(values()).map(MovieFilteringCriterion::name).toArray(String[]::new)));
     builder = new MovieFilterCommand.FilterCommandBuilder();
     System.out.println(message);
 
     boolean hasNext;
     do {
 
-      MovieFilteringCriterion filteringCriterion;
+      String filteringCriterion;
       do {
-        printCriteria(filteringCriteria);
-        filteringCriterion = valueOf(getString("CHOOSE PROPER FILTERING CRITERION FROM ABOVE: (NOT CASE SENSITIVE) \n ").toUpperCase());
+        printCollectionWithNumeration(filteringCriteria);
+        filteringCriterion = getString("CHOOSE PROPER FILTERING CRITERION FROM ABOVE: (NOT CASE SENSITIVE) \n ").toUpperCase();
       } while (!filteringCriteria.contains(filteringCriterion));
 
-      switch (filteringCriterion) {
+      switch (MovieFilteringCriterion.valueOf(filteringCriterion)) {
         case DURATION -> {
           filterByMovieDuration();
-          filteringCriteria.remove(DURATION);
+          filteringCriteria.remove(DURATION.name());
         }
         case RELEASE_DATE -> {
           filterByReleaseDate();
-          filteringCriteria.remove(RELEASE_DATE);
+          filteringCriteria.remove(RELEASE_DATE.name());
         }
         case GENRE -> {
           filterByGenre();
-          filteringCriteria.remove(GENRE);
+          filteringCriteria.remove(GENRE.name());
         }
       }
       hasNext = getString("DO YOU WANT TO ADD NEW SORTING CRITERION? Y/N").equalsIgnoreCase("Y");
@@ -88,7 +79,7 @@ public class TicketsFilteringUtils {
         minimumReleaseDate = getLocalDate("Input minimum release date");
         maximumReleaseDate = getLocalDate("Input maximum release date");
         if (!(isValid = minimumReleaseDate.compareTo(maximumReleaseDate) <= 0)) {
-          System.out.println("Min release date has to be greater or equal to max release date!");
+          printMessage("Min release date has to be greater or equal to max release date!");
         }
       } catch (AppException e) {
         log.info(e.getMessage(), e);
@@ -109,7 +100,7 @@ public class TicketsFilteringUtils {
         minDuration = getInt("Choose the min movie duration");
         maxDuration = getInt("Choose the max movie duration");
         if (!(isValid = minDuration <= maxDuration)) {
-          System.out.println("Min duration has to be greater or equal to max duration!");
+          printMessage("Min duration has to be greater or equal to max duration!");
         }
       } catch (AppException e) {
         log.info(e.getMessage(), e);
