@@ -3,7 +3,6 @@ package main;
 import exceptions.AppException;
 import lombok.extern.log4j.Log4j;
 import model.entity.Movie;
-import model.others.CustomerWithLoyaltyCard;
 import repository.entity_repository.impl.CustomerRepository;
 import repository.entity_repository.impl.LoyaltyCardRepository;
 import repository.entity_repository.impl.MovieRepository;
@@ -20,7 +19,6 @@ import utils.others.EmailUtils;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Optional;
 
 import static utils.others.SimulateTimeFlowUtils.*;
 import static utils.others.UserDataUtils.*;
@@ -134,20 +132,25 @@ class MainMenu {
   private void buyTicket() {
 
     var customer = customerService.getCustomerFromUserInput();
-    var ticketDetails = movieService.chooseMovieStartTime();
-    Movie movie = (Movie) ticketDetails.get("movie");
-    LocalDateTime movieStartTime = (LocalDateTime) ticketDetails.get("movieStartTime");
-
-    Optional<CustomerWithLoyaltyCard> customerLoyaltyCardId = joinedEntitiesService.getCustomerWithLoyaltyCardByCustomer(customer);
-    salesStandService.addNewSale(movie, customer, movieStartTime);
+    Movie movie = movieService.chooseMovieById();
+    LocalDateTime movieStartTime = movieService.chooseMovieStartTime(movie);
 
     if (joinedEntitiesService.doCustomerPosesActiveLoyaltyCard(customer)) {
-      loyaltyCardService.decreaseMoviesNumberByLoyaltyCardId(customerLoyaltyCardId.get().getLoyaltyCardId());
-      movie.setPrice(movie.getPrice().subtract(loyaltyCardService.findLoyaltyCardById(customerLoyaltyCardId.get().getLoyaltyCardId()).get().getDiscount()));
+
+      joinedEntitiesService
+              .getCustomerWithLoyaltyCardByCustomer(customer)
+              .ifPresent(customerWithLoyaltyCard -> {
+                loyaltyCardService.decreaseMoviesNumberByLoyaltyCardId(customerWithLoyaltyCard.getLoyaltyCardId());
+                movie.setPrice(movie
+                        .getPrice()
+                        .subtract(loyaltyCardService.findLoyaltyCardById(customerWithLoyaltyCard.getLoyaltyCardId()).get().getDiscount()));
+              });
+
     } else if (joinedEntitiesService.numberOfMoviesBoughtByCustomer(customer) == loyaltyCardService.getLoyaltyMinMovieCard()) {
       loyaltyCardService.askForLoyaltyCard(customer);
     }
 
+    salesStandService.addNewSale(movie, customer, movieStartTime);
     customerService.update(customer);
     EmailUtils.sendMoviePurchaseConfirmation(customer.getEmail(), "MOVIE PURCHASE DETAILS FROM APP", movie, movieStartTime);
   }

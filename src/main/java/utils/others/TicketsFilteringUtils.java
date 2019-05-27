@@ -40,15 +40,15 @@ public final class TicketsFilteringUtils {
       switch (valueOf(filteringCriterion)) {
         case DURATION -> {
           filterByMovieDuration();
-          filteringCriteria.remove(DURATION.name());
+          filteringCriteria.remove(MovieFilteringCriterion.DURATION.name());
         }
         case RELEASE_DATE -> {
           filterByReleaseDate();
-          filteringCriteria.remove(RELEASE_DATE.name());
+          filteringCriteria.remove(MovieFilteringCriterion.RELEASE_DATE.name());
         }
         case GENRE -> {
           filterByGenre();
-          filteringCriteria.remove(GENRE.name());
+          filteringCriteria.remove(MovieFilteringCriterion.GENRE.name());
         }
       }
       hasNext = getString("DO YOU WANT TO ADD NEW SORTING CRITERION? Y/N").equalsIgnoreCase("Y");

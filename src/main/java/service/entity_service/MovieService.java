@@ -64,7 +64,7 @@ public class MovieService {
     return isCorrect;
   }
 
-  private Movie chooseMovieById() {
+  public Movie chooseMovieById() {
 
     Optional<Movie> movieOptional;
     Integer movieId;
@@ -78,16 +78,15 @@ public class MovieService {
     return movieOptional.get();
   }
 
-  public Map<String, Object> chooseMovieStartTime() {
+  public LocalDateTime chooseMovieStartTime(Movie movie) {
 
-    var movie = chooseMovieById();
     printMessage("Possible movie show times in the next 24 hours");
     printCollectionWithNumeration(possibleShowTimes(movie));
     LocalDateTime movieStartTime;
 
     movieStartTime = getLocalDateTime("Input movie start time in format 'year-month-day HH:mm'");
 
-    return Map.of("movie", movie, "movieStartTime", movieStartTime);
+    return movieStartTime;
   }
 
   private List<LocalDateTime> possibleShowTimes(Movie movie) {
