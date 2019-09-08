@@ -1,14 +1,11 @@
-package service.others;
+package others;
 
 import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
-import model.entity.Customer;
-import model.entity.Movie;
-import model.others.CustomerWithLoyaltyCard;
-import model.others.CustomerWithMoviesAndSalesStand;
-import model.tickets_data_filtering.MovieFilteringCriterion;
-import repository.others.JoinedEntitiesRepository;
-import utils.entity.JoinedEntitiesUtils;
+import entity.Customer;
+import entity.Movie;
+import tickets_data_filtering.MovieFilteringCriterion;
+import entity.JoinedEntitiesUtils;
 
 import java.time.LocalDate;
 import java.util.*;

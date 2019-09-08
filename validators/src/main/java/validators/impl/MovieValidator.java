@@ -1,6 +1,6 @@
 package validators.impl;
 
-import model.entity.Movie;
+import entity.Movie;
 import validators.Validator;
 
 import java.math.BigDecimal;
@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static utils.others.UserDataUtils.printMessage;
+import static others.UserDataUtils.printMessage;
 
 public class MovieValidator implements Validator<Movie> {
 

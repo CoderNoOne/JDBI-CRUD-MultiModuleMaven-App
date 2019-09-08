@@ -1,10 +1,10 @@
-package repository.entity_repository.impl;
+package entity_repository.impl;
 
 import connection.DbConnection;
+import entity_repository.AbstractCrudRepository;
 import exceptions.AppException;
-import model.entity.Movie;
+import entity.Movie;
 import org.jdbi.v3.core.Jdbi;
-import repository.entity_repository.AbstractCrudRepository;
 
 public class MovieRepository extends AbstractCrudRepository<Movie> {
 

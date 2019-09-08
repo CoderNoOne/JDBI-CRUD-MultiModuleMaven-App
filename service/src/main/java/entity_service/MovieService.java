@@ -1,10 +1,12 @@
-package service.entity_service;
+package entity_service;
+
 
 import converters.impl.MovieJsonConverter;
+import entity_repository.impl.MovieRepository;
+
 import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
-import model.entity.Movie;
-import repository.entity_repository.impl.MovieRepository;
+import entity.Movie;
 import validators.impl.MovieValidator;
 
 import java.math.BigDecimal;
@@ -19,9 +21,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static utils.others.SimulateTimeFlowUtils.getClock;
-import static utils.others.UserDataUtils.*;
-
+import static others.SimulateTimeFlowUtils.getClock;
+import static others.UserDataUtils.*;
 
 @RequiredArgsConstructor
 public class MovieService {
@@ -30,7 +31,7 @@ public class MovieService {
 
   private Movie createMovie(final String jsonfileName) {
 
-    return new MovieJsonConverter(jsonfileName)
+    return new MovieJsonConverter(String.format("./service/example_data/%s", jsonfileName))
             .fromJson()
             .orElseThrow(() -> new AppException("FILE " + jsonfileName + " is empty"));
   }

@@ -1,10 +1,7 @@
-package repository.others;
+package others;
 
 import connection.DbConnection;
 import exceptions.AppException;
-import model.others.CustomerWithLoyaltyCard;
-import model.others.CustomerWithMoviesAndSalesStand;
-import model.others.MovieWithSalesStand;
 import org.jdbi.v3.core.Jdbi;
 
 import java.util.List;
@@ -56,7 +53,7 @@ public class JoinedEntitiesRepository {
 
   public List<CustomerWithMoviesAndSalesStand> getAllTicketsByCustomerId(Integer id) {
 
-    if(id == null){
+    if (id == null) {
       throw new AppException("Id is null");
     }
 
@@ -80,7 +77,7 @@ public class JoinedEntitiesRepository {
 
   public Optional<CustomerWithLoyaltyCard> getCustomerWithLoyaltyCardInfoByCustomerId(Integer customerId) {
 
-    if(customerId == null){
+    if (customerId == null) {
       throw new AppException("Id is null");
     }
     final String sql = String.join(" ", "select customers.id c_id, loyalty_cards.movies_number lc_movie_numbers,"

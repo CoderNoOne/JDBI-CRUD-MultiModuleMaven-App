@@ -1,10 +1,10 @@
-package repository.entity_repository.impl;
+package entity_repository.impl;
 
 import connection.DbConnection;
+import entity_repository.AbstractCrudRepository;
 import exceptions.AppException;
-import model.entity.SalesStand;
+import entity.SalesStand;
 import org.jdbi.v3.core.Jdbi;
-import repository.entity_repository.AbstractCrudRepository;
 
 public class SalesStandRepository extends AbstractCrudRepository<SalesStand> {
 

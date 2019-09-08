@@ -1,20 +1,20 @@
-package service.others;
+package others;
 
 import converters.impl.CustomerListJsonConverter;
 import converters.impl.MovieListJsonConverter;
+import entity_repository.impl.CustomerRepository;
+import entity_repository.impl.LoyaltyCardRepository;
+import entity_repository.impl.MovieRepository;
+import entity_repository.impl.SalesStandRepository;
 import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
-import repository.entity_repository.impl.CustomerRepository;
-import repository.entity_repository.impl.LoyaltyCardRepository;
-import repository.entity_repository.impl.MovieRepository;
-import repository.entity_repository.impl.SalesStandRepository;
 import validators.impl.CustomerValidator;
 import validators.impl.MovieValidator;
 
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static utils.others.UserDataUtils.printMessage;
+import static others.UserDataUtils.printMessage;
 
 @RequiredArgsConstructor
 public class DataInitializeService {
@@ -29,8 +29,8 @@ public class DataInitializeService {
     deleteCustomers();
     deleteLoyaltyCards();
     deleteMovies();
-    initMovies("exampleMovies.json");
-    initCustomers("exampleCustomers.json");
+    initMovies("./service/example_data/exampleMovies.json");
+    initCustomers("./service/example_data/exampleCustomers.json");
   }
 
   private void initMovies(final String moviesJsonFilename) {

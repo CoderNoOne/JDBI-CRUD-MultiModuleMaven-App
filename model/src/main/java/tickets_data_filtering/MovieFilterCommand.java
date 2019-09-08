@@ -1,9 +1,9 @@
-package model.tickets_data_filtering;
+package tickets_data_filtering;
 
 import java.time.LocalDate;
 import java.util.*;
 
-import static model.tickets_data_filtering.MovieFilteringCriterion.*;
+import static tickets_data_filtering.MovieFilteringCriterion.*;
 
 public class MovieFilterCommand {
 

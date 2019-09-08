@@ -1,4 +1,4 @@
-package repository.entity_repository;
+package entity_repository;
 
 import java.util.List;
 import java.util.Optional;

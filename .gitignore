@@ -1,0 +1,10 @@
+.idea
+/service/target/
+/repository/target
+/utils/target
+/validators/target
+/main/target/
+/connection/target/
+/converters/target/
+/exceptions/target/
+/model/target/

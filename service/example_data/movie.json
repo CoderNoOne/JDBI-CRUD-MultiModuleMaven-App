@@ -1,0 +1,11 @@
+{
+  "title": "WORMS",
+  "genre": "SCIFI",
+  "price": "15.00",
+  "duration": "2",
+  "releaseDate": {
+    "year": 2020,
+    "month": 5,
+    "day": 15
+  }
+}

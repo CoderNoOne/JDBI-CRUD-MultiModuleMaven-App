@@ -1,13 +1,15 @@
-package service.entity_service;
+package entity_service;
 
+import entity_repository.impl.SalesStandRepository;
 import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
-import model.entity.Customer;
-import model.entity.Movie;
-import model.entity.SalesStand;
-import repository.entity_repository.impl.SalesStandRepository;
+import entity.Customer;
+import entity.Movie;
+import entity.SalesStand;
+
 
 import validators.impl.SalesStandValidator;
+
 import java.time.LocalDateTime;
 
 

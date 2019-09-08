@@ -1,18 +1,18 @@
-package service.entity_service;
+package entity_service;
 
+import entity_repository.impl.LoyaltyCardRepository;
 import lombok.RequiredArgsConstructor;
-import model.entity.Customer;
-import model.entity.LoyaltyCard;
-import repository.entity_repository.impl.LoyaltyCardRepository;
+import entity.Customer;
+import entity.LoyaltyCard;
 import validators.impl.LoyaltyCardValidator;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static utils.others.SimulateTimeFlowUtils.getClock;
-import static utils.others.UserDataUtils.getString;
-import static utils.others.UserDataUtils.printMessage;
+import static others.SimulateTimeFlowUtils.getClock;
+import static others.UserDataUtils.getString;
+import static others.UserDataUtils.printMessage;
 
 @RequiredArgsConstructor
 public class LoyaltyCardService {

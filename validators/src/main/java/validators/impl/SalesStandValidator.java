@@ -1,7 +1,7 @@
 package validators.impl;
 
-import model.entity.SalesStand;
-import utils.others.SimulateTimeFlowUtils;
+import entity.SalesStand;
+import others.SimulateTimeFlowUtils;
 import validators.Validator;
 
 import java.time.LocalDateTime;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static utils.others.UserDataUtils.printMessage;
+import static others.UserDataUtils.printMessage;
 
 public class SalesStandValidator implements Validator<SalesStand> {
 

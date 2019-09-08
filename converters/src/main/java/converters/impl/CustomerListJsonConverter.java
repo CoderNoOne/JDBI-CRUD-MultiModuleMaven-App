@@ -1,7 +1,7 @@
 package converters.impl;
 
 import converters.JsonConverter;
-import model.entity.Customer;
+import entity.Customer;
 
 import java.util.List;
 

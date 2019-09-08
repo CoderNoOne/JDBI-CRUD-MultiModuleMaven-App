@@ -1,10 +1,11 @@
-package repository.entity_repository.impl;
+package entity_repository.impl;
 
 import connection.DbConnection;
+import entity_repository.AbstractCrudRepository;
 import exceptions.AppException;
-import model.entity.LoyaltyCard;
+import entity.LoyaltyCard;
 import org.jdbi.v3.core.Jdbi;
-import repository.entity_repository.AbstractCrudRepository;
+
 
 public class LoyaltyCardRepository extends AbstractCrudRepository<LoyaltyCard> {
   private Jdbi jdbi = DbConnection.getInstance().getJdbi();

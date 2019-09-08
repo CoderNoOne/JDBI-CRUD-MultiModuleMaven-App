@@ -1,6 +1,6 @@
 package validators.impl;
 
-import model.entity.LoyaltyCard;
+import entity.LoyaltyCard;
 import validators.Validator;
 
 import java.math.BigDecimal;
@@ -9,8 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static utils.others.SimulateTimeFlowUtils.getClock;
-import static utils.others.UserDataUtils.printMessage;
+import static others.SimulateTimeFlowUtils.getClock;
+import static others.UserDataUtils.printMessage;
+
 
 public class LoyaltyCardValidator implements Validator<LoyaltyCard> {
 

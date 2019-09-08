@@ -1,14 +1,16 @@
-package service.entity_service;
 
+package entity_service;
+
+import entity_repository.impl.CustomerRepository;
 import exceptions.AppException;
+import entity.Customer;
 import lombok.RequiredArgsConstructor;
-import model.entity.Customer;
-import repository.entity_repository.impl.CustomerRepository;
-import utils.others.UserDataUtils;
-import validators.impl.CustomerValidator;
 
 import java.util.List;
 import java.util.Optional;
+import validators.impl.CustomerValidator;
+
+import static others.UserDataUtils.*;
 
 @RequiredArgsConstructor
 public class CustomerService {
@@ -57,9 +59,9 @@ public class CustomerService {
   public Customer getCustomerFromUserInput() {
     getAllCustomers();
 
-    var name = UserDataUtils.getString("Input your name");
-    var surname = UserDataUtils.getString("Input your surname");
-    var email = UserDataUtils.getString("Input your email");
+    var name = getString("Input your name");
+    var surname = getString("Input your surname");
+    var email = getString("Input your email");
 
     return customerRepository.findByNameSurnameAndEmail(name, surname, email).orElseThrow(() -> new AppException("You are not registered in a db"));
   }

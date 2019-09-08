@@ -1,11 +1,13 @@
 package validators.impl;
 
-import model.entity.Customer;
-import validators.Validator;
 
+import validators.Validator;
+import entity.Customer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static others.UserDataUtils.printMessage;
 
 public class CustomerValidator implements Validator<Customer> {
 
@@ -49,7 +51,7 @@ public class CustomerValidator implements Validator<Customer> {
     Map<String, String> errors = validate(customer);
 
     if (hasErrors()) {
-      System.out.println(errors
+      printMessage(errors
               .entrySet()
               .stream()
               .map(e -> e.getKey() + " : " + e.getValue())
