@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
+
 import validators.impl.CustomerValidator;
 
 import static others.UserDataUtils.*;
@@ -37,6 +38,10 @@ public class CustomerService {
   }
 
   public void deleteCustomer(final Integer id) {
+
+    if (id == null) {
+      throw new AppException("Customer id is null");
+    }
     customerRepository.delete(id);
   }
 
@@ -45,10 +50,18 @@ public class CustomerService {
   }
 
   public Optional<Customer> findCustomerById(final Integer id) {
+
+    if (id == null) {
+      throw new AppException("Customer id is null");
+    }
     return customerRepository.findById(id);
   }
 
   public boolean updateCustomer(Customer customer) {
+
+    if (customer == null) {
+      throw new AppException("Customer is null");
+    }
     boolean isCorrect = new CustomerValidator().validateEntity(customer);
     if (isCorrect) {
       customerRepository.update(customer);
@@ -56,18 +69,16 @@ public class CustomerService {
     return isCorrect;
   }
 
-  public Customer getCustomerFromUserInput() {
-    getAllCustomers();
+  public Customer getCustomerFromUserInput(String name, String surname, String email) {
 
-    var name = getString("Input your name");
-    var surname = getString("Input your surname");
-    var email = getString("Input your email");
+    if (name == null || surname == null || email == null) {
+      throw new AppException(
+              String.format("Not valid input arguments (null): %s, %s, %s", name, surname, email));
+    }
 
-    return customerRepository.findByNameSurnameAndEmail(name, surname, email).orElseThrow(() -> new AppException("You are not registered in a db"));
-  }
-
-  public void update(Customer customer) {
-    customerRepository.update(customer);
+    return customerRepository
+            .findByNameSurnameAndEmail(name, surname, email)
+            .orElseThrow(() -> new AppException(String.format("Customer with name: %s, surname %s, email %s is not registered in a db", name, surname, email)));
   }
 
   private boolean isCustomerEmailUnique(String email) {

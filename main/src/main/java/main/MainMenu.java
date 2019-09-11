@@ -132,6 +132,12 @@ class MainMenu {
 
   private void buyTicket() {
 
+    customerService.getAllCustomers();
+
+    var name = getString("Input your name");
+    var surname = getString("Input your surname");
+    var email = getString("Input your email");
+
     var customer = customerService.getCustomerFromUserInput();
     Movie movie = movieService.chooseMovieById();
     LocalDateTime movieStartTime = movieService.chooseMovieStartTime(movie);
@@ -152,7 +158,7 @@ class MainMenu {
     }
 
     salesStandService.addNewSale(movie, customer, movieStartTime);
-    customerService.update(customer);
+    customerService.updateCustomer(customer);
     EmailUtils.sendMoviePurchaseConfirmation(customer.getEmail(), "MOVIE PURCHASE DETAILS FROM APP", movie, movieStartTime);
   }
 
