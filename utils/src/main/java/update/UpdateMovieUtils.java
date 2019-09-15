@@ -1,62 +1,23 @@
 package update;
 
-import exceptions.AppException;
 import entity.Movie;
-import enums.MovieField;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static others.UserDataUtils.*;
 
-public final class UpdateMovieUtils {
 
-  private UpdateMovieUtils() {
-  }
+public interface UpdateMovieUtils {
 
-  public static Movie getUpdatedMovie(Movie movie) {
+  static Movie getUpdatedMovie(Integer id) {
 
-    List<MovieField> movieFields = Arrays.stream(MovieField.values()).collect(Collectors.toList());
+    return Movie.builder()
+            .id(id)
+            .title(getString("Do you want to update movie title ?").equalsIgnoreCase("Y") ? getString("Input movie new title") : null)
+            .genre(getString("Do you want to update movie genre ?").equalsIgnoreCase("Y") ? getString("Input movie new genre") : null)
+            .duration(getString("Do you want to update movie duration ?").equalsIgnoreCase("Y") ? getInt("Input movie new duration") : null)
+            .releaseDate(getString("Do you want to update movie release date ?").equalsIgnoreCase("Y") ? getLocalDate("Input movie new release date") : null)
+            .price(getString("Do you want to update movie price ?").equalsIgnoreCase("Y") ? getBigDecimal("Input movie new price") : null)
+            .build();
 
-    boolean hasNext;
-    do {
-      printCollectionWithNumeration(movieFields);
-      MovieField movieProperty = MovieField.valueOf(getString("Choose what movie property you want to update. Not case sensitive").toUpperCase());
-
-      switch (movieProperty) {
-        case TITLE -> {
-          String updatedTitle = getString("Type movie new title");
-          movieFields.remove(MovieField.TITLE);
-          movie.setTitle(updatedTitle);
-        }
-        case GENRE -> {
-          String updatedGenre = getString("Type movie new genre");
-          movieFields.remove(MovieField.GENRE);
-          movie.setGenre(updatedGenre);
-        }
-        case DURATION -> {
-          Integer updatedDuration = getInt("Type movie new duration");
-          movieFields.remove(MovieField.DURATION);
-          movie.setDuration(updatedDuration);
-        }
-        case PRICE -> {
-          BigDecimal updatedPrice = getBigDecimal("Type movie new price");
-          movieFields.remove(MovieField.PRICE);
-          movie.setPrice(updatedPrice);
-        }
-        case RELEASE_DATE -> {
-          LocalDate updatedReleaseDate = getLocalDate("Type movie new release date");
-          movieFields.remove(MovieField.RELEASE_DATE);
-          movie.setReleaseDate(updatedReleaseDate);
-        }
-        default -> throw new AppException("Not valid movie property");
-      }
-      hasNext = getString("Do you want to update other movie property (Y/N)").equalsIgnoreCase("Y");
-    } while (hasNext && !movieFields.isEmpty());
-    return movie;
   }
 
 }

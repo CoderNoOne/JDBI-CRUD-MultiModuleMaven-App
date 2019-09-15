@@ -1,6 +1,7 @@
 package entity_service;
 
 import entity_repository.impl.LoyaltyCardRepository;
+import exceptions.AppException;
 import lombok.RequiredArgsConstructor;
 import entity.Customer;
 import entity.LoyaltyCard;
@@ -26,7 +27,7 @@ public class LoyaltyCardService {
 
   private boolean addLoyaltyCard(BigDecimal discount, LocalDate expirationDate, Integer moviesNumber) {
     var loyaltyCard = createLoyaltyCard(discount, expirationDate, moviesNumber);
-    boolean isValid = new LoyaltyCardValidator().validateEntity(loyaltyCard);
+    boolean isValid = new LoyaltyCardValidator().validateEntity(loyaltyCard, false);
 
     if (isValid) {
       loyaltyCardRepository.add(loyaltyCard);
@@ -35,7 +36,12 @@ public class LoyaltyCardService {
 
   }
 
-  private void addLoyaltyCardForCustomer(Customer customer) {
+  public void addLoyaltyCardForCustomer(Customer customer) {
+
+    if(customer == null){
+      throw new AppException("Customer is null");
+    }
+
     if (addNewLoyaltyCard()) {
       customer.setLoyaltyCardId(getNewlyCreatedLoyaltyCardId());
     }
@@ -59,16 +65,11 @@ public class LoyaltyCardService {
     }
   }
 
-  public void askForLoyaltyCard(Customer customer) {
-    if (getString("Do you want to add a loyalty card? (y/n)").toUpperCase().equalsIgnoreCase("y")) {
-      addLoyaltyCardForCustomer(customer);
-      printMessage("Loyalty card successfully added to you account!");
-    } else {
-      printMessage("Too bad. Maybe next time");
-    }
-  }
-
   public Optional<LoyaltyCard> findLoyaltyCardById(Integer id) {
+    if (id == null) {
+      throw new AppException("Id is null");
+    }
+
     return loyaltyCardRepository.findById(id);
   }
 

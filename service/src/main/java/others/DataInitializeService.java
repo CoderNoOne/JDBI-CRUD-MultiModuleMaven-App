@@ -46,7 +46,7 @@ public class DataInitializeService {
 
               if (movieValidator.hasErrors()) {
                 printMessage("MOVIE NO: " + atomicInteger.get());
-                movieValidator.validateEntity(movie);
+                movieValidator.validateEntity(movie, false);
               }
               atomicInteger.incrementAndGet();
               return !movieValidator.hasErrors();
@@ -66,7 +66,7 @@ public class DataInitializeService {
             .filter(customer -> {
               if (customerValidator.hasErrors()) {
                 printMessage("CUSTOMER NO: " + atomicInteger.get());
-                customerValidator.validateEntity(customer);
+                customerValidator.validateEntity(customer, false);
               }
               atomicInteger.incrementAndGet();
               return !customerValidator.hasErrors();

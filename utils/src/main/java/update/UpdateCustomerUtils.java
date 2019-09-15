@@ -1,57 +1,24 @@
 package update;
 
-import exceptions.AppException;
 import entity.Customer;
-import enums.CustomerField;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import static others.UserDataUtils.getInt;
+import static others.UserDataUtils.getString;
 
-import static others.UserDataUtils.*;
 
-public final class UpdateCustomerUtils {
+public interface UpdateCustomerUtils {
 
-  private UpdateCustomerUtils() {
+  static Customer getUpdatedCustomer(Integer id) {
+
+    return Customer.builder()
+            .id(id)
+            .name(getString("Do you want to update customer name? (Y/N)").equalsIgnoreCase("Y") ? getString("Input customer new name") : null)
+            .surname(getString("Do you want to update customer surname? (Y/N)").equalsIgnoreCase("Y") ? getString("Input customer new surname") : null)
+            .age(getString("Do you want to update customer age? (Y/N)").equalsIgnoreCase("Y") ? getInt("Input customer new age") : null)
+            .email(getString("Do you want to update customer email? (Y/N)").equalsIgnoreCase("Y") ? getString("Input customer new email") : null)
+            .build();
   }
 
-  public static Customer getUpdatedCustomer(Customer customer) {
-
-    List<CustomerField> customerFields = Arrays.stream(CustomerField.values()).collect(Collectors.toList());
-
-    boolean hasNext;
-    do {
-      printCollectionWithNumeration(customerFields);
-      CustomerField customerProperty = CustomerField.valueOf(getString("Choose what customer property you want to update. Not case sensitive").toUpperCase());
-
-      switch (customerProperty) {
-        case NAME -> {
-          String updatedName = getString("Type customer new name");
-          customerFields.remove(CustomerField.NAME);
-          customer.setName(updatedName);
-        }
-        case SURNAME -> {
-          String updatedSurname = getString("Type customer new surname");
-          customerFields.remove(CustomerField.SURNAME);
-          customer.setSurname(updatedSurname);
-        }
-        case AGE -> {
-          int updatedAge = getInt("Type customer new age");
-          customerFields.remove(CustomerField.AGE);
-          customer.setAge(updatedAge);
-        }
-        case EMAIL -> {
-          String updatedEmail = getString("Type customer new email");
-          customerFields.remove(CustomerField.EMAIL);
-          customer.setEmail(updatedEmail);
-        }
-        default -> throw new AppException("Not valid customer property");
-      }
-      hasNext = getString("Do you want to update other customer property? (Y/N)").equalsIgnoreCase("Y");
-    } while (hasNext && !customerFields.isEmpty());
-
-    return customer;
-  }
 }
 
 

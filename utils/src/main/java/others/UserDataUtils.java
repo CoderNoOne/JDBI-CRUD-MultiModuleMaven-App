@@ -73,7 +73,17 @@ public final class UserDataUtils {
     }
 
     printMessage(inputMessage);
-    return sc.nextBigDecimal();
+    String input = sc.nextLine();
+
+    if (input.length() == 0) {
+      throw new AppException("You didn't input any value");
+    }
+
+    if (!input.matches("\\d+(\\.\\d+)*")) {
+      throw new AppException("Big Decimal value is not correct: " + input);
+    }
+
+    return new BigDecimal(input);
   }
 
   public static LocalDateTime getLocalDateTime(String message) {

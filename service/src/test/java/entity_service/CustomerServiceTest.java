@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -22,7 +23,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
@@ -216,14 +216,189 @@ class CustomerServiceTest {
     //when
     Assertions.assertDoesNotThrow(() -> {
       Customer actualResult = customerService.getCustomerFromUserInput(name, surname, email);
-      assertThat(actualResult,is(equalTo(customer.get())));
+      assertThat(actualResult, is(equalTo(customer.get())));
     });
 
 
     then(customerRepository).should(times(1)).findByNameSurnameAndEmail(name, surname, email);
     then(customerRepository).shouldHaveNoMoreInteractions();
 
+  }
+
+  @Test
+  @DisplayName("Update Customer : case Customer is null")
+  void test9() {
+
+    //given
+    Customer customer = null;
+    var expectedExceptionMessage = "Customer is null";
+
+    //when
+    //then
+    AppException actualException = assertThrows(AppException.class, () -> customerService.updateCustomer(customer));
+    assertThat(actualException.getExceptionMessage(), is(equalTo(expectedExceptionMessage)));
+
+    then(customerRepository).shouldHaveZeroInteractions();
+  }
+
+  @Test
+  @DisplayName("Update customer : case Customer is not valid")
+  void test10() {
+
+    //given
+    Customer customer = Customer.builder()
+            .age(-1)
+            .name("john")
+            .build();
+
+    //when
+    //then
+    Assertions.assertDoesNotThrow(() -> {
+      boolean isCorrect = customerService.updateCustomer(customer);
+      assertThat(isCorrect, is(false));
+    });
+
+    then(customerRepository).shouldHaveZeroInteractions();
 
   }
 
+  @Test
+  @DisplayName("Update customer : case customer is valid")
+  void test11() {
+
+    //given
+    Customer customer = Customer.builder()
+            .name("JOHN")
+            .surname("STONE")
+            .age(30)
+            .email("j.stone@gmail.com")
+            .build();
+
+    //when
+    //then
+    Assertions.assertDoesNotThrow(() -> {
+      boolean actualResult = customerService.updateCustomer(customer);
+      assertThat(actualResult, is(equalTo(true)));
+    });
+
+    then(customerRepository).should(times(1)).update(customer);
+    then(customerRepository).shouldHaveNoMoreInteractions();
+  }
+
+  @Test
+  @DisplayName("Add customer, case : null arguments")
+  void test12() {
+
+    //given
+    String name = null;
+    String surname = null;
+    Integer age = null;
+    String email = null;
+    String expectedExceptionMessage = "Arguments (name, surname, age, email) cannot be null";
+
+    //when
+    //then
+    AppException actualException = assertThrows(AppException.class, () -> {
+      boolean actualResult = customerService.addCustomer(name, surname, age, email);
+      assertThat(actualResult, is(equalTo(false)));
+    });
+    assertThat(actualException.getExceptionMessage(), is(equalTo(expectedExceptionMessage)));
+
+    then(customerRepository).shouldHaveZeroInteractions();
+
+  }
+
+  @Test
+  @DisplayName("Add customer, case : non null but not valid arguments")
+  void test13() {
+
+    //given
+    String name = "john";
+    String surname = "stone";
+    Integer age = 15;
+    String email = "ad";
+
+    //when
+    //then
+    Assertions.assertDoesNotThrow(() -> {
+      boolean actualResult = customerService.addCustomer(name, surname, age, email);
+      assertThat(actualResult, is(false));
+    });
+
+    then(customerRepository).shouldHaveZeroInteractions();
+  }
+
+
+  @Test
+  @DisplayName("Add customer, case : valid arguments and email is unique")
+  void test14() {
+
+    //given
+
+    String name = "JOHN";
+    String surname = "STONE";
+    Integer age = 30;
+    String email = "j.stone@gmail.com";
+    ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
+
+    given(customerRepository.findCustomerByEmail(email))
+            .willReturn(Optional.empty());
+
+    //when
+    //then
+    Assertions.assertDoesNotThrow(() -> {
+      boolean actualResult = customerService.addCustomer(name, surname, age, email);
+      assertThat(actualResult, is(true));
+    });
+
+    then(customerRepository)
+            .should(times(1))
+            .findCustomerByEmail(email);
+
+    then(customerRepository)
+            .should(times(1))
+            .add(customerArgumentCaptor.capture());
+
+    then(customerRepository)
+            .shouldHaveNoMoreInteractions();
+
+    assertThat(CustomerMatcher.matches(name, surname, age, email).matchesSafely(customerArgumentCaptor.getValue()), is(true));
+  }
+
+  @Test
+  @DisplayName("Add customer, case : valid arguments and email is not unique")
+  void test15() {
+
+    //given
+    String name = "JOHN";
+    String surname = "STONE";
+    Integer age = 30;
+    String email = "j.stone@gmail.com";
+
+
+    given(customerRepository.findCustomerByEmail(email))
+            .willReturn(Optional.of(
+                    Customer.builder()
+                            .id(1)
+                            .name(name)
+                            .surname(surname)
+                            .age(age)
+                            .email(email)
+                            .build()));
+
+    //when
+    //then
+    Assertions.assertDoesNotThrow(() -> {
+      boolean actualResult = customerService.addCustomer(name, surname, age, email);
+      assertThat(actualResult, is(false));
+    });
+
+    then(customerRepository)
+            .should(times(1))
+            .findCustomerByEmail(email);
+
+    then(customerRepository)
+            .shouldHaveNoMoreInteractions();
+
+  }
 }

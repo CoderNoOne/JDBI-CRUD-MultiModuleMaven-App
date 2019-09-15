@@ -1,5 +1,6 @@
 package main;
 
+import converters.impl.MovieJsonConverter;
 import entity_repository.impl.CustomerRepository;
 import entity_repository.impl.LoyaltyCardRepository;
 import entity_repository.impl.MovieRepository;
@@ -19,7 +20,12 @@ import others.EmailUtils;
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static others.SimulateTimeFlowUtils.*;
 import static others.UserDataUtils.*;
@@ -113,10 +119,14 @@ class MainMenu {
     if (!jsonFilename.matches(".+\\.json$")) {
       throw new AppException("Wrong json file format");
     }
-    boolean isAdded = movieService.addMovie(jsonFilename);
+
+    boolean isAdded = movieService
+            .addMovie(new MovieJsonConverter(String.format("./service/example_data/%s", jsonFilename))
+                    .fromJson()
+                    .orElseThrow(() -> new AppException(String.format("File %s is empty", jsonFilename))));
 
     if (!isAdded) {
-      throw new AppException("Movie raw data couldn't be added to db");
+      throw new AppException("Movie couldn't be added to db");
     }
     printMessage("Movie successfully added to db!");
   }
@@ -130,6 +140,21 @@ class MainMenu {
     new CustomerAndMovieTableManagementMenu().showTableManagementMenu();
   }
 
+  private Movie chooseMovieById() {
+
+    Integer movieIndex;
+
+    printMessage("AVAILABLE MOVIES");
+    List<Movie> allMovies = movieService.getAllMovies();
+    printCollectionWithNumeration(allMovies);
+
+    do {
+      movieIndex = getInt("Input proper movie number");
+    } while (movieIndex < 0 || movieIndex > allMovies.size() - 1);
+
+    return allMovies.get(movieIndex);
+  }
+
   private void buyTicket() {
 
     customerService.getAllCustomers();
@@ -138,9 +163,9 @@ class MainMenu {
     var surname = getString("Input your surname");
     var email = getString("Input your email");
 
-    var customer = customerService.getCustomerFromUserInput();
-    Movie movie = movieService.chooseMovieById();
-    LocalDateTime movieStartTime = movieService.chooseMovieStartTime(movie);
+    var customer = customerService.getCustomerFromUserInput(name, surname, email);
+    Movie movie = chooseMovieById();
+    LocalDateTime movieStartTime = chooseMovieStartTime(movie);
 
     if (joinedEntitiesService.doCustomerPosesActiveLoyaltyCard(customer)) {
 
@@ -153,13 +178,43 @@ class MainMenu {
                         .subtract(loyaltyCardService.findLoyaltyCardById(customerWithLoyaltyCard.getLoyaltyCardId()).get().getDiscount()));
               });
 
-    } else if (joinedEntitiesService.numberOfMoviesBoughtByCustomer(customer) == loyaltyCardService.getLoyaltyMinMovieCard()) {
-      loyaltyCardService.askForLoyaltyCard(customer);
+    } else if (joinedEntitiesService.numberOfMoviesBoughtByCustomer(customer) >= loyaltyCardService.getLoyaltyMinMovieCard() &&
+            getString("Do you want to add a loyalty card? (y/n)").toUpperCase().equalsIgnoreCase("y")) {
+      loyaltyCardService.addLoyaltyCardForCustomer(customer);
     }
 
     salesStandService.addNewSale(movie, customer, movieStartTime);
     customerService.updateCustomer(customer);
     EmailUtils.sendMoviePurchaseConfirmation(customer.getEmail(), "MOVIE PURCHASE DETAILS FROM APP", movie, movieStartTime);
+  }
+
+  private LocalDateTime chooseMovieStartTime(Movie movie) {
+
+    printMessage("Possible movie show times in the next 24 hours");
+    List<LocalDateTime> showTimes = getPossibleShowTimes(movie);
+    printCollectionWithNumeration(showTimes);
+
+    int timeNumber;
+
+    do {
+      timeNumber = getInt("Input proper movie start time: choose number associated to that time");
+    } while (timeNumber < 0 || timeNumber > showTimes.size() - 1);
+
+    return showTimes.get(timeNumber - 1);
+
+  }
+
+  private List<LocalDateTime> getPossibleShowTimes(Movie movie) {
+
+    var presentDateTime = LocalDateTime.now(getClock());
+
+    var localDateTimeToClosesHourOrHalfAnHour = presentDateTime.getMinute() < 30 ? presentDateTime.truncatedTo(ChronoUnit.HOURS).plusMinutes(30) : presentDateTime.plusHours(1).truncatedTo(ChronoUnit.HOURS);
+    var seedDateTime = movie.getReleaseDate().compareTo(presentDateTime.toLocalDate()) < 0 ? localDateTimeToClosesHourOrHalfAnHour : movie.getReleaseDate().atTime(8, 0);
+
+    return Stream.iterate(seedDateTime, date -> date.plusMinutes(30))
+            .limit(ChronoUnit.HOURS.between(seedDateTime, seedDateTime.plusHours(48)))
+            .filter(date -> date.toLocalTime().compareTo(LocalTime.of(8, 0)) >= 0 && date.toLocalTime().compareTo(LocalTime.of(22, 30)) <= 0)
+            .collect(Collectors.toList());
   }
 
   private void showTransactionHistoryMenu() {

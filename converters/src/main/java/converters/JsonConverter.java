@@ -3,6 +3,10 @@ package converters;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import exceptions.AppException;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
 import java.io.FileReader;
@@ -12,20 +16,22 @@ import java.util.Arrays;
 import java.util.Optional;
 
 @Log4j
+@RequiredArgsConstructor
 public abstract class JsonConverter<T> {
 
   private final String jsonFilename;
-
-  private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-  private final Type type = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+  private final Gson gson;
+  private final Type type;
 
   public JsonConverter(String jsonFilename) {
+    gson = new GsonBuilder().setPrettyPrinting().create();
+    type = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     this.jsonFilename = jsonFilename;
   }
 
   public Optional<T> fromJson() {
     try (FileReader fileReader = new FileReader(jsonFilename)) {
-      return Optional.of(gson.fromJson(fileReader, type));
+      return Optional.ofNullable(gson.fromJson(fileReader, type));
     } catch (Exception e) {
       log.info(e.getMessage());
       log.error(Arrays.toString(e.getStackTrace()));

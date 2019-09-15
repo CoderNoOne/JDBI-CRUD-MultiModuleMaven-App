@@ -1,9 +1,9 @@
 package sorting;
 
-import exceptions.AppException;
 import enums.CustomerField;
 import sorting.sorting_comparator.CustomerSort;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,17 +20,19 @@ public final class CustomerSortingUtils {
 
   public static CustomerSort getCustomerSortingAlgorithm(String message) {
 
-    sortingAlgorithms = Arrays.asList(CustomerField.values());
+    sortingAlgorithms = new ArrayList<>(Arrays.asList(CustomerField.values()));
     builder = new CustomerSort.CustomerSortBuilder();
     System.out.println(message);
 
     boolean hasNext;
 
     do {
-      CustomerField sortingCriterion = CustomerField.valueOf(getString("CHOOSE FROM ABOVE: " + sortingAlgorithms).toUpperCase());
 
-      if (sortingAlgorithms.isEmpty() || !sortingAlgorithms.contains(sortingCriterion))
-        throw new AppException("UNDEFINED SORTING CRITERION OR ALREADY SORTED BY THIS ONE");
+      CustomerField sortingCriterion;
+
+      do {
+        sortingCriterion = fromString(getString("CHOOSE FROM ABOVE: " + sortingAlgorithms).toUpperCase());
+      } while (sortingCriterion == null);
 
       switch (sortingCriterion) {
         case NAME -> sortByName();

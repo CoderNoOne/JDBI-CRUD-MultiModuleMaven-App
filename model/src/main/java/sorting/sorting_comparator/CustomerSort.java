@@ -1,4 +1,4 @@
-package  sorting.sorting_comparator;
+package sorting.sorting_comparator;
 
 
 import entity.Customer;
@@ -16,16 +16,27 @@ public class CustomerSort {
     comparators = customerSortBuilder.comparators;
   }
 
-  public Comparator<Customer> getComparator() {
+  public Comparator<Customer> getFinalComparator() {
 
     if (comparators.isEmpty()) {
       throw new AppException("NO COMPARATORS AVAILABLE");
     }
-    Comparator<Customer> comparator = comparators.get(0);
+    Comparator<Customer> baseComparator = comparators.get(0);
 
-    comparators.stream().skip(1).forEach(comparator::thenComparing);
+    return getComparatorRecursive(baseComparator, comparators, 0);
+  }
 
-    return comparator;
+
+  private Comparator<Customer> getComparatorRecursive(Comparator<Customer> baseComparator, List<Comparator<Customer>> comparators, Integer counter) {
+
+    if (counter == comparators.size() - 1) {
+      return baseComparator;
+    }
+
+    baseComparator = baseComparator.thenComparing(comparators.get(++counter));
+
+    return getComparatorRecursive(baseComparator, comparators, counter);
+
   }
 
   public static class CustomerSortBuilder {

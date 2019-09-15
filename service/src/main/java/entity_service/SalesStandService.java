@@ -28,7 +28,7 @@ public class SalesStandService {
 
   private boolean addSalesStand(Movie movie, Customer customer, LocalDateTime startDateTime) {
     var salesStand = createSalesStand(movie.getId(), customer.getId(), startDateTime);
-    boolean isValid = new SalesStandValidator().validateEntity(salesStand);
+    boolean isValid = new SalesStandValidator().validateEntity(salesStand, false);
 
     if (isValid) {
       salesStandRepository.add(salesStand);

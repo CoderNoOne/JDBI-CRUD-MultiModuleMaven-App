@@ -11,8 +11,6 @@ import java.util.Optional;
 
 import validators.impl.CustomerValidator;
 
-import static others.UserDataUtils.*;
-
 @RequiredArgsConstructor
 public class CustomerService {
 
@@ -22,18 +20,27 @@ public class CustomerService {
     return Customer.builder().name(name).surname(surname).age(age).email(email).build();
   }
 
-  public boolean addCustomer(String name, String surname, int age, String email) {
-    Customer customer = createCustomer(name, surname, age, email);
-    boolean isValid = new CustomerValidator().validateEntity(customer);
+  public boolean addCustomer(String name, String surname, Integer age, String email) {
 
-    var customerEmailUnique = isCustomerEmailUnique(customer.getEmail());
-    if (isValid && customerEmailUnique) {
-      addCustomerToDb(customer);
+    if (name == null || surname == null || age == null || email == null) {
+      throw new AppException("Arguments (name, surname, age, email) cannot be null");
     }
-    return isValid && customerEmailUnique;
+
+    Customer customer = createCustomer(name, surname, age, email);
+    boolean isValid = new CustomerValidator().validateEntity(customer, false);
+
+    if (isValid && isCustomerEmailUnique(customer.getEmail())) {
+      addCustomerToDb(customer);
+      return true;
+    }
+    return false;
   }
 
   private void addCustomerToDb(Customer customer) {
+
+    if (customer == null) {
+      throw new AppException("Customer is null");
+    }
     customerRepository.add(customer);
   }
 
@@ -62,7 +69,7 @@ public class CustomerService {
     if (customer == null) {
       throw new AppException("Customer is null");
     }
-    boolean isCorrect = new CustomerValidator().validateEntity(customer);
+    boolean isCorrect = new CustomerValidator().validateEntity(customer, true);
     if (isCorrect) {
       customerRepository.update(customer);
     }

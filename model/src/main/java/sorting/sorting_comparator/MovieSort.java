@@ -15,17 +15,29 @@ public class MovieSort {
     comparators = movieSortBuilder.comparators;
   }
 
-  public Comparator<Movie> getComparator() {
+  public Comparator<Movie> getFinalComparator() {
 
     if (comparators.isEmpty()) {
       throw new AppException("NO COMPARATORS AVAILABLE");
     }
-    Comparator<Movie> comparator = comparators.get(0);
+    Comparator<Movie> baseComparator = comparators.get(0);
 
-    comparators.stream().skip(1).forEach(comparator::thenComparing);
-
-    return comparator;
+    return getComparatorRecursive(baseComparator, comparators, 0);
   }
+
+
+  private Comparator<Movie> getComparatorRecursive(Comparator<Movie> baseComparator, List<Comparator<Movie>> comparators, Integer counter) {
+
+    if (counter == comparators.size() - 1) {
+      return baseComparator;
+    }
+
+    baseComparator = baseComparator.thenComparing(comparators.get(++counter));
+
+    return getComparatorRecursive(baseComparator, comparators, counter);
+
+  }
+
 
   public static class MovieSortBuilder {
 

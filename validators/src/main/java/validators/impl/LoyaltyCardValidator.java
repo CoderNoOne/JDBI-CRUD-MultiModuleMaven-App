@@ -18,22 +18,22 @@ public class LoyaltyCardValidator implements Validator<LoyaltyCard> {
   private Map<String, String> errors = new HashMap<>();
 
   @Override
-  public Map<String, String> validate(LoyaltyCard loyaltyCard) {
+  public Map<String, String> validate(LoyaltyCard loyaltyCard, boolean isUpdate) {
 
     if (loyaltyCard == null) {
       errors.put("Loyalty Card object", "loyalty card object is null");
       return errors;
     }
 
-    if (!isMovieNumberValid(loyaltyCard)) {
+    if (!isMovieNumberValid(loyaltyCard, isUpdate)) {
       errors.put("Movie number", "Movie number should be greater than zero");
     }
 
-    if (!isDiscountValid(loyaltyCard)) {
+    if (!isDiscountValid(loyaltyCard, isUpdate)) {
       errors.put("Discount value", "Discount value should be greater than zero");
     }
 
-    if (!isExpirationDateValid(loyaltyCard)) {
+    if (!isExpirationDateValid(loyaltyCard, isUpdate)) {
       errors.put("Loyalty Card Expiration Date", "Loyalty Card Expiration should take place in the future");
 
     }
@@ -46,8 +46,9 @@ public class LoyaltyCardValidator implements Validator<LoyaltyCard> {
   }
 
   @Override
-  public boolean validateEntity(LoyaltyCard loyaltyCard) {
-    validate(loyaltyCard);
+  public boolean validateEntity(LoyaltyCard loyaltyCard, boolean isUpdate) {
+
+    validate(loyaltyCard, isUpdate);
 
     if (hasErrors()) {
       printMessage(errors
@@ -59,15 +60,21 @@ public class LoyaltyCardValidator implements Validator<LoyaltyCard> {
     return !hasErrors();
   }
 
-  private boolean isMovieNumberValid(LoyaltyCard loyaltyCard) {
-    return loyaltyCard.getMoviesNumber() > 0;
+  private boolean isMovieNumberValid(LoyaltyCard loyaltyCard, boolean isUpdate) {
+    return !isUpdate ?
+            loyaltyCard.getMoviesNumber() != null && loyaltyCard.getMoviesNumber() > 0
+            : loyaltyCard.getMoviesNumber() == null || loyaltyCard.getMoviesNumber() > 0;
   }
 
-  private boolean isDiscountValid(LoyaltyCard loyaltyCard) {
-    return loyaltyCard.getDiscount().compareTo(BigDecimal.ZERO) > 0;
+  private boolean isDiscountValid(LoyaltyCard loyaltyCard, boolean isUpdate) {
+    return !isUpdate ?
+            loyaltyCard.getDiscount() != null && loyaltyCard.getDiscount().compareTo(BigDecimal.ZERO) > 0
+            : loyaltyCard.getDiscount() == null || loyaltyCard.getDiscount().compareTo(BigDecimal.ZERO) > 0;
   }
 
-  private boolean isExpirationDateValid(LoyaltyCard loyaltyCard) {
-    return loyaltyCard.getExpirationDate().compareTo(LocalDate.now(getClock())) > 0;
+  private boolean isExpirationDateValid(LoyaltyCard loyaltyCard, boolean isUpdate) {
+    return !isUpdate ?
+            loyaltyCard.getExpirationDate() != null && loyaltyCard.getExpirationDate().compareTo(LocalDate.now(getClock())) > 0
+            : loyaltyCard.getExpirationDate() == null || loyaltyCard.getExpirationDate().compareTo(LocalDate.now(getClock())) > 0;
   }
 }

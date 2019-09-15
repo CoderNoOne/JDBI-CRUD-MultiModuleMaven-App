@@ -10,6 +10,7 @@ import others.JoinedEntitiesRepository;
 import entity_service.CustomerService;
 import entity_service.MovieService;
 import others.JoinedEntitiesService;
+import others.UserDataUtils;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
@@ -17,7 +18,7 @@ import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static javax.swing.UIManager.getInt;
+import static others.UserDataUtils.getInt;
 import static others.UserDataUtils.*;
 import static sorting.CustomerSortingUtils.getCustomerSortingAlgorithm;
 import static sorting.MovieSortingUtils.getMovieSortingAlgorithm;
@@ -35,7 +36,7 @@ class CustomerAndMovieTableManagementMenu {
     showMenuOptions();
     while (true) {
       try {
-        int option = getInt("INPUT YOUR OPTION: ");
+        int option = UserDataUtils.getInt("INPUT YOUR OPTION: ");
         switch (option) {
           case 1 -> deleteCustomerById();
           case 2 -> deleteMovieById();
@@ -95,11 +96,11 @@ class CustomerAndMovieTableManagementMenu {
   }
 
   private Comparator<Movie> getMovieComparators() {
-    return getMovieSortingAlgorithm("Input your movie sorting algorithms").getComparator();
+    return getMovieSortingAlgorithm("Input your movie sorting algorithms").getFinalComparator();
   }
 
   private Comparator<Customer> getCustomerComparator() {
-    return getCustomerSortingAlgorithm("Input your customer sorting algorithms").getComparator();
+    return getCustomerSortingAlgorithm("Input your customer sorting algorithms").getFinalComparator();
   }
 
 
@@ -108,11 +109,10 @@ class CustomerAndMovieTableManagementMenu {
 
     var customerId = getInt("Choose customer id you want to update");
 
-    Optional<Customer> customerById = customerService.findCustomerById(customerId);
-    if (customerById.isEmpty()) {
+    if (customerService.findCustomerById(customerId).isEmpty()) {
       throw new AppException("There is no customer with such an id in our database!");
     }
-    printMessage(customerService.updateCustomer(getUpdatedCustomer(customerById.get())) ?
+    printMessage(customerService.updateCustomer(getUpdatedCustomer(customerId)) ?
             "Customer has been updated successfully" : "Some of new customer's field failed to pass the validation. Check the output");
   }
 
@@ -123,11 +123,11 @@ class CustomerAndMovieTableManagementMenu {
 
     var movieId = getInt("Choose movie id you want to update");
 
-    Optional<Movie> movieById = movieService.findMovieById(movieId);
+    Optional<Movie> movieById = movieService.getMovieById(movieId);
     if (movieById.isEmpty()) {
       throw new AppException("There is no movie with such an id in our database!");
     }
-    printMessage(movieService.updateMovie(getUpdatedMovie(movieById.get())) ?
+    printMessage(movieService.updateMovie(getUpdatedMovie(movieId)) ?
             "Movie has been updated successfully" : "Some of new movie's field failed to pass the validation. Check the output");
 
   }
@@ -209,7 +209,7 @@ class CustomerAndMovieTableManagementMenu {
 
   private void showMovieById() {
     int movieId = getInt("Input movie id");
-    movieService.findMovieById(movieId).ifPresent(System.out::println);
+    movieService.getMovieById(movieId).ifPresent(System.out::println);
   }
 
   private void showCustomerById() {
@@ -224,30 +224,30 @@ class CustomerAndMovieTableManagementMenu {
       throw new AppException("Minimum age cannot be greater than maximum one");
     }
     printCollectionWithNumeration(customerService.getAllCustomers()
-            .stream().filter(customer -> customer.getAge() > minCustomerAge && customer.getAge() < maxCustomerAge)
+            .stream().filter(customer -> customer.getAge() >= minCustomerAge && customer.getAge() <= maxCustomerAge)
             .collect(Collectors.toList()));
   }
 
   private void showAllCustomers() {
     customerService.getAllCustomers();
-    var choice = getString("Do you want to sort all customers (Y/N").equalsIgnoreCase("Y");
+    var toSort = getString("Do you want to sort all customers (Y/N").equalsIgnoreCase("Y");
 
     var allCustomers = customerService.getAllCustomers();
-    if (choice) {
+    if (toSort) {
       allCustomers.sort(getCustomerComparator());
     }
 
-    printMessage(choice ? "Sorted customer list \n" : "Unsorted customer list \n");
+    printMessage(toSort ? "Sorted customer list \n" : "Unsorted customer list \n");
     printCollectionWithNumeration(allCustomers);
   }
 
   private void deleteMovieById() {
-    Integer integer = getInt("Input movie id you want to delete from database");
+    Integer integer = UserDataUtils.getInt("Input movie id you want to delete from database");
     movieService.deleteMovie(integer);
   }
 
   private void deleteCustomerById() {
-    Integer integer = getInt("Input customer id you want to delete from database");
+    Integer integer = UserDataUtils.getInt("Input customer id you want to delete from database");
     customerService.deleteCustomer(integer);
   }
 }

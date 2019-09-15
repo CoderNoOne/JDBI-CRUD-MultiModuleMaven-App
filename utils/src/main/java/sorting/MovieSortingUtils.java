@@ -27,7 +27,11 @@ public final class MovieSortingUtils {
 
     boolean hasNext;
     do {
-      var sortingCriterion = MovieField.valueOf(getString("CHOOSE FROM ABOVE: " + sortingAlgorithms).toUpperCase());
+      MovieField sortingCriterion;
+
+      do {
+        sortingCriterion = MovieField.fromString(getString("CHOOSE FROM ABOVE: " + sortingAlgorithms).toUpperCase());
+      } while (sortingCriterion == null);
 
       switch (sortingCriterion) {
         case TITLE -> sortByTitle();

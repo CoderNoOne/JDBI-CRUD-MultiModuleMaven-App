@@ -2,7 +2,9 @@ package entity_repository;
 
 import connection.DbConnection;
 import exceptions.AppException;
+import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.statement.Update;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -21,10 +23,18 @@ public abstract class AbstractCrudRepository<T> implements CrudRepository<T> {
       throw new AppException("id is null");
     }
 
-    jdbi.withHandle(handle -> handle
-            .createUpdate("delete from " + getTableName(type.getSimpleName()) + " where id = :id"))
-            .bind("id", id)
-            .execute();
+    Handle handle = jdbi.open();
+
+    try (handle;
+         Update update = handle
+                 .createUpdate("delete from " + getTableName(type.getSimpleName()) + " where id = :id")) {
+      update
+              .bind("id", id)
+              .execute();
+    } catch (Exception e) {
+      throw new AppException(String.format("Delete %s with id: %s exception", id, type));
+    }
+
   }
 
   @Override

@@ -128,7 +128,7 @@ class StatisticsMenu {
 
 
   private void showTheEarliestReleaseDateInEachMovieGenre() {
-    movieService.theEarliestPremierInMovieGenre().forEach((genre, innerMap) -> {
+    movieService.theEarliestPremiereForMovieGenre().forEach((genre, innerMap) -> {
       printMessage("\nIn movie genre: " + genre + " the earliest premiere (release date) falls on " + innerMap.keySet().iterator().next() +
               "\nThe movies are: ");
       printCollectionWithNumeration(innerMap.values());

@@ -1,8 +1,6 @@
 package entity;
 
 import exceptions.AppException;
-import entity.Customer;
-import entity.Movie;
 import others.CustomerWithMoviesAndSalesStand;
 import others.MovieWithSalesStand;
 import tickets_data_filtering.MovieFilteringCriterion;
@@ -41,6 +39,7 @@ public interface JoinedEntitiesUtils {
     return CustomerWithMoviesAndSalesStand.builder()
             .movieTitle(movie.getTitle())
             .movieReleaseDate(movie.getReleaseDate())
+            .movieDuration(movie.getDuration())
             .ticketPrice(movie.getPrice())
             .movieGenre(movie.getGenre())
             .startDateTime(movieStartTime)
@@ -87,13 +86,14 @@ public interface JoinedEntitiesUtils {
   }
 
   static Predicate<CustomerWithMoviesAndSalesStand> getPredicate(Map.Entry<MovieFilteringCriterion, List<?>> cus) {
-    Predicate<CustomerWithMoviesAndSalesStand> predicate;
+    Predicate<CustomerWithMoviesAndSalesStand> predicate = null;
+
     switch (cus.getKey()) {
       case DURATION -> predicate = JoinedEntitiesUtils.filterByMovieDurationPredicate(cus);
       case RELEASE_DATE -> predicate = JoinedEntitiesUtils.filterByMovieReleaseDate(cus);
       case GENRE -> predicate = JoinedEntitiesUtils.filterByMoviesGenre(cus);
-      default -> throw new AppException("Filtering criterion not recognized");
     }
+
     return predicate;
   }
 }
