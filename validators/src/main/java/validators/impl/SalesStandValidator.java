@@ -25,7 +25,7 @@ public class SalesStandValidator implements Validator<SalesStand> {
     }
 
     if (!isStartDateTimeValid(salesStand, isUpdate)) {
-      errors.put("Sales stand start date time valid", "start time should take place between 8.00 and 22.30");
+      errors.put("Sales stand start date time valid", "start time should take place between 8:00 and 22:30 at 8:00, 8:30 and so on");
     }
     return errors;
   }
@@ -40,11 +40,12 @@ public class SalesStandValidator implements Validator<SalesStand> {
                     && (startDateTime.toLocalTime().compareTo(LocalTime.of(8, 0)) >= 0 && startDateTime.toLocalTime().compareTo(LocalTime.of(22, 30)) <= 0)
             : startDateTime == null || startDateTime.compareTo(presentDateTime) > 0 && (startDateTime.getMinute() == 0 || startDateTime.getMinute() == 30)
             && (startDateTime.toLocalTime().compareTo(LocalTime.of(8, 0)) >= 0 && startDateTime.toLocalTime().compareTo(LocalTime.of(22, 30)) <= 0);
+
   }
 
   @Override
   public boolean hasErrors() {
-    return false;
+    return !errors.isEmpty();
   }
 
   @Override

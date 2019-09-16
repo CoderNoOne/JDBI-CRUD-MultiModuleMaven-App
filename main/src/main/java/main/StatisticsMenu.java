@@ -107,20 +107,20 @@ class StatisticsMenu {
   }
 
   private void showAverageMovieDurationForEachGenre() {
-    movieService.getAverageMovieDurationForMovieCategory().forEach((category, averageDuration) -> {
+    movieService.getAverageMovieDurationForMovieGenre().forEach((category, averageDuration) -> {
       printMessage("Category: " + category + " -> " + String.format("%.2f", averageDuration));
     });
   }
 
   private void showMostExpensiveMovieInEachGenre() {
-    movieService.mostExpensiveMoviesForEachGenre().forEach((category, mostExpensiveMovies) -> {
+    movieService.getMostExpensiveMovieForEachGenre().forEach((category, mostExpensiveMovies) -> {
       printMessage("Category: " + category);
       printCollectionWithNumeration(mostExpensiveMovies);
     });
   }
 
   private void showTheCheapestMovieInEachGenre() {
-    movieService.cheapestMoviesForEachGenre().forEach((category, cheapestMovies) -> {
+    movieService.getCheapestMovieForEachGenre().forEach((category, cheapestMovies) -> {
       printMessage("Category: " + category);
       printCollectionWithNumeration(cheapestMovies);
     });
@@ -128,7 +128,7 @@ class StatisticsMenu {
 
 
   private void showTheEarliestReleaseDateInEachMovieGenre() {
-    movieService.theEarliestPremiereForMovieGenre().forEach((genre, innerMap) -> {
+    movieService.getTheEarliestPremiereForMovieGenre().forEach((genre, innerMap) -> {
       printMessage("\nIn movie genre: " + genre + " the earliest premiere (release date) falls on " + innerMap.keySet().iterator().next() +
               "\nThe movies are: ");
       printCollectionWithNumeration(innerMap.values());

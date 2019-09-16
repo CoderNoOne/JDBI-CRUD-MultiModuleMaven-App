@@ -38,7 +38,7 @@ public class LoyaltyCardService {
 
   public void addLoyaltyCardForCustomer(Customer customer) {
 
-    if(customer == null){
+    if (customer == null) {
       throw new AppException("Customer is null");
     }
 
@@ -56,6 +56,11 @@ public class LoyaltyCardService {
   }
 
   public void decreaseMoviesNumberByLoyaltyCardId(Integer loyaltyCardId) {
+
+    if (loyaltyCardId == null) {
+      throw new AppException("Loyalty card id is null");
+    }
+
     var loyaltyCardOptional = loyaltyCardRepository.findById(loyaltyCardId);
 
     if (loyaltyCardOptional.isPresent() && loyaltyCardOptional.get().getExpirationDate().compareTo(LocalDate.now(getClock())) > 0) {

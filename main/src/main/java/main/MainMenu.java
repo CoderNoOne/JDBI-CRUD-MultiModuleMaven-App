@@ -183,7 +183,7 @@ class MainMenu {
       loyaltyCardService.addLoyaltyCardForCustomer(customer);
     }
 
-    salesStandService.addNewSale(movie, customer, movieStartTime);
+    salesStandService.addNewSale(movie.getId(), customer.getId(), movieStartTime);
     customerService.updateCustomer(customer);
     EmailUtils.sendMoviePurchaseConfirmation(customer.getEmail(), "MOVIE PURCHASE DETAILS FROM APP", movie, movieStartTime);
   }

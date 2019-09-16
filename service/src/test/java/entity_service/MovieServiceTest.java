@@ -17,7 +17,9 @@ import org.mockito.quality.Strictness;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -274,6 +276,203 @@ class MovieServiceTest {
 
   }
 
+  @Test
+  @DisplayName("get Average movie duration")
+  void test12() {
+
+    //given
+
+    List<Movie> movieList = getMovieList();
+
+    given(movieRepository.findAll())
+            .willReturn(movieList);
+
+    Map<String, Double> expectedResult = Map.of(
+            "GENRE ONE", 3.0,
+            "GENRE TWO", 1.0
+    );
+
+    //when
+    //then
+    Assertions.assertDoesNotThrow(() -> {
+      Map<String, Double> actualResult = movieService.getAverageMovieDurationForMovieGenre();
+      assertThat(actualResult, is(equalTo(expectedResult)));
+    });
+
+    then(movieRepository).should(times(1)).findAll();
+    then(movieRepository).shouldHaveNoMoreInteractions();
+  }
+
+  @Test
+  @DisplayName("get most expensive movie for each genre")
+  void test13() {
+
+    //given
+    List<Movie> movieList = getMovieList();
+
+    Map<String, List<Movie>> expectedResult = Map.of(
+            "GENRE ONE", List.of(Movie.builder()
+                            .id(1)
+                            .duration(2)
+                            .genre("GENRE ONE")
+                            .price(new BigDecimal("35"))
+                            .releaseDate(LocalDate.of(2020, Month.OCTOBER, 20))
+                            .title("TITLE ONE")
+                            .build(),
+
+                    Movie.builder()
+                            .id(2)
+                            .duration(4)
+                            .genre("GENRE ONE")
+                            .price(new BigDecimal("35"))
+                            .releaseDate(LocalDate.of(2022, Month.MARCH, 15))
+                            .title("TITLE TWO")
+                            .build()),
+            "GENRE TWO", Collections.singletonList(Movie.builder()
+                    .id(3)
+                    .duration(1)
+                    .genre("GENRE TWO")
+                    .price(new BigDecimal("40"))
+                    .releaseDate(LocalDate.of(2021, Month.APRIL, 21))
+                    .title("TITLE THREE")
+                    .build())
+
+    );
+
+    given(movieRepository.findAll())
+            .willReturn(movieList);
+    //when
+    //then
+    Assertions.assertDoesNotThrow(() -> {
+      Map<String, List<Movie>> actualResult = movieService.getMostExpensiveMovieForEachGenre();
+      assertThat(actualResult, is(equalTo(expectedResult)));
+    });
+
+    then(movieRepository).should(times(1)).findAll();
+    then(movieRepository).shouldHaveNoMoreInteractions();
+
+  }
+
+  @Test
+  @DisplayName("get cheapest movie for each genre")
+  void test14() {
+
+    //given
+    List<Movie> movieList = getMovieList();
+    Map<String, List<Movie>> expectedResult = Map.of(
+            "GENRE ONE", List.of(Movie.builder()
+                            .id(1)
+                            .duration(2)
+                            .genre("GENRE ONE")
+                            .price(new BigDecimal("35"))
+                            .releaseDate(LocalDate.of(2020, Month.OCTOBER, 20))
+                            .title("TITLE ONE")
+                            .build(),
+
+                    Movie.builder()
+                            .id(2)
+                            .duration(4)
+                            .genre("GENRE ONE")
+                            .price(new BigDecimal("35"))
+                            .releaseDate(LocalDate.of(2022, Month.MARCH, 15))
+                            .title("TITLE TWO")
+                            .build()),
+            "GENRE TWO", Collections.singletonList(Movie.builder()
+                    .id(3)
+                    .duration(1)
+                    .genre("GENRE TWO")
+                    .price(new BigDecimal("40"))
+                    .releaseDate(LocalDate.of(2021, Month.APRIL, 21))
+                    .title("TITLE THREE")
+                    .build())
+
+    );
+
+    given(movieRepository.findAll()).willReturn(movieList);
+
+    //when
+    //then
+    Assertions.assertDoesNotThrow(() -> {
+      Map<String, List<Movie>> actualResult = movieService.getCheapestMovieForEachGenre();
+      assertThat(actualResult, is(equalTo(expectedResult)));
+    });
+
+    then(movieRepository).should(times(1)).findAll();
+    then(movieRepository).shouldHaveNoMoreInteractions();
+  }
+
+  @Test
+  @DisplayName("get the earliest premiere for movie genre")
+  void test15() {
+
+    //given
+
+    given(movieRepository.findAll()).willReturn(getMovieList());
+
+    Map<String, Map<LocalDate, List<Movie>>> expectedResult = Map.of(
+            "GENRE ONE", Map.of(
+                    LocalDate.of(2020, Month.OCTOBER, 20),
+                    Collections.singletonList(Movie.builder()
+                            .id(1)
+                            .duration(2)
+                            .genre("GENRE ONE")
+                            .price(new BigDecimal("35"))
+                            .releaseDate(LocalDate.of(2020, Month.OCTOBER, 20))
+                            .title("TITLE ONE")
+                            .build())),
+
+                    "GENRE TWO", Map.of(
+                            LocalDate.of(2021, Month.APRIL, 21),
+                            Collections.singletonList(Movie.builder()
+                                    .id(3)
+                                    .duration(1)
+                                    .genre("GENRE TWO")
+                                    .price(new BigDecimal("40"))
+                                    .releaseDate(LocalDate.of(2021, Month.APRIL, 21))
+                                    .title("TITLE THREE")
+                                    .build())
+                    ));
+
+    //when
+    //then
+    Assertions.assertDoesNotThrow(() -> {
+      Map<String, Map<LocalDate, List<Movie>>> actualResult = movieService.getTheEarliestPremiereForMovieGenre();
+      assertThat(actualResult, is(equalTo(expectedResult)));
+    });
+
+    then(movieRepository).should(times(1)).findAll();
+    then(movieRepository).shouldHaveNoMoreInteractions();
+  }
 
 
+  private List<Movie> getMovieList() {
+
+    return List.of(
+            Movie.builder()
+                    .id(1)
+                    .duration(2)
+                    .genre("GENRE ONE")
+                    .price(new BigDecimal("35"))
+                    .releaseDate(LocalDate.of(2020, Month.OCTOBER, 20))
+                    .title("TITLE ONE")
+                    .build(),
+
+            Movie.builder()
+                    .id(2)
+                    .duration(4)
+                    .genre("GENRE ONE")
+                    .price(new BigDecimal("35"))
+                    .releaseDate(LocalDate.of(2022, Month.MARCH, 15))
+                    .title("TITLE TWO")
+                    .build(),
+
+            Movie.builder()
+                    .id(3)
+                    .duration(1)
+                    .genre("GENRE TWO")
+                    .price(new BigDecimal("40"))
+                    .releaseDate(LocalDate.of(2021, Month.APRIL, 21))
+                    .title("TITLE THREE")
+                    .build());
+  }
 }

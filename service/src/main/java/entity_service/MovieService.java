@@ -65,7 +65,7 @@ public class MovieService {
     return isCorrect;
   }
 
-  public Map<String, Double> getAverageMovieDurationForMovieCategory() {
+  public Map<String, Double> getAverageMovieDurationForMovieGenre() {
 
     return movieRepository.findAll()
             .stream()
@@ -74,10 +74,12 @@ public class MovieService {
                     Collectors.averagingInt(Movie::getDuration)));
   }
 
-  public Map<String, List<Movie>> mostExpensiveMoviesForEachGenre() {
+  public Map<String, List<Movie>> getMostExpensiveMovieForEachGenre() {
+
+    List<Movie> allMovies = movieRepository.findAll();
 
     //noinspection OptionalGetWithoutIsPresent
-    return movieRepository.findAll()
+    return allMovies
             .stream()
             .collect(Collectors.groupingBy(
                     Movie::getGenre,
@@ -85,13 +87,17 @@ public class MovieService {
             .entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
-                    e -> movieRepository.findAll().stream().filter(movie -> movie.getGenre().equals(e.getKey()) && movie.getPrice().compareTo(e.getValue().get().getPrice()) == 0).collect(Collectors.toList())));
+                    e -> allMovies.stream()
+                            .filter(movie -> movie.getGenre().equals(e.getKey()) && movie.getPrice().compareTo(e.getValue().get().getPrice()) == 0)
+                            .collect(Collectors.toList())));
   }
 
-  public Map<String, List<Movie>> cheapestMoviesForEachGenre() {
+  public Map<String, List<Movie>> getCheapestMovieForEachGenre() {
+
+    List<Movie> allMovies = movieRepository.findAll();
 
     //noinspection OptionalGetWithoutIsPresent
-    return movieRepository.findAll()
+    return allMovies
             .stream()
             .collect(Collectors.groupingBy(
                     Movie::getGenre,
@@ -99,13 +105,17 @@ public class MovieService {
             .entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
-                    e -> movieRepository.findAll().stream().filter(movie -> movie.getGenre().equals(e.getKey()) && movie.getPrice().compareTo(e.getValue().get().getPrice()) == 0).collect(Collectors.toList())));
+                    e -> allMovies.stream()
+                            .filter(movie -> movie.getGenre().equals(e.getKey()) && movie.getPrice().compareTo(e.getValue().get().getPrice()) == 0)
+                            .collect(Collectors.toList())));
   }
 
-  public Map<String, Map<LocalDate, List<Movie>>> theEarliestPremiereForMovieGenre() {
+  public Map<String, Map<LocalDate, List<Movie>>> getTheEarliestPremiereForMovieGenre() {
+
+    List<Movie> allMovies = movieRepository.findAll();
 
     //noinspection OptionalGetWithoutIsPresent
-    return movieRepository.findAll()
+    return allMovies
             .stream()
             .collect(Collectors.groupingBy(
                     Movie::getGenre,
@@ -113,6 +123,8 @@ public class MovieService {
             .entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
-                    e -> movieRepository.findAll().stream().filter(movie -> movie.getGenre().equals(e.getKey()) && movie.getReleaseDate().compareTo(e.getValue().get().getReleaseDate()) == 0).collect(Collectors.groupingBy(Movie::getReleaseDate))));
+                    e -> allMovies.stream()
+                            .filter(movie -> movie.getGenre().equals(e.getKey()) && movie.getReleaseDate().compareTo(e.getValue().get().getReleaseDate()) == 0)
+                            .collect(Collectors.groupingBy(Movie::getReleaseDate))));
   }
 }

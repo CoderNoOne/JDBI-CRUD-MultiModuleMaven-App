@@ -26,21 +26,22 @@ public class SalesStandService {
             .build();
   }
 
-  private boolean addSalesStand(Movie movie, Customer customer, LocalDateTime startDateTime) {
-    var salesStand = createSalesStand(movie.getId(), customer.getId(), startDateTime);
+  public void addNewSale(Integer movieId, Integer customerId, LocalDateTime startDateTime) {
+
+    if (movieId == null || customerId == null || startDateTime == null) {
+      throw new AppException("Arguments cannot be null");
+    }
+
+    var salesStand = createSalesStand(movieId, customerId, startDateTime);
     boolean isValid = new SalesStandValidator().validateEntity(salesStand, false);
 
     if (isValid) {
       salesStandRepository.add(salesStand);
-    }
-    return isValid;
-  }
-
-  public boolean addNewSale(Movie movie, Customer customer, LocalDateTime startDateTime) {
-    if (!addSalesStand(movie, customer, startDateTime)) {
+    } else {
       throw new AppException("Movie start date time is not valid");
     }
-    return true;
+
   }
+
 }
 
