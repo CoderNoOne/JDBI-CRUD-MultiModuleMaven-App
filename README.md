@@ -32,6 +32,9 @@ This application also provides several additional functionalities, such as filte
 * [javaMail API](https://mvnrepository.com/artifact/javax.mail/mail/1.4.7) - Java API used to send and receive email via SMTP
 * [gson](https://github.com/google/gson/blob/master/UserGuide.md) - 
 Java-based library to serialize Java objects to JSON and vice versa
+* [Junit 5](https://junit.org/junit5/docs/current/user-guide/) - one of the most popular unit-testing frameworks in the Java ecosystem
+* [Mockito 3](https://site.mockito.org/) -  JAVA-based library that is used to mock interfaces so that a dummy functionality can be added to a mock interface that can be used in unit testing
+* [Hamcrest](http://hamcrest.org/JavaHamcrest/) - a framework for writing matcher objects allowing 'match' rules to be defined declaratively
 ### 5. How to run it
 
 * configure your database connection (database url etc.) - change appropriate properties in **connection.DbConnection** class
