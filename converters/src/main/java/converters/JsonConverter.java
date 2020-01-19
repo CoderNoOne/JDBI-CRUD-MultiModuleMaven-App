@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileReader;
 import java.lang.reflect.ParameterizedType;
@@ -15,7 +16,7 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Optional;
 
-@Log4j
+@Slf4j
 @RequiredArgsConstructor
 public abstract class JsonConverter<T> {
 

@@ -8,7 +8,7 @@ import org.jdbi.v3.core.Jdbi;
 
 import java.util.Optional;
 
-public class CustomerRepository extends AbstractCrudRepository<Customer> /*implements CrudRepository<Customer> */ {
+public class CustomerRepository extends AbstractCrudRepository<Customer>  {
 
   private Jdbi jdbi = DbConnection.getInstance().getJdbi();
 

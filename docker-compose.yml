@@ -1,0 +1,38 @@
+version: '3.7'
+services:
+  jdbi-application:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MYSQL_USER: "${user:-user}"
+        MYSQL_PASSWORD: "${password:-pass}"
+        MYSQL_DATABASE: "${database:-db}"
+        MYSQL_SERVICE: "${mysql_service:-mysql_service}"
+    restart: always
+    networks:
+      - jdbi-app-network
+    depends_on:
+      - mysql_service
+
+  mysql_service:
+    image: mysql:5.7
+    ports:
+      - ${db_host_port:-2000}:3306
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_USER: "${user:-user}"
+      MYSQL_PASSWORD: "${password:-pass}"
+      MYSQL_DATABASE: "${database:-db}"
+    container_name: "${mysql_service:-mysql_service}"
+    networks:
+      - jdbi-app-network
+    volumes:
+      - mysql-jdbi-db-data-volume:/var/lib/mysql
+
+networks:
+  jdbi-app-network:
+
+volumes:
+  mysql-jdbi-db-data-volume:

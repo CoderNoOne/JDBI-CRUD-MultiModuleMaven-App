@@ -21,8 +21,8 @@ import static others.UserDataUtils.printMessage;
 @Slf4j
 public final class EmailUtils {
 
-  private static final String emailAddress = "the.mountain.057@gmail.com";
-  private static final String emailPassword = "imlegendary94";
+  private static final String emailAddress = "mailForApplication1908@gmail.com";
+  private static final String emailPassword = "notyourbusiness1908";
 
   private EmailUtils() {
   }
