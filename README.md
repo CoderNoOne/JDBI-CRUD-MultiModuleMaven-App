@@ -76,7 +76,7 @@ To log in with specified mysql user credentials you can:
 1. Log via exposed port on localhost using a command:
 
 ```
-mysql -u user -p -P 1000 -h127.0.0.1
+mysql -u user -p -P 2000 -h127.0.0.1
 ```
 2. Log into bash of running mysql container with interactive mode using command:
 
